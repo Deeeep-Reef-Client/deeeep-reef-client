@@ -1,7 +1,7 @@
 {
   "name": "deeeep-reef-client",
   "productName": "deeeep-reef-client",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "My Electron application description",
   "main": "src/index.js",
   "scripts": {
@@ -13,10 +13,10 @@
   },
   "keywords": [],
   "author": {
-    "name": "Seagull",
+    "name": "Canned Seagull",
     "email": "101097344+Canned-Seagull23@users.noreply.github.com"
   },
-  "license": "MIT",
+  "license": "GPL v3",
   "config": {
     "forge": {
       "packagerConfig": {},
