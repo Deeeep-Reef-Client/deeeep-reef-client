@@ -22,13 +22,13 @@ const createWindow = () => {
     window.removeMenu();
     const menu = Menu.buildFromTemplate([
         {
-          label: "Settings"
+            label: "Settings"
         },
         {
-          label: "Discord"
+            label: "Discord"
         },
         {
-          label: "Help"
+            label: "Help"
         }
     ]);
     Menu.setApplicationMenu(menu);
