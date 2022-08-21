@@ -1,5 +1,6 @@
 const { app, BrowserWindow, Menu } = require('electron');
 const path = require('path');
+const RPC = require('discord-rpc');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 // eslint-disable-next-line global-require
@@ -59,5 +60,17 @@ app.on('activate', () => {
     }
 });
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.
+let rpc = new RPC.Client({
+    transport: 'ipc'
+});
+rpc.login({ clientId: "1006552150807150594" });
+rpc.on('ready', () => {
+    rpc.setActivity({
+        details: "Playing Deeeep.io",
+        largeImageKey: "favicon-big",
+        largeImageText: "Deeeep.io",
+        // smallImageKey: "ffa",
+        // smallImageText: "Playing Unknown Gamemode",
+        startTimestamp: new Date(),
+      })
+});
