@@ -20,6 +20,7 @@ const createWindow = () => {
     window.loadURL("https://deeeep.io");
     // Open the DevTools.
     window.webContents.openDevTools();
+    window.maximize();
     window.removeMenu();
     const menu = Menu.buildFromTemplate([
         {
