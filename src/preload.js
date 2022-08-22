@@ -1,22 +1,49 @@
 "use strict";
 const { ipcRenderer } = require('electron');
+let gameStarted = false;
 window.addEventListener("load", () => {
     const btn = document.querySelector(".play");
     btn.addEventListener("click", () => {
+        if (gameStarted)
+            return;
         const element = document.getElementById("app");
-        const observer = new MutationObserver((mutations) => {
+        const openObserver = new MutationObserver((mutations) => {
             if (document.contains(document.getElementById("canvas-container"))) {
-                observer.disconnect();
+                gameStarted = true;
+                openObserver.disconnect();
                 ipcRenderer.send("gameInfo", {
-                    gamemode: document.querySelector('.block, .modes')
-                        .querySelector('.selected')
-                        .querySelector('.name')
-                        .innerText,
+                    gamemode: document.querySelector('.block, .modes').querySelector('.selected').querySelector('.name').innerText,
                     url: window.location.href
+                });
+                function onGameEnd() {
+                    ipcRenderer.send("gameInfo", {
+                        gamemode: "Menu",
+                        url: ''
+                    });
+                }
+                const closeObserver = new MutationObserver((mutations) => {
+                    if (document.contains(document.querySelector(".death-reason"))) {
+                        closeObserver.disconnect();
+                        onGameEnd();
+                    }
+                    mutations.forEach((mutation) => {
+                        mutation.removedNodes.forEach((removedNode) => {
+                            if (removedNode.className == "game") {
+                                closeObserver.disconnect();
+                                onGameEnd();
+                            }
+                        });
+                    });
+                });
+                closeObserver.observe(element, {
+                    attributes: false,
+                    childList: true,
+                    characterData: false,
+                    subtree: true
                 });
             }
         });
-        observer.observe(element, {
+        openObserver.observe(element, {
             attributes: false,
             childList: true,
             characterData: false,
