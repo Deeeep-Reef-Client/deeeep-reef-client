@@ -61,7 +61,6 @@ function setDiscordActivity(gameInfo) {
         buttons
     });
 }
-;
 let rpc = new RPC.Client({
     transport: 'ipc'
 });
