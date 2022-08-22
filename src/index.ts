@@ -35,8 +35,8 @@ const createWindow = () => {
 
 app.on('ready', () => {
         createWindow();
-        ipcMain.on("gamemode", (event: Event, gamemode: string) => {
-            setDiscordActivity(gamemode);
+        ipcMain.on("gameInfo", (event: Event, gameInfo: { gamemode: string, url: string}) => {
+            setDiscordActivity(gameInfo);
         })
     }
 );
@@ -53,14 +53,18 @@ app.on('activate', () => {
     }
 });
 
-function setDiscordActivity(gamemode: string) {
+function setDiscordActivity(gameInfo: { gamemode: string, url: string}) {
+    type joinbtn = [{ label: string, url: string }] | undefined;
+    let buttons: joinbtn = [{ label: "Join Game", url: gameInfo.url }];
+    if (gameInfo.url == '') buttons = undefined;
     rpc.setActivity({
         details: "Playing Deeeep.io",
         largeImageKey: "favicon-big",
         largeImageText: "Deeeep.io",
-        smallImageKey: gamemode.toLowerCase(),
-        smallImageText: gamemode,
+        smallImageKey: gameInfo.gamemode.toLowerCase(),
+        smallImageText: gameInfo.gamemode,
         startTimestamp: new Date(),
+        buttons
     })
 };
 
@@ -68,4 +72,7 @@ let rpc = new RPC.Client({
     transport: 'ipc'
 });
 rpc.login({ clientId: "1006552150807150594" });
-rpc.on('ready', () => setDiscordActivity("Menu"));
+rpc.on('ready', () => setDiscordActivity({
+    gamemode: "Menu",
+    url: ''
+}));

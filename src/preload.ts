@@ -1,27 +1,24 @@
-"use strict";
 const { ipcRenderer } = require('electron');
+
 window.addEventListener("load", () => {
     const btn = document.querySelector(".play");
     const modes = document.querySelector(".block, .modes");
-    btn.addEventListener("click", () => {
+    btn!.addEventListener("click", () => {
         const element = document.getElementById("app");
-        const observer = new MutationObserver((mutations) => {
+        const observer = new MutationObserver((mutations: MutationRecord[]) => {
             if (document.contains(document.getElementById("canvas-container"))) {
                 observer.disconnect();
                 ipcRenderer.send("gameInfo", {
-                    gamemode: document.querySelector('.block, .modes')
-                        .querySelector('.selected')
-                        .querySelector('.name')
-                        .innerText,
+                    gamemode: (document.querySelector('.block, .modes')!.querySelector('.selected')!.querySelector('.name') as HTMLElement)!.innerText,
                     url: window.location.href
                 });
             }
         });
-        observer.observe(element, {
+        observer.observe(element!, {
             attributes: false,
             childList: true,
             characterData: false,
             subtree: true
         });
-    });
-});
+    })
+})
