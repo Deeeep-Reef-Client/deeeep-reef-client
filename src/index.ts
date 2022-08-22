@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, ipcMain } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain, shell } = require('electron');
 const path = require('path');
 const RPC = require('discord-rpc');
 
@@ -24,10 +24,36 @@ const createWindow = () => {
             label: "Settings"
         },
         {
-            label: "Discord"
+            label: "Help"
+        },
+        // {
+        //     label: "Asset Swappers",
+        //     submenu: [
+        //         {
+        //             role: "Skin Swapper"
+        //         },
+        //         {
+        //             role: "Asset Swapper"
+        //         }
+        //     ]
+        // },
+        {
+            label: "Discord",
+            click() {
+                shell.openExternal("https://discord.gg/s8mYRHKXZw");
+            }
         },
         {
-            label: "Help"
+            label: "Report a Bug",
+            click() {
+                shell.openExternal("https://github.com/Canned-Seagull23/deeeep-reef-client/issues");
+            }
+        },
+        {
+            label: "OPEN HACKS",
+            click() {
+                shell.openExternal("https://www.youtube.com/watch?v=klfT41uZniI");
+            }
         }
     ]);
     Menu.setApplicationMenu(menu);
