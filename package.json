@@ -9,12 +9,9 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
-    "lint": "npx eslint ."
+    "lint": "echo \"No linting configured\""
   },
-  "keywords": [
-    "deeeep",
-    "client"
-  ],
+  "keywords": ["deeeep", "client"],
   "author": {
     "name": "Canned Tuna",
     "email": "101097344+Canned-Seagull23@users.noreply.github.com"
