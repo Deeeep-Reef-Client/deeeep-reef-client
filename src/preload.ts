@@ -15,22 +15,18 @@ window.addEventListener("load", () => {
                     url: window.location.href
                 });
                 function onGameEnd() {
+                    gameStarted = false;
+                    closeObserver.disconnect();
                     ipcRenderer.send("gameInfo", {
                         gamemode: "Menu",
                         url: ''
                     });
                 }
                 const closeObserver = new MutationObserver((mutations: MutationRecord[]) => {
-                    if (document.contains(document.querySelector(".death-reason"))) {
-                        closeObserver.disconnect();
-                        onGameEnd();
-                    }
+                    if (document.contains(document.querySelector(".death-reason"))) onGameEnd();
                     mutations.forEach((mutation: MutationRecord)  => {
                         mutation.removedNodes.forEach((removedNode: Node) =>{
-                            if((removedNode as HTMLElement)!.className == "game") {
-                                closeObserver.disconnect();
-                                onGameEnd();
-                            }
+                            if((removedNode as HTMLElement)!.className == "game") onGameEnd();
                         });
                     });
                 });
