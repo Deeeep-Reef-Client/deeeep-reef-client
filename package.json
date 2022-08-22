@@ -1,8 +1,8 @@
 {
   "name": "deeeep-reef-client",
-  "productName": "deeeep-reef-client",
+  "productName": "Deeeep.io Reef client",
   "version": "0.0.0",
-  "description": "My Electron application description",
+  "description": "A new desktop client for Deeeep.io",
   "main": "src/index.js",
   "scripts": {
     "start": "electron-forge start",
@@ -11,12 +11,12 @@
     "publish": "electron-forge publish",
     "lint": "echo \"No linting configured\""
   },
-  "keywords": [],
+  "keywords": ["deeeep", "client"],
   "author": {
-    "name": "Canned Seagull",
+    "name": "Canned Tuna",
     "email": "101097344+Canned-Seagull23@users.noreply.github.com"
   },
-  "license": "GPL v3",
+  "license": "GPL-3.0",
   "config": {
     "forge": {
       "packagerConfig": {},
