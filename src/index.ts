@@ -53,6 +53,7 @@ app.on('activate', () => {
     }
 });
 
+const startTimestamp = new Date();
 function setDiscordActivity(gameInfo: { gamemode: string, url: string}) {
     type joinbtn = [{ label: string, url: string }] | undefined;
     let buttons: joinbtn = [{ label: "Join Game", url: gameInfo.url }];
@@ -63,7 +64,7 @@ function setDiscordActivity(gameInfo: { gamemode: string, url: string}) {
         largeImageText: "Deeeep.io",
         smallImageKey: gameInfo.gamemode.toLowerCase(),
         smallImageText: gameInfo.gamemode,
-        startTimestamp: new Date(),
+        startTimestamp,
         buttons
     })
 };
