@@ -2,7 +2,6 @@ const { ipcRenderer } = require('electron');
 
 window.addEventListener("load", () => {
     const btn = document.querySelector(".play");
-    const modes = document.querySelector(".block, .modes");
     btn!.addEventListener("click", () => {
         const element = document.getElementById("app");
         const observer = new MutationObserver((mutations: MutationRecord[]) => {
