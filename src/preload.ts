@@ -5,6 +5,13 @@ let gameStarted = false;
 
 window.addEventListener("load", () => {
 
+    // Custom stylesheet
+    const customTheme = document.createElement("link")
+    customTheme.rel = "stylesheet";
+    customTheme.type = "text/css";
+    customTheme.href = "https://deeeep-reef-client.netlify.app/assets/customtheme.css";
+    document.head.appendChild(customTheme);
+
     // Watch for match start
     const btn = document.querySelector(".play");
     btn!.addEventListener("click", () => {
