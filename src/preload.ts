@@ -7,7 +7,7 @@ window.addEventListener("load", () => {
         if (gameStarted) return;
         const element = document.getElementById("app");
         const openObserver = new MutationObserver((mutations: MutationRecord[]) => {
-            if (document.contains(document.getElementById("canvas-container"))) {
+            if (document.contains(document.querySelector(".playing"))) {
                 gameStarted = true;
                 openObserver.disconnect();
                 ipcRenderer.send("gameInfo", {
