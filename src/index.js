@@ -2,6 +2,7 @@
 const { app, BrowserWindow, Menu, ipcMain, shell } = require('electron');
 const path = require('path');
 const RPC = require('discord-rpc');
+// Create window
 if (require('electron-squirrel-startup')) {
     app.quit();
 }
@@ -14,9 +15,11 @@ const createWindow = () => {
             preload: path.join(__dirname, 'preload.js'),
         },
     });
+    // Loads blocky fish game :)
     window.loadURL("https://deeeep.io");
     window.webContents.openDevTools();
     window.maximize();
+    // Deletes menu and makes new menu
     window.removeMenu();
     const menu = Menu.buildFromTemplate([
         {
@@ -59,6 +62,7 @@ const createWindow = () => {
 };
 app.on('ready', () => {
     createWindow();
+    // Await gameInfo IPC message to change RPC
     ipcMain.on("gameInfo", (event, gameInfo) => {
         setDiscordActivity(gameInfo);
     });
@@ -73,7 +77,9 @@ app.on('activate', () => {
         createWindow();
     }
 });
+// Discord rich presence
 const startTimestamp = new Date();
+// Set activity
 function setDiscordActivity(gameInfo) {
     let buttons = [{ label: "Join Game", url: gameInfo.url }];
     if (gameInfo.url == '')
