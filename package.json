@@ -1,6 +1,6 @@
 {
   "name": "deeeep-reef-client",
-  "productName": "Deeeep.io Reef client",
+  "productName": "Deeeep.io Reef Client",
   "version": "0.0.0",
   "description": "A new desktop client for Deeeep.io",
   "main": "src/index.js",
