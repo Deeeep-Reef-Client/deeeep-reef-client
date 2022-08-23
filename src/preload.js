@@ -1,23 +1,14 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 const { ipcRenderer } = require('electron');
-// @ts-ignore: I know better.
-const object_observer_min_js_1 = require("./node_modules/object-observer/dist/object-observer.min.js");
 let gameStarted = false;
 window.addEventListener("load", () => {
-    const oldThis = object_observer_min_js_1.Observable.from(this);
-    object_observer_min_js_1.Observable.observe(oldThis, (changes) => {
-        changes.forEach(change => {
-            console.log(change);
-        });
-    });
     const btn = document.querySelector(".play");
     btn.addEventListener("click", () => {
         if (gameStarted)
             return;
         const element = document.getElementById("app");
         const openObserver = new MutationObserver((mutations) => {
-            if (document.contains(document.getElementById("canvas-container"))) {
+            if (document.contains(document.querySelector(".playing"))) {
                 gameStarted = true;
                 openObserver.disconnect();
                 ipcRenderer.send("gameInfo", {
