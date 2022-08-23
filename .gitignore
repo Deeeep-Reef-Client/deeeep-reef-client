@@ -3,5 +3,8 @@ logs
 npm-debug.log*
 build/Release
 node_modules/
-out/
+out/Deeeep.io Reef client-win32-x64
+out/make/squirrel.windows/x64/RELEASES
+out/make/squirrel.windows/x64/deeeep_reef_client-0.0.0-full.nupkg
 tsconfig.json
+!**/Deeeep.io-Reef-Client-0.0.0-Setup.exe
