@@ -9,6 +9,31 @@ window.addEventListener("load", () => {
     customTheme.type = "text/css";
     customTheme.href = "https://deeeep-reef-client.netlify.app/assets/customtheme.css";
     document.head.appendChild(customTheme);
+    // Custom Settings
+    // Watch for settings pane opened
+    const observer = new MutationObserver((mutations) => {
+        if (document.contains(document.querySelector(".vfm__content, .modal-content"))) {
+            observer.disconnect();
+            const graphicsPane = document.querySelector("#pane-0 > .el-form");
+            const customThemeSetting = graphicsPane.childNodes[2].cloneNode(true);
+            const customThemeName = customThemeSetting.querySelector(".el-form-item__label");
+            const customThemeDesc = customThemeSetting.querySelector(".notes");
+            const customThemeCheckbox = customThemeSetting.querySelector(".el-checkbox__input > input");
+            customThemeName.setAttribute("id", "customThemeName");
+            customThemeName.innerText = "Theme";
+            customThemeDesc.innerText = "Custom reef theme";
+            customThemeCheckbox.addEventListener("click", () => {
+                customThemeSetting.querySelector(".el-checkbox__input").classList.remove("is-checked");
+            });
+            graphicsPane.appendChild(customThemeSetting);
+        }
+    });
+    observer.observe(document.querySelector(".modals-container"), {
+        attributes: false,
+        childList: true,
+        characterData: false,
+        subtree: true
+    });
     // Watch for match start
     const btn = document.querySelector(".play");
     btn.addEventListener("click", () => {
