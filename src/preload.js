@@ -1,14 +1,20 @@
 "use strict";
 const { ipcRenderer } = require('electron');
+// Import settings
+ipcRenderer.on("settings", (settings) => {
+    settings = settings;
+});
 // Prevent starting RPC when game already started
 let gameStarted = false;
 window.addEventListener("load", () => {
     // Custom stylesheet
-    const customTheme = document.createElement("link");
-    customTheme.rel = "stylesheet";
-    customTheme.type = "text/css";
-    customTheme.href = "https://deeeep-reef-client.netlify.app/assets/customtheme.css";
-    document.head.appendChild(customTheme);
+    if (settings.customTheme) {
+        const customTheme = document.createElement("link");
+        customTheme.rel = "stylesheet";
+        customTheme.type = "text/css";
+        customTheme.href = "https://deeeep-reef-client.netlify.app/assets/customtheme.css";
+        document.head.appendChild(customTheme);
+    }
     // Custom Settings
     // Watch for settings pane opened
     const observer = new MutationObserver((mutations) => {
@@ -22,8 +28,21 @@ window.addEventListener("load", () => {
             customThemeName.setAttribute("id", "customThemeName");
             customThemeName.innerText = "Theme";
             customThemeDesc.innerText = "Custom reef theme";
-            customThemeCheckbox.addEventListener("click", () => {
+            if (settings.customTheme) {
+                customThemeSetting.querySelector(".el-checkbox__input").classList.add("is-checked");
+            }
+            else {
                 customThemeSetting.querySelector(".el-checkbox__input").classList.remove("is-checked");
+            }
+            customThemeCheckbox.addEventListener("click", () => {
+                if (settings.customTheme) {
+                    settings.customTheme = false;
+                    customThemeSetting.querySelector(".el-checkbox__input").classList.remove("is-checked");
+                }
+                else {
+                    settings.customTheme = true;
+                    customThemeSetting.querySelector(".el-checkbox__input").classList.add("is-checked");
+                }
             });
             graphicsPane.appendChild(customThemeSetting);
         }

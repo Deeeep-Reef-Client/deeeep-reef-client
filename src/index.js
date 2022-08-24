@@ -2,6 +2,7 @@
 const { app, BrowserWindow, Menu, ipcMain, shell } = require('electron');
 const path = require('path');
 const RPC = require('discord-rpc');
+const { ElectronStore } = require('electron-store');
 // Create window
 if (require('electron-squirrel-startup')) {
     app.quit();
@@ -114,3 +115,19 @@ rpc.on('ready', () => setDiscordActivity({
     gamemode: "Menu",
     url: ''
 }));
+// Settings object
+let settings = {
+    customTheme: true
+};
+// Store!
+const schema = {
+    settings: {
+        customTheme: {
+            type: "boolean",
+            default: "true"
+        }
+    }
+};
+// const store = new ElectronStore({schema});
+// settings = store.get("settings");
+ipcMain.send("settings", settings);
