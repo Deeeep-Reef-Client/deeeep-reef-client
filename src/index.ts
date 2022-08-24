@@ -27,6 +27,17 @@ const createWindow = () => {
     window.removeMenu();
     const menu = Menu.buildFromTemplate([
         {
+            label: "DEBUG",
+            submenu: [
+                {
+                    role: "DevTools",
+                    click() {
+                        window.webContents.openDevTools();
+                    }
+                }
+            ]
+        },
+        {
             label: "Settings"
         },
         {
