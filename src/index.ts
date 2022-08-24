@@ -1,6 +1,7 @@
 const { app, BrowserWindow, Menu, ipcMain, shell } = require('electron');
 const path = require('path');
 const RPC = require('discord-rpc');
+const { Store } = require('electron-store');
 
 // Create window
 if (require('electron-squirrel-startup')) {
@@ -125,3 +126,5 @@ rpc.on('ready', () => setDiscordActivity({
     gamemode: "Menu",
     url: ''
 }));
+
+const store = new Store();
