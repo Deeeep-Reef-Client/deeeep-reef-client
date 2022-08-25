@@ -1,5 +1,18 @@
 const { ipcRenderer } = require('electron');
 
+// Settings
+let settings: SettingsTemplate = {
+    customTheme: true
+};
+ipcRenderer.on("settings", (_event: Event, s: SettingsTemplate) => {
+    settings = s;
+})
+
+function saveSettings() {
+    // console.log(settings);
+    ipcRenderer.send("saveSettings", settings);
+}
+
 // Prevent starting RPC when game already started
 let gameStarted = false;
 
@@ -39,7 +52,8 @@ window.addEventListener("load", () => {
                 } else {
                     settings.customTheme = true;
                     customThemeSetting.querySelector(".el-checkbox__input")!.classList.add("is-checked");
-                }
+                };
+                saveSettings();
             });
             graphicsPane!.appendChild(customThemeSetting);
         }

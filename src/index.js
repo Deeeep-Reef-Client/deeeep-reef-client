@@ -2,7 +2,23 @@
 const { app, BrowserWindow, Menu, ipcMain, shell } = require('electron');
 const path = require('path');
 const RPC = require('discord-rpc');
-const { ElectronStore } = require('electron-store');
+const Store = require('electron-store');
+// Store!
+const schema = {
+    settings: {
+        type: "object",
+        properties: {
+            customTheme: {
+                type: "boolean",
+                default: "true"
+            }
+        }
+    }
+};
+const store = new Store({ schema });
+ipcMain.on("saveSettings", (settings) => {
+    store.set("settings", settings);
+});
 // Create window
 if (require('electron-squirrel-startup')) {
     app.quit();
@@ -71,11 +87,16 @@ const createWindow = () => {
         }
     ]);
     Menu.setApplicationMenu(menu);
+    // Loads settings
+    window.webContents.send("settings", {
+        customTheme: true
+    }
+    /* Commenting this for the time being store.get("settings")*/ );
 };
 app.on('ready', () => {
     createWindow();
     // Await gameInfo IPC message to change RPC
-    ipcMain.on("gameInfo", (event, gameInfo) => {
+    ipcMain.on("gameInfo", (_event, gameInfo) => {
         setDiscordActivity(gameInfo);
     });
 });
@@ -115,19 +136,3 @@ rpc.on('ready', () => setDiscordActivity({
     gamemode: "Menu",
     url: ''
 }));
-// Settings object
-let settings = {
-    customTheme: true
-};
-// Store!
-const schema = {
-    settings: {
-        customTheme: {
-            type: "boolean",
-            default: "true"
-        }
-    }
-};
-// const store = new ElectronStore({schema});
-// settings = store.get("settings");
-ipcMain.send("settings", settings);
