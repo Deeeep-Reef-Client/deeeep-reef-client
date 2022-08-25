@@ -38,17 +38,16 @@ const createWindow = () => {
     const window = new BrowserWindow({
         width: 800,
         height: 600,
+        show: false,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
         },
     });
-    window.hide();
     // Loads blocky fish game :)
     window.loadURL("https://deeeep.io");
 
     window.webContents.openDevTools();
     window.maximize();
-
     // Deletes menu and makes new menu
     window.removeMenu();
     const menu = Menu.buildFromTemplate([
@@ -102,7 +101,7 @@ const createWindow = () => {
     Menu.setApplicationMenu(menu);
 
     // Loads doc assets
-    if (/* for dev purposes only docassets*/ true) {
+    if (/* for dev purposes only docassets*/ /*true*/store.get("settings").docassets || store.get("settings").docassets == undefined) {
         const extensions = new ElectronChromeExtensions()
         extensions.addTab(window.webContents, window)
         window.webContents.session.loadExtension(app.getAppPath() + "/extensions/docassets").then(() => {
@@ -116,10 +115,10 @@ const createWindow = () => {
 
 
     // Loads settings
-    window.webContents.send("settings", {
+    window.webContents.send("settings", /*{
         customTheme: true
-    }
-    /* Commenting this for the time being store.get("settings")*/);
+    }*/
+    /* Commenting this for the time being */store.get("settings"));
 };
 
 app.on('ready', () => {

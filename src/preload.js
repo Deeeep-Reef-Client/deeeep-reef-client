@@ -1,6 +1,5 @@
 "use strict";
 const { ipcRenderer } = require('electron');
-// Settings
 let settings = {
     customTheme: true
 };
@@ -8,8 +7,9 @@ ipcRenderer.on("settings", (_event, s) => {
     settings = s;
 });
 function saveSettings() {
-    console.log(settings);
-    // ipcRenderer.send("saveSettings", settings);
+    // console.log(settings);
+    console.log("Settings saved!");
+    ipcRenderer.send("saveSettings", settings);
 }
 // Prevent starting RPC when game already started
 let gameStarted = false;
