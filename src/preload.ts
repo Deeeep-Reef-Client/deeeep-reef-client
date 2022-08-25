@@ -1,6 +1,9 @@
 const { ipcRenderer } = require('electron');
 
 // Settings
+interface SettingsTemplate {
+    customTheme: boolean;
+}
 let settings: SettingsTemplate = {
     customTheme: true
 };
