@@ -15,13 +15,11 @@ function saveSettings() {
 let gameStarted = false;
 window.addEventListener("load", () => {
     // Custom stylesheet
-    if (settings.customTheme) {
-        const customTheme = document.createElement("link");
-        customTheme.rel = "stylesheet";
-        customTheme.type = "text/css";
-        customTheme.href = "https://deeeep-reef-client.netlify.app/assets/customtheme.css";
-        document.head.appendChild(customTheme);
-    }
+    const customTheme = document.createElement("link");
+    customTheme.rel = "stylesheet";
+    customTheme.type = "text/css";
+    customTheme.href = settings.customTheme ? "https://deeeep-reef-client.netlify.app/assets/customtheme.css" : '';
+    document.head.appendChild(customTheme);
     // Custom Settings
     // Watch for settings pane opened
     const observer = new MutationObserver((mutations) => {
@@ -42,13 +40,16 @@ window.addEventListener("load", () => {
                 customThemeSetting.querySelector(".el-checkbox__input").classList.remove("is-checked");
             }
             customThemeCheckbox.addEventListener("click", () => {
+                var _a, _b;
                 if (settings.customTheme) {
                     settings.customTheme = false;
                     customThemeSetting.querySelector(".el-checkbox__input").classList.remove("is-checked");
+                    (_a = document.head.querySelector("link[href='https://deeeep-reef-client.netlify.app/assets/customtheme.css']")) === null || _a === void 0 ? void 0 : _a.setAttribute("href", '');
                 }
                 else {
                     settings.customTheme = true;
                     customThemeSetting.querySelector(".el-checkbox__input").classList.add("is-checked");
+                    (_b = document.head.querySelector("link[href='https://deeeep-reef-client.netlify.app/assets/customtheme.css']")) === null || _b === void 0 ? void 0 : _b.setAttribute("href", 'https://deeeep-reef-client.netlify.app/assets/customtheme.css');
                 }
                 ;
                 saveSettings();

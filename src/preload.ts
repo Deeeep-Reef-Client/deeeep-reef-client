@@ -23,13 +23,12 @@ let gameStarted = false;
 window.addEventListener("load", () => {
 
     // Custom stylesheet
-    if (settings.customTheme) {
-        const customTheme = document.createElement("link")
-        customTheme.rel = "stylesheet";
-        customTheme.type = "text/css";
-        customTheme.href = "https://deeeep-reef-client.netlify.app/assets/customtheme.css";
-        document.head.appendChild(customTheme);
-    }
+    const customTheme = document.createElement("link");
+    customTheme.rel = "stylesheet";
+    customTheme.type = "text/css";
+    customTheme.href = settings.customTheme ? "https://deeeep-reef-client.netlify.app/assets/customtheme.css" : '';
+    document.head.appendChild(customTheme);
+    
 
     // Custom Settings
     // Watch for settings pane opened
@@ -53,9 +52,11 @@ window.addEventListener("load", () => {
                 if (settings.customTheme) {
                     settings.customTheme = false;
                     customThemeSetting.querySelector(".el-checkbox__input")!.classList.remove("is-checked");
+                    document.head.querySelector("link[href='https://deeeep-reef-client.netlify.app/assets/customtheme.css']")?.setAttribute("href", '');
                 } else {
                     settings.customTheme = true;
                     customThemeSetting.querySelector(".el-checkbox__input")!.classList.add("is-checked");
+                    document.head.querySelector("link[href='https://deeeep-reef-client.netlify.app/assets/customtheme.css']")?.setAttribute("href", 'https://deeeep-reef-client.netlify.app/assets/customtheme.css');
                 };
                 saveSettings();
             });
