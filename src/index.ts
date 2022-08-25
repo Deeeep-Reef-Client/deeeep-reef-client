@@ -1,3 +1,5 @@
+import { Widget } from "discord.js";
+
 const { app, BrowserWindow, Menu, ipcMain, shell, session } = require('electron');
 const path = require('path');
 const RPC = require('discord-rpc');
@@ -40,7 +42,7 @@ const createWindow = () => {
             preload: path.join(__dirname, 'preload.js'),
         },
     });
-
+    window.hide();
     // Loads blocky fish game :)
     window.loadURL("https://deeeep.io");
 
@@ -103,7 +105,13 @@ const createWindow = () => {
     if (/* for dev purposes only docassets*/ true) {
         const extensions = new ElectronChromeExtensions()
         extensions.addTab(window.webContents, window)
-        window.webContents.session.loadExtension(app.getAppPath() + "/extensions/docassets").then(() => window.loadURL("https://deeeep.io"));
+        window.webContents.session.loadExtension(app.getAppPath() + "/extensions/docassets").then(() => {
+            window.loadURL("https://deeeep.io");
+            window.show();
+        });
+    } else {
+        window.loadURL("https://deeeep.io");
+        window.show();
     }
 
 
