@@ -1,8 +1,9 @@
 "use strict";
-const { app, BrowserWindow, Menu, ipcMain, shell } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain, shell, session } = require('electron');
 const path = require('path');
 const RPC = require('discord-rpc');
 const Store = require('electron-store');
+const { ElectronChromeExtensions } = require('electron-chrome-extensions');
 // Store!
 const schema = {
     settings: {
@@ -87,6 +88,12 @@ const createWindow = () => {
         }
     ]);
     Menu.setApplicationMenu(menu);
+    // Loads doc assets
+    if ( /* for dev purposes only docassets*/true) {
+        const extensions = new ElectronChromeExtensions();
+        extensions.addTab(window.webContents, window);
+        window.webContents.session.loadExtension(app.getAppPath() + "/extensions/docassets").then(() => window.loadURL("https://deeeep.io"));
+    }
     // Loads settings
     window.webContents.send("settings", {
         customTheme: true

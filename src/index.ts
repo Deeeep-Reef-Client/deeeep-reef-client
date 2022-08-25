@@ -1,7 +1,8 @@
-const { app, BrowserWindow, Menu, ipcMain, shell } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain, shell, session } = require('electron');
 const path = require('path');
 const RPC = require('discord-rpc');
 const Store = require('electron-store');
+const { ElectronChromeExtensions } = require('electron-chrome-extensions');
 
 // Store!
 const schema = {
@@ -15,7 +16,7 @@ const schema = {
         }
     }
 };
-const store = new Store({schema});
+const store = new Store({ schema });
 
 // Save settings
 interface SettingsTemplate {
@@ -98,21 +99,29 @@ const createWindow = () => {
     ]);
     Menu.setApplicationMenu(menu);
 
+    // Loads doc assets
+    if (/* for dev purposes only docassets*/ true) {
+        const extensions = new ElectronChromeExtensions()
+        extensions.addTab(window.webContents, window)
+        window.webContents.session.loadExtension(app.getAppPath() + "/extensions/docassets").then(() => window.loadURL("https://deeeep.io"));
+    }
+
+
     // Loads settings
-    window.webContents.send("settings", /*{
+    window.webContents.send("settings", {
         customTheme: true
-    }*/
-    /* Commenting this for the time being */store.get("settings"));
+    }
+    /* Commenting this for the time being store.get("settings")*/);
 };
 
 app.on('ready', () => {
-        createWindow();
-        
-        // Await gameInfo IPC message to change RPC
-        ipcMain.on("gameInfo", (_event: Event, gameInfo: { gamemode: string, url: string}) => {
-            setDiscordActivity(gameInfo);
-        })
-    }
+    createWindow();
+
+    // Await gameInfo IPC message to change RPC
+    ipcMain.on("gameInfo", (_event: Event, gameInfo: { gamemode: string, url: string }) => {
+        setDiscordActivity(gameInfo);
+    })
+}
 );
 
 app.on('window-all-closed', () => {
@@ -131,7 +140,7 @@ app.on('activate', () => {
 const startTimestamp = new Date();
 
 // Set activity
-function setDiscordActivity(gameInfo: { gamemode: string, url: string}) {
+function setDiscordActivity(gameInfo: { gamemode: string, url: string }) {
     type joinbtn = [{ label: string, url: string }] | undefined;
     let buttons: joinbtn = [{ label: "Join Game", url: gameInfo.url }];
     if (gameInfo.url == '') buttons = undefined;
