@@ -22,7 +22,12 @@
   "license": "GPL-3.0",
   "config": {
     "forge": {
-      "packagerConfig": {},
+      "packagerConfig": {
+        "ignore": [
+          ".ts$"
+        ],
+        "icon": "src/favicon.ico"
+      },
       "makers": [
         {
           "name": "@electron-forge/maker-squirrel",
