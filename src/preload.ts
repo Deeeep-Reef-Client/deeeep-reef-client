@@ -58,11 +58,11 @@ window.addEventListener("load", () => {
                 if (settings.customTheme) {
                     settings.customTheme = false;
                     customThemeSetting.querySelector(".el-checkbox__input")!.classList.remove("is-checked");
-                    document.head.querySelector("link[href='https://deeeep-reef-client.netlify.app/assets/customtheme.css']")?.setAttribute("href", '');
+                    document.getElementById("customThemeStyle")!.setAttribute("href", '');
                 } else {
                     settings.customTheme = true;
                     customThemeSetting.querySelector(".el-checkbox__input")!.classList.add("is-checked");
-                    document.head.querySelector("link[href='https://deeeep-reef-client.netlify.app/assets/customtheme.css']")?.setAttribute("href", "https://deeeep-reef-client.netlify.app/assets/customtheme.css");
+                    document.getElementById("customThemeStyle")!.setAttribute("href", "https://deeeep-reef-client.netlify.app/assets/customtheme.css");
                 };
                 saveSettings();
             });
