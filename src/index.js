@@ -18,7 +18,7 @@ const schema = {
     }
 };
 const store = new Store({ schema });
-ipcMain.on("saveSettings", (settings) => {
+ipcMain.on("saveSettings", (_event, settings) => {
     store.set("settings", settings);
 });
 // Create window

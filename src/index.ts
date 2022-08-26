@@ -24,7 +24,7 @@ const store = new Store({ schema });
 interface SettingsTemplate {
     customTheme: boolean;
 }
-ipcMain.on("saveSettings", (settings: SettingsTemplate) => {
+ipcMain.on("saveSettings", (_event: Event, settings: SettingsTemplate) => {
     store.set("settings", settings);
 });
 
