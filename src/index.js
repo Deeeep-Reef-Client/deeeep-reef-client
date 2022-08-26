@@ -5,19 +5,8 @@ const path = require('path');
 const RPC = require('discord-rpc');
 const Store = require('electron-store');
 const { ElectronChromeExtensions } = require('electron-chrome-extensions');
-// Store!
-const schema = {
-    settings: {
-        type: "object",
-        properties: {
-            customTheme: {
-                type: "boolean",
-                default: "true"
-            }
-        }
-    }
-};
-const store = new Store({ schema });
+
+const store = new Store();
 ipcMain.on("saveSettings", (_event, settings) => {
     store.set("settings", settings);
 });
@@ -46,9 +35,9 @@ const createWindow = () => {
             label: "DEBUG",
             submenu: [
                 {
-                    role: "DevTools",
+                    label: "DevTools",
                     click() {
-                        window.webContents.openDevTools();
+                        window.webContents.toggleDevTools();
                     }
                 }
             ]
@@ -91,7 +80,12 @@ const createWindow = () => {
     ]);
     Menu.setApplicationMenu(menu);
     // Loads doc assets
-    if ( /* for dev purposes only docassets*/ /*true*/store.get("settings").docassets || store.get("settings").docassets == undefined) {
+    var docassetsOn = store.get("settings.docassets")
+    if (docassetsOn == undefined) {
+        store.set("settings.docassets", true)
+        docassetsOn = true
+    }
+    if (docassetsOn) {
         const extensions = new ElectronChromeExtensions();
         extensions.addTab(window.webContents, window);
         window.webContents.session.loadExtension(app.getAppPath() + "/extensions/docassets").then(() => {
