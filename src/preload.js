@@ -8,7 +8,6 @@ ipcRenderer.on("settings", (_event, s) => {
     settings = s;
 });
 function saveSettings() {
-    // console.log(settings);
     console.log("Settings saved!");
     ipcRenderer.send("saveSettings", settings);
 }

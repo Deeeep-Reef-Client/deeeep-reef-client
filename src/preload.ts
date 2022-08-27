@@ -14,7 +14,6 @@ ipcRenderer.on("settings", (_event: Event, s: SettingsTemplate) => {
 })
 
 function saveSettings() {
-    // console.log(settings);
     console.log("Settings saved!");
     ipcRenderer.send("saveSettings", settings);
 }

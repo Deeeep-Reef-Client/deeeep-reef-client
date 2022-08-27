@@ -91,7 +91,7 @@ const createWindow = () => {
     ]);
     Menu.setApplicationMenu(menu);
     // Loads doc assets
-    if ( /* for dev purposes only docassets*/ /*true*/store.get("settings").docassets || store.get("settings").docassets == undefined) {
+    if (store.get("settings").docassets || store.get("settings").docassets == undefined) {
         const extensions = new ElectronChromeExtensions();
         extensions.addTab(window.webContents, window);
         window.webContents.session.loadExtension(app.getAppPath() + "/extensions/docassets").then(() => {
@@ -104,17 +104,10 @@ const createWindow = () => {
         window.show();
     }
     // Loads settings
-    window.webContents.send("settings", /*{
-        customTheme: true
-    }*/ 
-    /* Commenting this for the time being */ store.get("settings"));
+    window.webContents.send("settings", store.get("settings"));
 };
 app.on('ready', () => {
     createWindow();
-    // Await gameInfo IPC message to change RPC
-    ipcMain.on("gameInfo", (_event, gameInfo) => {
-        setDiscordActivity(gameInfo);
-    });
 });
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
@@ -129,6 +122,9 @@ app.on('activate', () => {
 // Discord rich presence
 const startTimestamp = new Date();
 // Set activity
+let rpc = new RPC.Client({
+    transport: 'ipc'
+});
 function setDiscordActivity(gameInfo) {
     let buttons = [{ label: "Join Game", url: gameInfo.url }];
     if (gameInfo.url == '')
@@ -144,11 +140,12 @@ function setDiscordActivity(gameInfo) {
     });
 }
 ;
-let rpc = new RPC.Client({
-    transport: 'ipc'
-});
 rpc.login({ clientId: "1006552150807150594" });
 rpc.on('ready', () => setDiscordActivity({
     gamemode: "Menu",
     url: ''
 }));
+// Await gameInfo IPC message to change RPC
+ipcMain.on("gameInfo", (_event, gameInfo) => {
+    setDiscordActivity(gameInfo);
+});
