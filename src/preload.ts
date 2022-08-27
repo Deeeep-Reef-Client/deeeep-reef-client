@@ -36,7 +36,6 @@ window.addEventListener("load", () => {
     // Watch for settings pane opened
     const observer = new MutationObserver((mutations: MutationRecord[]) => {
         if (document.contains(document.querySelector(".vfm__content, .modal-content"))) {
-            observer.disconnect();
 
             const graphicsPane = document.querySelector("#pane-0 > .el-form");
 
