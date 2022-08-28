@@ -21,7 +21,7 @@ function saveSettings() {
 // Prevent starting RPC when game already started
 let gameStarted = false;
 
-window.addEventListener("load", () => {
+window.addEventListener("DOMContentLoaded", () => {
 
     // Custom stylesheet
     const customTheme = document.createElement("link");
@@ -35,6 +35,7 @@ window.addEventListener("load", () => {
     // Custom Settings
     // Watch for settings pane opened
     const observer = new MutationObserver((mutations: MutationRecord[]) => {
+        if (document.contains(document.getElementById("customThemeName"))) return;
         if (document.contains(document.querySelector(".vfm__content, .modal-content"))) {
 
             const graphicsPane = document.querySelector("#pane-0 > .el-form");
