@@ -5,21 +5,35 @@ const path = require('path');
 const RPC = require('discord-rpc');
 const Store = require('electron-store');
 const { ElectronChromeExtensions } = require('electron-chrome-extensions');
-// Store!
 const schema = {
     settings: {
         type: "object",
         properties: {
             customTheme: {
                 type: "boolean",
-                default: "true"
+                default: true
+            },
+            docassets: {
+                type: "boolean",
+                default: false
             }
         }
     }
 };
 const store = new Store({ schema });
-ipcMain.on("saveSettings", (_event, settings) => {
+// Fetch settings
+let settings = store.get("settings");
+if (settings === undefined) {
+    settings = {
+        customTheme: true,
+        docassets: false
+    };
     store.set("settings", settings);
+}
+// Save settings
+ipcMain.on("saveSettings", (_event, newSettings) => {
+    settings = newSettings;
+    store.set("settings", newSettings);
 });
 // Create window
 if (require('electron-squirrel-startup')) {
@@ -91,7 +105,14 @@ const createWindow = () => {
     ]);
     Menu.setApplicationMenu(menu);
     // Loads doc assets
-    if (store.get("settings").docassets || store.get("settings").docassets == undefined) {
+    let docassetsOn = settings.docassets;
+    if (docassetsOn === undefined) {
+        settings.docassets = false;
+        store.set("settings", settings);
+        docassetsOn = false;
+    }
+    ;
+    if (docassetsOn) {
         const extensions = new ElectronChromeExtensions();
         extensions.addTab(window.webContents, window);
         window.webContents.session.loadExtension(app.getAppPath() + "/extensions/docassets").then(() => {
@@ -103,8 +124,9 @@ const createWindow = () => {
         window.loadURL("https://deeeep.io");
         window.show();
     }
+    ;
     // Loads settings
-    window.webContents.send("settings", store.get("settings"));
+    window.webContents.send("settings", settings);
 };
 app.on('ready', () => {
     createWindow();

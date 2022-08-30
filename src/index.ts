@@ -7,25 +7,43 @@ const Store = require('electron-store');
 const { ElectronChromeExtensions } = require('electron-chrome-extensions');
 
 // Store!
+
+interface SettingsTemplate {
+    customTheme: boolean;
+    docassets: boolean;
+}
+
 const schema = {
     settings: {
         type: "object",
         properties: {
             customTheme: {
                 type: "boolean",
-                default: "true"
+                default: true
+            },
+            docassets: {
+                type: "boolean",
+                default: false
             }
         }
     }
 };
 const store = new Store({ schema });
 
-// Save settings
-interface SettingsTemplate {
-    customTheme: boolean;
-}
-ipcMain.on("saveSettings", (_event: Event, settings: SettingsTemplate) => {
+// Fetch settings
+let settings: SettingsTemplate = store.get("settings");
+if (settings === undefined) {
+    settings = {
+        customTheme: true,
+        docassets: false
+    };
     store.set("settings", settings);
+}
+
+// Save settings
+ipcMain.on("saveSettings", (_event: Event, newSettings: SettingsTemplate) => {
+    settings = newSettings;
+    store.set("settings", newSettings);
 });
 
 // Create window
@@ -101,7 +119,13 @@ const createWindow = () => {
     Menu.setApplicationMenu(menu);
 
     // Loads doc assets
-    if (store.get("settings").docassets || store.get("settings").docassets == undefined) {
+    let docassetsOn = settings.docassets;
+    if (docassetsOn === undefined) {
+        settings.docassets = false;
+        store.set("settings", settings);
+        docassetsOn = false;
+    };
+    if (docassetsOn) {
         const extensions = new ElectronChromeExtensions()
         extensions.addTab(window.webContents, window)
         window.webContents.session.loadExtension(app.getAppPath() + "/extensions/docassets").then(() => {
@@ -111,11 +135,11 @@ const createWindow = () => {
     } else {
         window.loadURL("https://deeeep.io");
         window.show();
-    }
+    };
 
 
     // Loads settings
-    window.webContents.send("settings", store.get("settings"));
+    window.webContents.send("settings", settings);
 };
 
 app.on('ready', () => {
