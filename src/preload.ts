@@ -107,6 +107,7 @@ window.addEventListener("DOMContentLoaded", () => {
     });
 
     // Evolution tree
+    /*
     const sidePaneTop = document.querySelector("div.p-2.sidebar.right.space-y-2 > .container > div.el-row.justify-center") as HTMLDivElement;
     const treeButtonContainer = sidePaneTop!.querySelector("div")!.cloneNode(true) as HTMLDivElement;
     const treeButton = treeButtonContainer.firstElementChild as HTMLButtonElement;
@@ -121,6 +122,19 @@ window.addEventListener("DOMContentLoaded", () => {
     treeIcon.remove();
     sidePaneTop.appendChild(treeButtonContainer);
 
+    // Evolution tree modal
+    const treeStyle = document.createElement("style");
+    document.head.appendChild(treeStyle);
+    treeStyle.innerHTML = `.tree-content { border-radius: .75rem;--tw-shadow-color: 0,0,0;--tw-shadow: 0 25px 50px -12pxrgba(var(--tw-shadow-color), 0.25);-webkit-box-shadow: var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow);box-shadow: var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow);padding-top: .5rem;padding-bottom: .5rem;padding-left: .75rem;padding-right: .75rem;--tw-bg-opacity: 1;background-color: rgba(255,255,255,var(--tw-bg-opacity));--tw-border-opacity: 1;border-color: rgba(243,244,246,var(--tw-border-opacity));position: relative;display: flex;flex-direction: column;max-height: 90%;margin: 0 1rem;border: 1px solid;min-width: 20rem; }`;
+    const treeDiv = document.createElement("div");
+    document.getElementById("app")!.appendChild(treeDiv);
+    treeDiv.outerHTML = `<div id="treeModal" style="z-index:1000" class="w-screen h-screen"></div>`;
+    const treeModal = document.getElementById("treeModal") as HTMLDivElement;
+    const treeContentDiv = document.createElement("div");
+    treeModal.appendChild(treeContentDiv);
+    treeContentDiv.outerHTML = `<div id="treeContent" class="modal-content"><img src="https://deeeep-reef-client.netlify.app/assets/evolution_tree.png" alt="Deeeep.io v4 beta evolution tree"></img></div>`;
+    const treeContent = document.getElementById("treeContent") as HTMLDivElement;
+*/
     // Watch for match start
     const btn = document.querySelector(".play");
     btn!.addEventListener("click", () => {
