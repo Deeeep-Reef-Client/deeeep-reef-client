@@ -11,6 +11,7 @@ const { ElectronChromeExtensions } = require('electron-chrome-extensions');
 interface SettingsTemplate {
     customTheme: boolean;
     docassets: boolean;
+    v3ui: boolean;
 }
 
 const schema = {
@@ -24,6 +25,10 @@ const schema = {
             docassets: {
                 type: "boolean",
                 default: false
+            },
+            v3ui: {
+                type: "boolean",
+                default: false
             }
         }
     }
@@ -35,7 +40,8 @@ let settings: SettingsTemplate = store.get("settings");
 if (settings === undefined) {
     settings = {
         customTheme: true,
-        docassets: false
+        docassets: false,
+        v3ui: false
     };
     store.set("settings", settings);
 }
@@ -73,9 +79,15 @@ const createWindow = () => {
             label: "DEBUG",
             submenu: [
                 {
-                    role: "DevTools",
+                    label: "DevTools",
                     click() {
                         window.webContents.openDevTools();
+                    }
+                },
+                {
+                    label: "Reload",
+                    click() {
+                        window.reload();
                     }
                 }
             ]

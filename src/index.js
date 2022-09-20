@@ -16,6 +16,10 @@ const schema = {
             docassets: {
                 type: "boolean",
                 default: false
+            },
+            v3ui: {
+                type: "boolean",
+                default: false
             }
         }
     }
@@ -26,7 +30,8 @@ let settings = store.get("settings");
 if (settings === undefined) {
     settings = {
         customTheme: true,
-        docassets: false
+        docassets: false,
+        v3ui: false
     };
     store.set("settings", settings);
 }
@@ -60,9 +65,15 @@ const createWindow = () => {
             label: "DEBUG",
             submenu: [
                 {
-                    role: "DevTools",
+                    label: "DevTools",
                     click() {
                         window.webContents.openDevTools();
+                    }
+                },
+                {
+                    label: "Reload",
+                    click() {
+                        window.reload();
                     }
                 }
             ]

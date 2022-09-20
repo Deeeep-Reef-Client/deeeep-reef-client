@@ -2,7 +2,8 @@
 const { ipcRenderer } = require('electron');
 let settings = {
     customTheme: true,
-    docassets: false
+    docassets: false,
+    v3ui: false
 };
 ipcRenderer.on("settings", (_event, s) => {
     settings = s;
@@ -13,7 +14,7 @@ function saveSettings() {
 }
 // Prevent starting RPC when game already started
 let gameStarted = false;
-window.addEventListener("load", () => {
+window.addEventListener("DOMContentLoaded", () => {
     // Custom stylesheet
     const customTheme = document.createElement("link");
     customTheme.rel = "stylesheet";
@@ -21,6 +22,13 @@ window.addEventListener("load", () => {
     customTheme.setAttribute("id", "customThemeStyle");
     customTheme.href = settings.customTheme ? "https://deeeep-reef-client.netlify.app/assets/customtheme.css" : '';
     document.head.appendChild(customTheme);
+    // V3 UI
+    const v3uiStyle = document.createElement("link");
+    v3uiStyle.rel = "stylesheet";
+    v3uiStyle.type = "text/css";
+    v3uiStyle.setAttribute("id", "v3uiStyle");
+    v3uiStyle.href = settings.v3ui ? "https://deeeep-reef-client.netlify.app/assets/v3ui.css" : '';
+    document.head.appendChild(v3uiStyle);
     // Custom Settings
     // Watch for settings pane opened
     const observer = new MutationObserver((mutations) => {
@@ -90,6 +98,35 @@ window.addEventListener("load", () => {
                 saveSettings();
             });
             graphicsPane.appendChild(docassetsSetting);
+            // V3 UI
+            const v3uiSetting = graphicsPane.childNodes[2].cloneNode(true);
+            const v3uiName = v3uiSetting.querySelector(".el-form-item__label");
+            const v3uiDesc = v3uiSetting.querySelector(".notes");
+            const v3uiCheckbox = v3uiSetting.querySelector(".el-checkbox__input > input");
+            v3uiName.setAttribute("id", "v3uiName");
+            v3uiName.innerText = "V3 UI";
+            v3uiDesc.innerText = "Brings back the v3 boost and XP bar";
+            if (settings.v3ui) {
+                v3uiSetting.querySelector(".el-checkbox__input").classList.add("is-checked");
+            }
+            else {
+                v3uiSetting.querySelector(".el-checkbox__input").classList.remove("is-checked");
+            }
+            v3uiCheckbox.addEventListener("click", () => {
+                if (settings.v3ui) {
+                    settings.v3ui = false;
+                    v3uiSetting.querySelector(".el-checkbox__input").classList.remove("is-checked");
+                    document.getElementById("v3uiStyle").setAttribute("href", '');
+                }
+                else {
+                    settings.v3ui = true;
+                    v3uiSetting.querySelector(".el-checkbox__input").classList.add("is-checked");
+                    document.getElementById("v3uiStyle").setAttribute("href", "https://deeeep-reef-client.netlify.app/assets/v3ui.css");
+                }
+                ;
+                saveSettings();
+            });
+            graphicsPane.appendChild(v3uiSetting);
         }
     });
     observer.observe(document.querySelector(".modals-container"), {
@@ -100,36 +137,33 @@ window.addEventListener("load", () => {
     });
     // Evolution tree
     /*
-    const sidePaneTop = document.querySelector("div.p-2.sidebar.right.space-y-2 > .container > div.el-row.justify-center");
-    const treeButtonContainer = sidePaneTop.querySelector("div").cloneNode(true);
-    const treeButton = treeButtonContainer.firstElementChild;
-    const treeName = treeButton.querySelector("span > span.inner");
-    const treeIcon = treeButton.querySelector("span > svg");
-    treeButton.classList.remove("pink");
-    treeButton.classList.add("black");
-    treeName.innerText = "Tree";
+    const sidePaneTop = document.querySelector("div.p-2.sidebar.right.space-y-2 > .container > div.el-row.justify-center") as HTMLDivElement;
+    const treeButtonContainer = sidePaneTop!.querySelector("div")!.cloneNode(true) as HTMLDivElement;
+    const treeButton = treeButtonContainer.firstElementChild as HTMLButtonElement;
+    const treeName = treeButton!.querySelector("span > span.inner") as HTMLSpanElement;
+    const treeIcon = treeButton!.querySelector("span > svg") as HTMLElement;
+    treeButton!.classList.remove("pink");
+    treeButton!.classList.add("black");
+    treeName!.innerText = "Tree";
     treeIcon.outerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-diagram-3-fill" viewBox="0 0 16 16">
     <path fill-rule="evenodd" d="M6 3.5A1.5 1.5 0 0 1 7.5 2h1A1.5 1.5 0 0 1 10 3.5v1A1.5 1.5 0 0 1 8.5 6v1H14a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0V8h-5v.5a.5.5 0 0 1-1 0V8h-5v.5a.5.5 0 0 1-1 0v-1A.5.5 0 0 1 2 7h5.5V6A1.5 1.5 0 0 1 6 4.5v-1zm-6 8A1.5 1.5 0 0 1 1.5 10h1A1.5 1.5 0 0 1 4 11.5v1A1.5 1.5 0 0 1 2.5 14h-1A1.5 1.5 0 0 1 0 12.5v-1zm6 0A1.5 1.5 0 0 1 7.5 10h1a1.5 1.5 0 0 1 1.5 1.5v1A1.5 1.5 0 0 1 8.5 14h-1A1.5 1.5 0 0 1 6 12.5v-1zm6 0a1.5 1.5 0 0 1 1.5-1.5h1a1.5 1.5 0 0 1 1.5 1.5v1a1.5 1.5 0 0 1-1.5 1.5h-1a1.5 1.5 0 0 1-1.5-1.5v-1z"/>
   </svg>`;
     treeIcon.remove();
     sidePaneTop.appendChild(treeButtonContainer);
+
     // Evolution tree modal
     const treeStyle = document.createElement("style");
     document.head.appendChild(treeStyle);
-    treeStyle.innerHTML = `.tree-content { position:relative;border-radius: .75rem;--tw-shadow-color: 0,0,0;--tw-shadow: 0 25px 50px -12pxrgba(var(--tw-shadow-color), 0.25);-webkit-box-shadow: var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow);box-shadow: var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow);padding-top: .5rem;padding-bottom: .5rem;padding-left: .75rem;padding-right: .75rem;--tw-bg-opacity: 1;background-color: rgba(255,255,255,var(--tw-bg-opacity));--tw-border-opacity: 1;border-color: rgba(243,244,246,var(--tw-border-opacity));position: relative;display: flex;flex-direction: column;max-height: 90%;margin: 0 1rem;border: 1px solid;min-width: 20rem; }`;
+    treeStyle.innerHTML = `.tree-content { border-radius: .75rem;--tw-shadow-color: 0,0,0;--tw-shadow: 0 25px 50px -12pxrgba(var(--tw-shadow-color), 0.25);-webkit-box-shadow: var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow);box-shadow: var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow);padding-top: .5rem;padding-bottom: .5rem;padding-left: .75rem;padding-right: .75rem;--tw-bg-opacity: 1;background-color: rgba(255,255,255,var(--tw-bg-opacity));--tw-border-opacity: 1;border-color: rgba(243,244,246,var(--tw-border-opacity));position: relative;display: flex;flex-direction: column;max-height: 90%;margin: 0 1rem;border: 1px solid;min-width: 20rem; }`;
     const treeDiv = document.createElement("div");
-    document.getElementById("app").appendChild(treeDiv);
+    document.getElementById("app")!.appendChild(treeDiv);
     treeDiv.outerHTML = `<div id="treeModal" style="z-index:1000" class="w-screen h-screen"></div>`;
-    const treeModal = document.getElementById("treeModal");
+    const treeModal = document.getElementById("treeModal") as HTMLDivElement;
     const treeContentDiv = document.createElement("div");
     treeModal.appendChild(treeContentDiv);
     treeContentDiv.outerHTML = `<div id="treeContent" class="modal-content"><img src="https://deeeep-reef-client.netlify.app/assets/evolution_tree.png" alt="Deeeep.io v4 beta evolution tree"></img></div>`;
-    const treeContent = document.getElementById("treeContent");
-    console.log(treeModal);
-    console.log(treeDiv);
-    console.log(treeContentDiv);
-    console.log(treeContent)
-    */
+    const treeContent = document.getElementById("treeContent") as HTMLDivElement;
+*/
     // Watch for match start
     const btn = document.querySelector(".play");
     btn.addEventListener("click", () => {

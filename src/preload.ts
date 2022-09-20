@@ -4,10 +4,12 @@ const { ipcRenderer } = require('electron');
 interface SettingsTemplate {
     customTheme: boolean;
     docassets: boolean;
+    v3ui: boolean;
 }
 let settings: SettingsTemplate = {
     customTheme: true,
-    docassets: false
+    docassets: false,
+    v3ui: false
 };
 ipcRenderer.on("settings", (_event: Event, s: SettingsTemplate) => {
     settings = s;
@@ -30,7 +32,14 @@ window.addEventListener("DOMContentLoaded", () => {
     customTheme.setAttribute("id", "customThemeStyle");
     customTheme.href = settings.customTheme ? "https://deeeep-reef-client.netlify.app/assets/customtheme.css" : '';
     document.head.appendChild(customTheme);
-    
+
+    // V3 UI
+    const v3uiStyle = document.createElement("link");
+    v3uiStyle.rel = "stylesheet";
+    v3uiStyle.type = "text/css";
+    v3uiStyle.setAttribute("id", "v3uiStyle");
+    v3uiStyle.href = settings.v3ui ? "https://deeeep-reef-client.netlify.app/assets/v3ui.css" : '';
+    document.head.appendChild(v3uiStyle);
 
     // Custom Settings
     // Watch for settings pane opened
@@ -84,19 +93,46 @@ window.addEventListener("DOMContentLoaded", () => {
                 if (settings.docassets) {
                     settings.docassets = false;
                     docassetsSetting.querySelector(".el-checkbox__input")!.classList.remove("is-checked");
-                    new Notification("Settings updated!", { 
-                        body: "Please restart the client for your changes to take effect." 
+                    new Notification("Settings updated!", {
+                        body: "Please restart the client for your changes to take effect."
                     });
                 } else {
                     settings.docassets = true;
                     docassetsSetting.querySelector(".el-checkbox__input")!.classList.add("is-checked");
-                    new Notification("Settings updated!", { 
-                        body: "Please restart the client for your changes to take effect." 
+                    new Notification("Settings updated!", {
+                        body: "Please restart the client for your changes to take effect."
                     });
                 };
                 saveSettings();
             });
             graphicsPane!.appendChild(docassetsSetting);
+
+            // V3 UI
+            const v3uiSetting = graphicsPane!.childNodes[2].cloneNode(true) as HTMLDivElement;
+            const v3uiName = v3uiSetting.querySelector(".el-form-item__label") as HTMLDivElement;
+            const v3uiDesc = v3uiSetting.querySelector(".notes") as HTMLSpanElement;
+            const v3uiCheckbox = v3uiSetting.querySelector(".el-checkbox__input > input") as HTMLInputElement;
+            v3uiName!.setAttribute("id", "v3uiName");
+            v3uiName!.innerText = "V3 UI";
+            v3uiDesc!.innerText = "Brings back the v3 boost and XP bar";
+            if (settings.v3ui) {
+                v3uiSetting.querySelector(".el-checkbox__input")!.classList.add("is-checked");
+            } else {
+                v3uiSetting.querySelector(".el-checkbox__input")!.classList.remove("is-checked");
+            }
+            v3uiCheckbox.addEventListener("click", () => {
+                if (settings.v3ui) {
+                    settings.v3ui = false;
+                    v3uiSetting.querySelector(".el-checkbox__input")!.classList.remove("is-checked");
+                    document.getElementById("v3uiStyle")!.setAttribute("href", '');
+                } else {
+                    settings.v3ui = true;
+                    v3uiSetting.querySelector(".el-checkbox__input")!.classList.add("is-checked");
+                    document.getElementById("v3uiStyle")!.setAttribute("href", "https://deeeep-reef-client.netlify.app/assets/v3ui.css");
+                };
+                saveSettings();
+            });
+            graphicsPane!.appendChild(v3uiSetting);
         }
     });
     observer.observe(document.querySelector(".modals-container")!, {
@@ -176,6 +212,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     characterData: false,
                     subtree: true
                 });
+                
             }
         });
         openObserver.observe(element!, {
