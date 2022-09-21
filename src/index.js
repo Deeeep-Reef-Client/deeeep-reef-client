@@ -126,7 +126,7 @@ const createWindow = () => {
     if (docassetsOn) {
         const extensions = new ElectronChromeExtensions();
         extensions.addTab(window.webContents, window);
-        window.webContents.session.loadExtension(app.getAppPath() + "/extensions/docassets").then(() => {
+        window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/docassets").then(() => {
             window.loadURL("https://deeeep.io");
             window.show();
         });
