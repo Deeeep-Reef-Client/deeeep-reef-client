@@ -8,9 +8,9 @@
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
+    "build": "npx electron-builder build --win",
     "publish": "electron-forge publish",
-    "lint": "echo \"No linting configured\"",
-    "electron-packager-make": "npx electron-packager . \"Deeeep.io Reef Client\" --platform=win32"
+    "lint": "echo \"No linting configured\""
   },
   "keywords": [
     "deeeep",
@@ -51,6 +51,26 @@
           "config": {}
         }
       ]
+    }
+  },
+  "build": {
+    "productName": "Deeeep.io Reef Client",
+    "appId": "deeeepio.reefclient",
+    "files": [
+      "package.json",
+      "src/**.js",
+      "build/**",
+      "extensions/**"
+    ],
+    "directories": {
+      "buildResources": "build"
+    },
+    "nsis": {
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true
     }
   },
   "dependencies": {
