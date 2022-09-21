@@ -8,7 +8,7 @@
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
-    "build": "npx electron-builder build --win",
+    "build": "npx electron-builder build",
     "publish": "electron-forge publish",
     "lint": "echo \"No linting configured\""
   },
@@ -59,7 +59,9 @@
     "files": [
       "package.json",
       "src/**.js",
-      "build/**",
+      "build/**"
+    ],
+    "extraResources": [
       "extensions/**"
     ],
     "directories": {
