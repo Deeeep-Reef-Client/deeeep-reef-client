@@ -1,5 +1,3 @@
-// import { Widget } from "discord.js";
-
 const { app, BrowserWindow, Menu, ipcMain, shell, session } = require('electron');
 const path = require('path');
 const RPC = require('discord-rpc');
