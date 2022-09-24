@@ -136,6 +136,10 @@ const createWindow = () => {
         window.show();
     }
     ;
+    window.webContents.setWindowOpenHandler((details) => {
+        shell.openExternal(details.url);
+        return { action: 'deny' };
+    });
     // Loads settings
     window.webContents.send("settings", settings);
 };

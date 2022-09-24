@@ -148,7 +148,13 @@ const createWindow = () => {
         window.loadURL("https://deeeep.io");
         window.show();
     };
-
+    interface ElectronWindowOpenHandler {
+        url: string;
+    }
+    window.webContents.setWindowOpenHandler((details: ElectronWindowOpenHandler) => {
+        shell.openExternal(details.url);
+        return { action: 'deny' };
+    });
 
     // Loads settings
     window.webContents.send("settings", settings);
