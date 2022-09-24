@@ -158,37 +158,133 @@ window.addEventListener("DOMContentLoaded", () => {
 
     // Evolution tree modal
     const treeStyle = document.createElement("style");
-    treeStyle.innerHTML = `.tree-title{margin-bottom:.5rem;margin-right:1rem;text-align:center;display:flex;align-items:center;justify-content:space-between;font-size:1.3rem;line-height:1.2em;font-weight:300;z-index:1}.dark .tree-title{color:rgba(229,231,235,1)}.tree-content{flex-grow:1;overflow-y:auto;height:100%;display:flex;justify-content:center}.tree-close{position:absolute;top:.3rem;right:.5rem}`;
+    treeStyle.innerHTML = `.tree-title {
+        margin-bottom: .5rem;
+        margin-right: 1rem;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 1.3rem;
+        line-height: 1.2em;
+        font-weight: 300;
+        z-index: 1;
+    }
+    
+    .dark .tree-title {
+        color: rgba(229, 231, 235, 1);
+    }
+    
+    .tree-content {
+        flex-grow: 1;
+        overflow-y: auto;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        background-color: rgba(31, 41, 55, 0.3);
+    }
+    
+    .tree-close {
+        position: absolute;
+        top: .3rem;
+        right: .5rem;
+    }
+    
+    .tree-container {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .tree-modal-content {
+        background-color: rgba(31, 41, 55, 1);
+        border-radius: .75rem;
+        --tw-shadow-color: 0, 0, 0;
+        --tw-shadow: 0 25px 50px -12px rgba(var(--tw-shadow-color), 0.25);
+        box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+        padding-top: .5rem;
+        padding-bottom: .5rem;
+        padding-left: .75rem;
+        padding-right: .75rem;
+        --tw-bg-opacity: 1;
+        --tw-border-opacity: 1;
+        border-color: rgba(243, 244, 246, var(--tw-border-opacity));
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        max-height: 90%;
+        margin: 0 1rem;
+        border: 1px solid;
+        min-width: 20rem;
+    }
+    
+    .tree-hidden {
+        display: none;
+    }
+    
+    .tree-modal-container {
+        z-index: 10000;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 900px;
+        height: 600px;
+        min-width:  20rem;
+        min-height: auto;
+    }
+    
+    .tree-overlay {
+        background-color: rgba(0,0,0,.5);
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        position: absolute;
+        width: 100vw;
+        height: 100vh;
+    }`;
     document.head.appendChild(treeStyle);
     const treeDiv = document.createElement("div");
     document.getElementById("app")!.appendChild(treeDiv);
-    treeDiv.outerHTML = `<div id="treeModal" style="z-index:10000" class="vfm__content modal-content">
-    <span class="tree-title">
-        <div></div>
-        <div class="justify-self-center">Evolution Tree</div>
-        <div></div>
-    </span>
-    <div class="tree-content">
-        <img src="https://deeeep-reef-client.netlify.app/assets/evolution_tree.png"
-            alt="Deeeep.io v4 beta evolution tree">
+    treeDiv.outerHTML = `
+    <div id="treeModalContainer" class="tree-modal-container tree-hidden">
+    <div class="tree-overlay vfm--overlay"></div>
+    <div id="treeContainer" class="tree-container">
+        <div id="treeModal" class="modal-content tree-modal-content">
+            <span class="tree-title">
+                <div></div>
+                <div class="justify-self-center">Evolution Tree</div>
+                <div></div>
+            </span>
+            <div class="tree-content">
+                <img src="https://deeeep-reef-client.netlify.app/assets/evolution_tree.png"
+                    alt="Deeeep.io v4 beta evolution tree">
+            </div>
+            <button id="treeCloseButton" class="tree-close"><svg width="1.125em" height="1.125em" viewBox="0 0 24 24"
+                    class="svg-icon" color="gray" style="--sx:1; --sy:1; --r:0deg;">
+                    <path
+                        d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z">
+                    </path>
+                </svg></button>
+        </div>
     </div>
-    <button id="treeCloseButton" class="tree-close"><svg width="1.125em" height="1.125em" viewBox="0 0 24 24"
-            class="svg-icon" color="gray"
-            style="--sx:1; --sy:1; --r:0deg;">
-            <path
-                d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"
-            ></path>
-        </svg></button>
 </div>
 `;
-    const treeModal = document.getElementById("treeModal");
+    const treeModalContainer = document.getElementById("treeModalContainer");
     const treeCloseButton = document.getElementById("treeCloseButton");
     // Tree button onclick
     treeButton.addEventListener("click", () => {
-        treeModal!.classList.toggle("tree-hidden");
+        treeModalContainer!.classList.toggle("tree-hidden");
     });
     treeCloseButton!.addEventListener("click", () => {
-        treeModal!.classList.toggle("tree-hidden");
+        treeModalContainer!.classList.toggle("tree-hidden");
     });
 
     // Watch for match start
