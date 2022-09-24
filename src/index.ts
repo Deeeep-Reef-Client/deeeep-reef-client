@@ -128,7 +128,7 @@ const createWindow = () => {
             }
         }
     ]);
-    Menu.setApplicationMenu(menu);
+    // Menu.setApplicationMenu(menu);
 
     // Loads doc assets
     let docassetsOn = settings.docassets;
