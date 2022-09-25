@@ -150,7 +150,7 @@ window.addEventListener("DOMContentLoaded", () => {
     sidePaneTop.appendChild(treeButtonContainer);
     // Evolution tree modal
     const treeStyle = document.createElement("style");
-    treeStyle.innerHTML = `.tree-title {
+    treeStyle.innerHTML = `.drc-modal-title {
         margin-bottom: .5rem;
         margin-right: 1rem;
         text-align: center;
@@ -163,26 +163,25 @@ window.addEventListener("DOMContentLoaded", () => {
         z-index: 1;
     }
     
-    .dark .tree-title {
+    .dark .drc-modal-title {
         color: rgba(229, 231, 235, 1);
     }
     
-    .tree-content {
+    .drc-modal-content {
         flex-grow: 1;
         overflow-y: auto;
         height: 100%;
         display: flex;
         justify-content: center;
-        background-color: rgba(31, 41, 55, 0.3);
     }
     
-    .tree-close {
+    .drc-modal-close {
         position: absolute;
         top: .3rem;
         right: .5rem;
     }
     
-    .tree-container {
+    .drc-modal-container {
         position: fixed;
         top: 0;
         right: 0;
@@ -193,7 +192,7 @@ window.addEventListener("DOMContentLoaded", () => {
         align-items: center;
     }
     
-    .tree-modal-content {
+    .drc-modal-modal-content {
         background-color: rgba(31, 41, 55, 1);
         border-radius: .75rem;
         --tw-shadow-color: 0, 0, 0;
@@ -215,11 +214,11 @@ window.addEventListener("DOMContentLoaded", () => {
         min-width: 20rem;
     }
     
-    .tree-hidden {
+    .drc-modal-hidden {
         display: none;
     }
     
-    .tree-modal-container {
+    .drc-modal-modal-container {
         z-index: 10000;
         position: fixed;
         top: 0;
@@ -232,7 +231,7 @@ window.addEventListener("DOMContentLoaded", () => {
         min-height: auto;
     }
     
-    .tree-overlay {
+    .drc-modal-overlay {
         background-color: rgba(0,0,0,.5);
         top: 0;
         right: 0;
@@ -246,20 +245,20 @@ window.addEventListener("DOMContentLoaded", () => {
     const treeDiv = document.createElement("div");
     document.getElementById("app").appendChild(treeDiv);
     treeDiv.outerHTML = `
-    <div id="treeModalContainer" class="tree-modal-container tree-hidden">
-    <div class="tree-overlay vfm--overlay"></div>
-    <div id="treeContainer" class="tree-container">
-        <div id="treeModal" class="modal-content tree-modal-content">
-            <span class="tree-title">
+    <div id="treeModalContainer" class="drc-modal-modal-container drc-modal-hidden">
+    <div class="drc-modal-overlay vfm--overlay"></div>
+    <div id="treeContainer" class="drc-modal-container">
+        <div id="treeModal" class="modal-content drc-modal-modal-content">
+            <span class="drc-modal-title">
                 <div></div>
                 <div class="justify-self-center">Evolution Tree</div>
                 <div></div>
             </span>
-            <div class="tree-content">
+            <div class="drc-modal-content">
                 <img src="https://deeeep-reef-client.netlify.app/assets/evolution_tree.png"
                     alt="Deeeep.io v4 beta evolution tree">
             </div>
-            <button id="treeCloseButton" class="tree-close"><svg width="1.125em" height="1.125em" viewBox="0 0 24 24"
+            <button id="treeCloseButton" class="drc-modal-close"><svg width="1.125em" height="1.125em" viewBox="0 0 24 24"
                     class="svg-icon" color="gray" style="--sx:1; --sy:1; --r:0deg;">
                     <path
                         d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z">
@@ -273,10 +272,10 @@ window.addEventListener("DOMContentLoaded", () => {
     const treeCloseButton = document.getElementById("treeCloseButton");
     // Tree button onclick
     treeButton.addEventListener("click", () => {
-        treeModalContainer.classList.toggle("tree-hidden");
+        treeModalContainer.classList.toggle("drc-modal-hidden");
     });
     treeCloseButton.addEventListener("click", () => {
-        treeModalContainer.classList.toggle("tree-hidden");
+        treeModalContainer.classList.toggle("drc-modal-hidden");
     });
     // Watch for match start
     const btn = document.querySelector(".play");
