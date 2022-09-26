@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const { app, BrowserWindow, Menu, ipcMain, shell, session } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain, shell, session, globalShortcut } = require('electron');
 const path = require('path');
 const RPC = require('discord-rpc');
 const Store = require('electron-store');
@@ -54,8 +54,8 @@ const createWindow = () => {
             preload: path.join(__dirname, 'preload.js'),
         },
     });
-    // Loads blocky fish game :)
-    window.loadURL("https://deeeep.io");
+    // Loads blocky fish game :)... probably not
+    // window.loadURL("https://deeeep.io");
     window.webContents.openDevTools();
     window.maximize();
     // Deletes menu and makes new menu
@@ -114,7 +114,10 @@ const createWindow = () => {
             }
         }
     ]);
-    // Menu.setApplicationMenu(menu);
+    Menu.setApplicationMenu(menu);
+    // Extensions
+    const extensions = new ElectronChromeExtensions();
+    extensions.addTab(window.webContents, window);
     // Loads doc assets
     let docassetsOn = settings.docassets;
     if (docassetsOn === undefined) {
@@ -124,24 +127,28 @@ const createWindow = () => {
     }
     ;
     if (docassetsOn) {
-        const extensions = new ElectronChromeExtensions();
-        extensions.addTab(window.webContents, window);
         window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/docassets").then(() => {
-            window.loadURL("https://deeeep.io");
-            window.show();
+            // loads DRC modified js
+            window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/drc-assetswapper").then(() => {
+                window.loadURL("https://deeeep.io");
+            });
         });
     }
     else {
-        window.loadURL("https://deeeep.io");
-        window.show();
+        // loads DRC modified js
+        window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/drc-assetswapper").then(() => {
+            window.loadURL("https://deeeep.io");
+        });
     }
     ;
+    // Opens URLs in browser
     window.webContents.setWindowOpenHandler((details) => {
         shell.openExternal(details.url);
         return { action: 'deny' };
     });
     // Loads settings
     window.webContents.send("settings", settings);
+    // window.show();
 };
 app.on('ready', () => {
     createWindow();
