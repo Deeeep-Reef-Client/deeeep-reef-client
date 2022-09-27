@@ -20,6 +20,16 @@ const schema = {
             v3ui: {
                 type: "boolean",
                 default: false
+            },
+            assetSwapper: {
+                type: "boolean",
+                default: true
+            },
+            assetSwapperConfig: {
+                type: "array",
+                items: {
+                    type: "object"
+                }
             }
         }
     }
@@ -31,7 +41,9 @@ if (settings === undefined) {
     settings = {
         customTheme: true,
         docassets: false,
-        v3ui: false
+        v3ui: false,
+        assetSwapper: true,
+        assetSwapperConfig: []
     };
     store.set("settings", settings);
 }
@@ -146,6 +158,12 @@ const createWindow = () => {
         shell.openExternal(details.url);
         return { action: 'deny' };
     });
+    // init settings if undefined
+    if (settings.assetSwapperConfig === undefined) {
+        settings.assetSwapperConfig = [];
+        store.set("settings", settings);
+    }
+    ;
     // Loads settings
     window.webContents.send("settings", settings);
     // window.show();
