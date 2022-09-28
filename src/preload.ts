@@ -16,7 +16,7 @@ interface SettingsTemplate {
     docassets: boolean;
     v3ui: boolean;
     assetSwapper: boolean;
-    assetSwapperConfig: Array<object>;
+    assetSwapperConfig: Array<any>;
 }
 let settings: SettingsTemplate = {
     customTheme: true,
@@ -30,7 +30,6 @@ ipcRenderer.on("settings", (_event: Event, s: SettingsTemplate) => {
 })
 
 function saveSettings() {
-    console.log(settings);
     console.log("Settings saved!");
     ipcRenderer.send("saveSettings", settings);
 }
@@ -345,6 +344,20 @@ window.addEventListener("DOMContentLoaded", () => {
         border-radius: 9999px;
         padding: 6px 10px 6px 10px;
         margin-top: 10px;
+}
+.assetswapper-new-button {
+    background-color: rgba(59, 130, 246, 1);
+    border-color: rgba(37, 99, 235, 1);
+    color: rgba(255, 255, 255, 1);
+    border-radius: 9999px;
+    padding: 6px 10px 6px 10px;
+    display: flex;
+    align-items: center;
+}
+
+.assetswapper-list-rule {
+    display: flex;
+    align-items: center;
 }`;
     document.head.appendChild(assetSwapperStyle);
     const assetSwapperDiv = document.createElement("div");
@@ -360,11 +373,12 @@ window.addEventListener("DOMContentLoaded", () => {
                 <div></div>
             </span>
             <div class="drc-modal-content">
-                <button id="assetSwapperNewButton" class="assetswapper-new-button"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                <button id="assetSwapperNewButton" class="assetswapper-new-button assetswapper-add-button"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-plus" viewBox="0 0 16 16">
                         <path
                             d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
                     </svg>New</button>
+                <div id="assetSwapperRuleList"></div>
             </div>
             <button id="assetSwapperCloseButton" class="drc-modal-close"><svg width="1.125em" height="1.125em"
                     viewBox="0 0 24 24" class="svg-icon" color="gray" style="--sx:1; --sy:1; --r:0deg;">
@@ -431,6 +445,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const assetSwapperLetterDropdown = document.getElementById("assetSwapperLetterDropdown") as HTMLSelectElement;
     const assetSwapperTargetDropdown = document.getElementById("assetSwapperTargetDropdown") as HTMLSelectElement;
     const assetSwapperSkinDropdown = document.getElementById("assetSwapperSkinDropdown") as HTMLSelectElement;
+    const assetSwapperRuleList = document.getElementById("assetSwapperRuleList") as HTMLDivElement;
     let assetSwapperLetter = assetSwapperLetterDropdown!.value;
     let assetSwapperTarget: string = '';
 
@@ -443,7 +458,7 @@ window.addEventListener("DOMContentLoaded", () => {
     let animalList: Array<any> = [];
     function updateAssetSwapperTargetDropdown() {
         assetSwapperLetter = assetSwapperLetterDropdown!.value;
-        assetSwapperTargetDropdown.innerHTML = '';
+        assetSwapperTargetDropdown.innerHTML = "";
         for (let i in animalList) {
             if (!(animalList[i].name.charAt(0).toLowerCase() == assetSwapperLetter.charAt(0))) continue;
             const elem = document.createElement("option");
@@ -462,9 +477,9 @@ window.addEventListener("DOMContentLoaded", () => {
     };
     function updateAssetSwapperSkinDropdown() {
         assetSwapperTarget = assetSwapperTargetDropdown!.value;
-        assetSwapperSkinDropdown.innerHTML = '';
+        assetSwapperSkinDropdown.innerHTML = "";
         assetSwapperTargetSkins = [];
-        fetch (API_URL + "/skins?animalId=" + assetSwapperTarget)
+        fetch(API_URL + "/skins?animalId=" + assetSwapperTarget)
             .then(res => res.json())
             .then(data => assetSwapperTargetSkins = data)
             .then(() => {
@@ -476,6 +491,74 @@ window.addEventListener("DOMContentLoaded", () => {
                 }
             });
     };
+    async function updateAssetSwapperList() {
+        let assetSwapperRuleSkins: Array<any> = [];
+        let assetSwapperRuleAnimalName: string = "";
+        let assetSwapperRuleSkinName: string = "";
+        assetSwapperRuleList.innerHTML = "";
+        for (let i in settings.assetSwapperConfig) {
+            for (let j in animalList) {
+                if (animalList[j].id == settings.assetSwapperConfig[i].animal) {
+                    assetSwapperRuleAnimalName = animalList[j].name;
+                    break;
+                }
+            }
+            await fetch(API_URL + "/skins?animalId=" + settings.assetSwapperConfig[i].animal)
+                .then(res => res.json())
+                .then(data => assetSwapperRuleSkins = data)
+                .then(() => {
+                    for (let j in assetSwapperRuleSkins) {
+                        if (assetSwapperRuleSkins[j].id == settings.assetSwapperConfig[i].skin) {
+                            assetSwapperRuleSkinName = assetSwapperRuleSkins[j].name;
+                            break;
+                        }
+                    }
+                });
+                console.log(assetSwapperRuleSkins);
+            const mainElem = document.createElement("div");
+            mainElem.classList.add("assetswapper-list-rule")
+            // animal name
+            const animalElem = document.createElement("p");
+            animalElem.innerText = assetSwapperRuleAnimalName;
+            mainElem.appendChild(animalElem);
+
+            const spacer1 = document.createElement("div");
+            spacer1.classList.add("spacer");
+            mainElem.appendChild(spacer1);
+
+            // => icon
+            const iconElem = document.createElement("div");
+            mainElem.appendChild(iconElem);
+            iconElem.outerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+            class="bi bi-arrow-right" viewBox="0 0 16 16">
+            <path fill-rule="evenodd"
+                d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />
+        </svg>`;
+            const spacer2 = document.createElement("div");
+            spacer2.classList.add("spacer");
+            mainElem.appendChild(spacer2);
+
+            // Skin name
+            const skinElem = document.createElement("p");
+            skinElem.innerText = assetSwapperRuleSkinName;
+            mainElem.appendChild(skinElem);
+            const spacer3 = document.createElement("div");
+            spacer3.classList.add("spacer");
+            mainElem.appendChild(spacer3);
+
+            // Delete button
+            const deleteElem = document.createElement("button");
+            deleteElem.classList.add("assetswapper-new-button");
+            deleteElem.innerText = "Delete";
+            deleteElem.addEventListener("click", () => {
+                settings.assetSwapperConfig = settings.assetSwapperConfig.filter(item => item != settings.assetSwapperConfig[i]);
+                saveSettings();
+                updateAssetSwapperList();
+            });
+            mainElem.appendChild(deleteElem);
+            assetSwapperRuleList.appendChild(mainElem);
+        }
+    }
     fetch("https://api.crowdl.io/deeeep/cdn/en.json")
         .then(res => res.json())
         .then(data => translations = data).then(() => {
@@ -489,6 +572,7 @@ window.addEventListener("DOMContentLoaded", () => {
             // init dropdown
             updateAssetSwapperTargetDropdown();
             updateAssetSwapperSkinDropdown();
+            updateAssetSwapperList();
         });
 
     assetSwapperLetterDropdown.addEventListener("change", updateAssetSwapperTargetDropdown);
@@ -501,6 +585,8 @@ window.addEventListener("DOMContentLoaded", () => {
             skin: assetSwapperSkinDropdown.value
         });
         saveSettings();
+        updateAssetSwapperList();
+        assetSwapperNewModalContainer!.classList.toggle("drc-modal-hidden");
     });
 
     const assetSwapperNewButton = document.getElementById("assetSwapperNewButton");
