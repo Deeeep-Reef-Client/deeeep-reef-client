@@ -13,7 +13,7 @@ interface SettingsTemplate {
     docassets: boolean;
     v3ui: boolean;
     assetSwapper: boolean;
-    assetSwapperConfig: Array<object>
+    assetSwapperConfig: Array<any>
 }
 
 const schema = {
