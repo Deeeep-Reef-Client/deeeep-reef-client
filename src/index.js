@@ -126,7 +126,7 @@ const createWindow = () => {
             }
         }
     ]);
-    Menu.setApplicationMenu(menu);
+    // Menu.setApplicationMenu(menu);
     // Extensions
     const extensions = new ElectronChromeExtensions();
     extensions.addTab(window.webContents, window);
