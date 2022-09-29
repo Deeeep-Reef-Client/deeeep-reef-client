@@ -8,3 +8,4 @@ dist/
 tsconfig.json
 Deeeep.io Reef Client-win32-x64
 .vscode
+src/tmp*
