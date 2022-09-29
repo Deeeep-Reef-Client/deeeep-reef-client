@@ -512,7 +512,6 @@ window.addEventListener("DOMContentLoaded", () => {
                         }
                     }
                 });
-                console.log(assetSwapperRuleSkins);
                 const mainElem = document.createElement("div");
                 mainElem.classList.add("assetswapper-list-rule");
                 // animal name
@@ -614,10 +613,41 @@ window.addEventListener("DOMContentLoaded", () => {
                     gamemode: document.querySelector('.block, .modes').querySelector('.selected').querySelector('.name').innerText,
                     url: window.location.href
                 });
+                // watch for game start
+                const evolveObserver = new MutationObserver((mutations) => {
+                    for (let i in settings.assetSwapperConfig) {
+                        ipcRenderer.send("evalInBrowserContext", `
+                        if (${settings.assetSwapperConfig[i].animal} == game.currentScene.myAnimal.visibleFishLevel) {
+                            game.currentScene.myAnimal.setSkin(${settings.assetSwapperConfig[i].skin});
+                        };
+                        `);
+                    }
+                });
+                const startObserver = new MutationObserver((mutations) => {
+                    if (document.contains(document.querySelector("div.stats > div.animal-data > div.detailed-info > h4.name"))) {
+                        // Asset swapper (do stuff on evolve)
+                        const animalNameElement = document.querySelector("div.stats > div.animal-data > div.detailed-info > h4.name");
+                        evolveObserver.observe(animalNameElement, { childList: true });
+                        for (let i in settings.assetSwapperConfig) {
+                            ipcRenderer.send("evalInBrowserContext", `
+                            if (${settings.assetSwapperConfig[i].animal} == game.currentScene.myAnimal.visibleFishLevel) {
+                                game.currentScene.myAnimal.setSkin(${settings.assetSwapperConfig[i].skin});
+                            };
+                            `);
+                        }
+                    }
+                });
+                startObserver.observe(element, {
+                    attributes: false,
+                    childList: true,
+                    characterData: false,
+                    subtree: true
+                });
                 // Function to be caled when game ends
                 function onGameEnd() {
                     gameStarted = false;
                     closeObserver.disconnect();
+                    evolveObserver.disconnect();
                     ipcRenderer.send("gameInfo", {
                         gamemode: "Menu",
                         url: ''

@@ -185,6 +185,10 @@ const createWindow = () => {
     // Loads settings
     window.webContents.send("settings", settings);
 
+    ipcMain.on("evalInBrowserContext", (_event: Event, code: string) => {
+        window.webContents.executeJavaScript(code);
+    })
+
     // window.show();
 };
 
