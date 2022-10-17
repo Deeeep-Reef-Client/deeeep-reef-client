@@ -264,7 +264,7 @@ chrome.webRequest.onBeforeRequest.addListener(
     ["blocking"]
 );
 
-const MISC_REDIRECT_TEMPLATE = 'https://the-doctorpus.github.io/doc-assets/images/misc/'; // redirect URLs are all from this
+const MISC_REDIRECT_TEMPLATE = 'https://deeeep-reef-client.github.io/modded-assets/misc/'; // redirect URLs are all from this
 const MISC_SCHEME = '*://*.deeeep.io/assets/*'; // these urls will be redirected like ui sprites
 const MISC_REGEX = /.+\/assets\/(?<filename>[^/?]+)(?:\?.*)?$/ // might it be a valid ui sprite? 
 

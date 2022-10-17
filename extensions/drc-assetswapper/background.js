@@ -128,6 +128,7 @@ function genericHandler(redirectTemplate, regex, name, filenameKeys=['filename']
 
     return handler; 
 }
+/*
 
 const MISC_REDIRECT_TEMPLATE = 'https://deeeep-reef-client.github.io/modded-assets/misc/'; // redirect URLs are all from this
 const MISC_SCHEME = '*://*.deeeep.io/assets/index.*.js'; // these urls will be redirected like ui sprites
@@ -145,3 +146,4 @@ chrome.webRequest.onBeforeRequest.addListener(
     },
     ["blocking"]
 ); 
+*/
