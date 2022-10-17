@@ -5,19 +5,25 @@ A simple client for Deeeep.io
 
 # Features  
 
+- (WIP) Asset swapper  
 - Custom Theme  
 - Discord Rich Presence  
 - Built-in Docassets  
 - Better UI  
 - Evolution Tree  
-- (COMING SOON) V3 game UI  
+- V3 game UI  
                     
 # Installing  
 
 ## With the installer  
 
+1. Open our [website](https://deeeep-reef-client.netlify.app) and click the "Download" button in the middle of the page  
+2. Run the installer
+
+## With the releases page  
+
 1. Open the releases page  
-2. Download "Deeeep.io-Reef-Client-Setup.exe"  
+2. Download "Deeeep.io-Reef-Client-Setup.x.x.x.exe"  
 3. Run it through the prompts  
 
 ## With the CLI  
@@ -38,4 +44,4 @@ npm run start
 ```
 
 # License  
-DRC is licensed under the [GPL](https://www.gnu.org/licenses/gpl-3.0.en.html)  
+DRC is licensed under the [GNU GPL](https://www.gnu.org/licenses/gpl-3.0.en.html)  
