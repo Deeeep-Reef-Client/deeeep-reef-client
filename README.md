@@ -17,8 +17,13 @@ A simple client for Deeeep.io
 
 ## With the installer  
 
+1. Open our [website](https://deeeep-reef-client.netlify.app) and click the "Download" button in the middle of the page  
+2. Run the installer
+
+## With the releases page  
+
 1. Open the releases page  
-2. Download "Deeeep.io-Reef-Client-Setup.exe"  
+2. Download "Deeeep.io-Reef-Client-Setup.x.x.x.exe"  
 3. Run it through the prompts  
 
 ## With the CLI  
