@@ -5,12 +5,13 @@ A simple client for Deeeep.io
 
 # Features  
 
+- (WIP) Asset swapper  
 - Custom Theme  
 - Discord Rich Presence  
 - Built-in Docassets  
 - Better UI  
 - Evolution Tree  
-- (COMING SOON) V3 game UI  
+- V3 game UI  
                     
 # Installing  
 
@@ -38,4 +39,4 @@ npm run start
 ```
 
 # License  
-DRC is licensed under the [GPL](https://www.gnu.org/licenses/gpl-3.0.en.html)  
+DRC is licensed under the [GNU GPL](https://www.gnu.org/licenses/gpl-3.0.en.html)  
