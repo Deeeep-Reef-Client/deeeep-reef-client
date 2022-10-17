@@ -1,7 +1,7 @@
 {
   "name": "deeeep-reef-client",
   "productName": "Deeeep.io Reef Client",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "A new desktop client for Deeeep.io",
   "main": "src/index.js",
   "scripts": {
