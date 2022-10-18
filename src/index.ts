@@ -164,9 +164,11 @@ const createWindow = () => {
             });
         });
     } else {
-        // loads DRC modified js
-        window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/drc-assetswapper").then(() => {
-            window.loadURL("https://deeeep.io");
+        window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/drc-as-copy").then(() => {
+            // loads DRC modified js
+            window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/drc-assetswapper").then(() => {
+                window.loadURL("https://deeeep.io");
+            });
         });
     };
 
