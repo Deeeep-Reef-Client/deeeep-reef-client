@@ -5,7 +5,7 @@ A simple client for Deeeep.io
 
 # Features  
 
-- (WIP) Asset swapper  
+-  Asset swapper  
 - Custom Theme  
 - Discord Rich Presence  
 - Built-in Docassets  
