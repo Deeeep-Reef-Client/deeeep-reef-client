@@ -1,10 +1,21 @@
 import { Widget } from "discord.js";
 
-const { app, BrowserWindow, Menu, ipcMain, shell, session, globalShortcut } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain, shell, session, globalShortcut, Notification } = require('electron');
+const { autoUpdater } = require("electron-updater")
 const path = require('path');
 const RPC = require('discord-rpc');
 const Store = require('electron-store');
 const { ElectronChromeExtensions } = require('electron-chrome-extensions');
+
+autoUpdater.checkForUpdatesAndNotify()
+autoUpdater.on("update-downloaded", () => {
+    app.whenReady().then(() => {
+        new Notification({
+            title: "Client Updated!",
+            body: "An update was downloaded successfully."
+        }).show();
+    });
+});
 
 // Store!
 
