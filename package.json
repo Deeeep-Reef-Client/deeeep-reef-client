@@ -3,12 +3,17 @@
   "productName": "Deeeep.io Reef Client",
   "version": "0.3.2",
   "description": "A new desktop client for Deeeep.io",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Deeeep-Reef-Client/deeeep-reef-client.git"
+  },
   "main": "src/index.js",
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
-    "build": "npx electron-builder build",
+    "build": "npx electron-builder build --publish never",
+    "deploy": "npx electron-builder build --publish always",
     "publish": "electron-forge publish",
     "lint": "echo \"No linting configured\""
   },
