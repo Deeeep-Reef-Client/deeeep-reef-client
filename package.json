@@ -12,8 +12,8 @@
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
-    "build": "npx electron-builder build --publish never",
-    "deploy": "npx electron-builder build --publish always",
+    "build": "tsc && npx electron-builder build --publish never",
+    "deploy": "tsc && npx electron-builder build --publish always",
     "publish": "electron-forge publish",
     "lint": "echo \"No linting configured\""
   },
