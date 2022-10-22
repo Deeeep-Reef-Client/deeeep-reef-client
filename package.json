@@ -10,11 +10,8 @@
   "main": "src/index.js",
   "scripts": {
     "start": "electron-forge start",
-    "package": "electron-forge package",
-    "make": "electron-forge make",
     "build": "tsc && npx electron-builder build --publish never",
-    "deploy": "tsc && npx electron-builder build --publish always",
-    "publish": "electron-forge publish",
+    "start2": "\"./dist/win-unpacked/Deeeep.io Reef Client.exe\"",
     "lint": "echo \"No linting configured\""
   },
   "keywords": [
