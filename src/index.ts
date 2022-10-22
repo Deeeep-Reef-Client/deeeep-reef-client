@@ -80,9 +80,6 @@ ipcMain.on("saveSettings", (_event: Event, newSettings: SettingsTemplate) => {
 });
 
 // Create window
-if (require('electron-squirrel-startup')) {
-    app.quit();
-}
 
 const createWindow = () => {
     // Create the browser window.
