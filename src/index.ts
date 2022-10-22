@@ -1,21 +1,23 @@
 import { Widget } from "discord.js";
 
 const { app, BrowserWindow, Menu, ipcMain, shell, session, globalShortcut, Notification } = require('electron');
-const { autoUpdater } = require("electron-updater")
+const log = require('electron-log');
 const path = require('path');
 const RPC = require('discord-rpc');
 const Store = require('electron-store');
 const { ElectronChromeExtensions } = require('electron-chrome-extensions');
+const https = require('https');
+const electronDl = require('electron-dl');
+const exec = require('child_process').execFile;
+const fs = require('fs');
 
-autoUpdater.checkForUpdatesAndNotify()
-autoUpdater.on("update-downloaded", () => {
-    app.whenReady().then(() => {
-        new Notification({
-            title: "Client Updated!",
-            body: "An update was downloaded successfully."
-        }).show();
-    });
-});
+log.info('DRC starting...');
+
+// Auto update
+let newUpdate = false;
+let instUrl = "";
+const versionId = "v0.4.0-beta";
+let currentVersionId = "";
 
 // Store!
 
@@ -206,14 +208,105 @@ const createWindow = () => {
 };
 
 app.on('ready', () => {
+    // Check for updates
+    https.request({
+        host: "deeeep-reef-client.netlify.app",
+        path: "/api/versionid.txt"
+    }, (res: any) => {
+        res.on('data', (chunk: any) => {
+            currentVersionId += chunk;
+        });
+        res.on('end', () => {
+            log.info(`Current version: ${currentVersionId}`);
+            if (versionId != currentVersionId) {
+                newUpdate = true;
+                new Notification({
+                    title: "New update detected!",
+                    body: "The update will be automatically downloaded when you quit"
+                }).show();
+            }
+        });
+    }).end();
+    https.request({
+        host: "deeeep-reef-client.netlify.app",
+        path: "/api/insturl.txt"
+    }, (res: any) => {
+        res.on('data', (chunk: any) => {
+            instUrl += chunk;
+        });
+        res.on('end', () => {
+            log.info(`Installer URL: ${instUrl}`);
+        });
+    }).end();
+    // Create window
     createWindow();
-}
-);
+});
 
-app.on('window-all-closed', () => {
+interface ElectronDlFile {
+    filename: string;
+    path: string;
+    filesize: number;
+    mimetype: string;
+    url: string;
+};
+
+function quitApp() {
+    log.info("App has been quit");
     if (process.platform !== 'darwin') {
         app.quit();
     }
+}
+
+app.on('window-all-closed', () => {
+    log.info("Window all closed");
+    // Auto update
+    if (newUpdate) {
+        log.info("Downloading update installer");
+        new Notification({
+            title: "Downloading update",
+            body: `The new update ${currentVersionId} is being downloaded`
+        }).show();
+        electronDl.download(new BrowserWindow({
+            width: 0,
+            height: 0,
+            show: false,
+        }), instUrl, {
+            directory: app.getPath("downloads"),
+            filename: "drcupdater.exe",
+            onCompleted: function (file: ElectronDlFile) {
+                if (this.errorTitle) {
+                    new Notification({
+                        title: "Error downloading update",
+                        body: "Something went wrong while downloading the update"
+                    }).show();
+                    log.info("Error while downloading update");
+                    console.error(this.errorMessage);
+                    quitApp();
+                }
+                exec(file.path, (err: Error, data: any) => {
+                    if (err) {
+                        log.info("An error occurred while downloading the installer");
+                        console.error(err);
+                        quitApp();
+                        return;
+                    }
+                    console.log(data.toString());
+                    if (fs.existsSync(app.getPath('downloads') + "\\drcupdater.exe")) {
+                        fs.unlink(app.getPath('downloads') + "\\drcupdater.exe", (err: Error) => {
+                            if (err) {
+                                log.info("An error occurred while deleting the installer. Please manually delete `drcupdater.exe` from your Downloads folder");
+                                console.error(err);
+                                quitApp();
+                                return;
+                            }
+                            console.log("Installer successfully deleted");
+                            quitApp();
+                        });
+                    }
+                });
+            }
+        });
+    } else quitApp();
 });
 
 app.on('activate', () => {

@@ -1,10 +1,21 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const { app, BrowserWindow, Menu, ipcMain, shell, session, globalShortcut } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain, shell, session, globalShortcut, Notification } = require('electron');
+const log = require('electron-log');
 const path = require('path');
 const RPC = require('discord-rpc');
 const Store = require('electron-store');
 const { ElectronChromeExtensions } = require('electron-chrome-extensions');
+const https = require('https');
+const electronDl = require('electron-dl');
+const exec = require('child_process').execFile;
+const fs = require('fs');
+log.info('DRC starting...');
+// Auto update
+let newUpdate = false;
+let instUrl = "";
+const versionId = "v0.4.0-beta";
+let currentVersionId = "";
 const schema = {
     settings: {
         type: "object",
@@ -174,12 +185,97 @@ const createWindow = () => {
     // window.show();
 };
 app.on('ready', () => {
+    // Check for updates
+    https.request({
+        host: "deeeep-reef-client.netlify.app",
+        path: "/api/versionid.txt"
+    }, (res) => {
+        res.on('data', (chunk) => {
+            currentVersionId += chunk;
+        });
+        res.on('end', () => {
+            log.info(`Current version: ${currentVersionId}`);
+            if (versionId != currentVersionId) {
+                newUpdate = true;
+                new Notification({
+                    title: "New update detected!",
+                    body: "The update will be automatically downloaded when you quit"
+                }).show();
+            }
+        });
+    }).end();
+    https.request({
+        host: "deeeep-reef-client.netlify.app",
+        path: "/api/insturl.txt"
+    }, (res) => {
+        res.on('data', (chunk) => {
+            instUrl += chunk;
+        });
+        res.on('end', () => {
+            log.info(`Installer URL: ${instUrl}`);
+        });
+    }).end();
+    // Create window
     createWindow();
 });
-app.on('window-all-closed', () => {
+;
+function quitApp() {
+    log.info("App has been quit");
     if (process.platform !== 'darwin') {
         app.quit();
     }
+}
+app.on('window-all-closed', () => {
+    log.info("Window all closed");
+    // Auto update
+    if (newUpdate) {
+        new Notification({
+            title: "Downloading update",
+            body: `The new update ${currentVersionId} is being downloaded`
+        }).show();
+        electronDl.download(new BrowserWindow({
+            width: 0,
+            height: 0,
+            show: false,
+        }), instUrl, {
+            directory: app.getPath("downloads"),
+            filename: "drcupdater.exe",
+            onCompleted: function (file) {
+                if (this.errorTitle) {
+                    new Notification({
+                        title: "Error downloading update",
+                        body: "Something went wrong while downloading the update"
+                    }).show();
+                    log.info("Error while downloading update");
+                    console.error(this.errorMessage);
+                    quitApp();
+                }
+                exec(file.path, (err, data) => {
+                    if (err) {
+                        log.info("An error occurred while downloading the installer");
+                        console.error(err);
+                        quitApp();
+                        return;
+                    }
+                    console.log(data.toString());
+                    if (fs.existsSync(app.getPath('downloads') + "\\drcupdater.exe")) {
+                        fs.unlink(app.getPath('downloads') + "\\drcupdater.exe", (err) => {
+                            if (err) {
+                                log.info("An error occurred while deleting the installer. Please manually delete `drcupdater.exe` from your Downloads folder");
+                                console.error(err);
+                                quitApp();
+                                return;
+                            }
+                            console.log("Installer successfully deleted");
+                            quitApp();
+                        });
+                    }
+                });
+            }
+        });
+    }
+    else
+        quitApp();
 });
 app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
