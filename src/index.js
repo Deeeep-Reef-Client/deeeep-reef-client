@@ -229,6 +229,7 @@ app.on('window-all-closed', () => {
     log.info("Window all closed");
     // Auto update
     if (newUpdate) {
+        log.info("Downloading update installer");
         new Notification({
             title: "Downloading update",
             body: `The new update ${currentVersionId} is being downloaded`
