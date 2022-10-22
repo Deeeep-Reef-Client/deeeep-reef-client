@@ -36,11 +36,9 @@ function saveSettings() {
 let gameStarted = false;
 window.addEventListener("DOMContentLoaded", () => {
     // DRC
-    /*
-    const clientVersion = document.querySelector(".client-version") as HTMLSpanElement;
+    const clientVersion = document.querySelector(".client-version");
     /// @REMIND Update client version
-    clientVersion.innerText = clientVersion.innerText + ", DRC v0.4.1";
-    */
+    clientVersion.innerText = clientVersion.innerText + ", DRC v0.4.0b";
     // Custom stylesheet
     const customTheme = document.createElement("link");
     customTheme.rel = "stylesheet";
