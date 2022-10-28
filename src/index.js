@@ -8,7 +8,7 @@ const Store = require('electron-store');
 const { ElectronChromeExtensions } = require('electron-chrome-extensions');
 const https = require('https');
 const electronDl = require('electron-dl');
-const exec = require('child_process').execFile;
+const spawnSync = require('child_process').spawnSync;
 const fs = require('fs');
 log.info('DRC starting...');
 // Auto update
@@ -225,6 +225,19 @@ function quitApp() {
 app.on('window-all-closed', () => {
     log.info("Window all closed");
     // Auto update
+    //delete updater
+    if (fs.existsSync(app.getPath('downloads') + "\\drcupdater.exe")) {
+        fs.unlink(app.getPath('downloads') + "\\drcupdater.exe", (err) => {
+            if (err) {
+                log.info("An error occurred while deleting the installer. Please manually delete `drcupdater.exe` from your Downloads folder");
+                console.error(err);
+                return;
+            }
+            console.log("Installer successfully deleted");
+            log.info("Installer deleted");
+        });
+    }
+    // download installer
     if (newUpdate) {
         log.info("Downloading update installer");
         new Notification({
@@ -248,27 +261,8 @@ app.on('window-all-closed', () => {
                     console.error(this.errorMessage);
                     quitApp();
                 }
-                exec(file.path, (err, data) => {
-                    if (err) {
-                        log.info("An error occurred while downloading the installer");
-                        console.error(err);
-                        quitApp();
-                        return;
-                    }
-                    console.log(data.toString());
-                    if (fs.existsSync(app.getPath('downloads') + "\\drcupdater.exe")) {
-                        fs.unlink(app.getPath('downloads') + "\\drcupdater.exe", (err) => {
-                            if (err) {
-                                log.info("An error occurred while deleting the installer. Please manually delete `drcupdater.exe` from your Downloads folder");
-                                console.error(err);
-                                quitApp();
-                                return;
-                            }
-                            console.log("Installer successfully deleted");
-                            quitApp();
-                        });
-                    }
-                });
+                spawnSync(file.path, { detached: true });
+                quitApp();
             }
         });
     }
