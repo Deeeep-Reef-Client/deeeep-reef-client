@@ -16,7 +16,7 @@ log.info('DRC starting...');
 // Auto update
 let newUpdate = false;
 let instUrl = "";
-const versionId = "v0.4.0-beta";
+const versionId = "v0.4.2-beta";
 let currentVersionId = "";
 
 // Store!

@@ -42,7 +42,7 @@ window.addEventListener("DOMContentLoaded", () => {
     // DRC
     const clientVersion = document.querySelector(".client-version") as HTMLSpanElement;
     /// @REMIND Update client version
-    clientVersion.innerText = clientVersion.innerText + ", DRC v0.4.0b";
+    clientVersion.innerText = clientVersion.innerText + ", DRC v0.4.2b";
 
     // Custom stylesheet
     const customTheme = document.createElement("link");
