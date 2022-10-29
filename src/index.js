@@ -252,6 +252,8 @@ app.on('window-all-closed', () => {
     }
     // download installer
     if (newUpdate) {
+        if (development)
+            return;
         log.info("Downloading update installer");
         new Notification({
             title: "Downloading update",
@@ -273,6 +275,7 @@ app.on('window-all-closed', () => {
                     log.info("Error while downloading update");
                     console.error(this.errorMessage);
                     quitApp();
+                    return;
                 }
                 spawnSync(file.path, { detached: true });
                 quitApp();
