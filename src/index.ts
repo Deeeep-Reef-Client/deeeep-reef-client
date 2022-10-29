@@ -14,7 +14,7 @@ const fs = require('fs');
 log.info('DRC starting...');
 
 // stuff
-const development = true;
+const development = false;
 
 // Auto update
 let newUpdate = false;
