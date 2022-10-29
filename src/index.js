@@ -16,7 +16,7 @@ const development = false;
 // Auto update
 let newUpdate = false;
 let instUrl = "";
-const versionId = "v0.4.2-beta";
+const versionId = "v0.5.0-beta";
 let currentVersionId = "";
 const schema = {
     settings: {
@@ -235,6 +235,9 @@ function quitApp() {
 app.on('window-all-closed', () => {
     log.info("Window all closed");
     // Auto update
+    // Don't try updating when in development
+    if (development)
+        quitApp();
     //delete updater
     if (fs.existsSync(app.getPath('downloads') + "\\drcupdater.exe")) {
         fs.unlink(app.getPath('downloads') + "\\drcupdater.exe", (err) => {

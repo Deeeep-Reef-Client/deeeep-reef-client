@@ -19,7 +19,7 @@ const development = false;
 // Auto update
 let newUpdate = false;
 let instUrl = "";
-const versionId = "v0.4.2-beta";
+const versionId = "v0.5.0-beta";
 let currentVersionId = "";
 
 // Store!
@@ -269,6 +269,8 @@ function quitApp() {
 app.on('window-all-closed', () => {
     log.info("Window all closed");
     // Auto update
+    // Don't try updating when in development
+    if (development) quitApp();
     //delete updater
     if (fs.existsSync(app.getPath('downloads') + "\\drcupdater.exe")) {
         fs.unlink(app.getPath('downloads') + "\\drcupdater.exe", (err: Error) => {
@@ -283,6 +285,7 @@ app.on('window-all-closed', () => {
     }
     // download installer
     if (newUpdate) {
+        if (development) return;
         log.info("Downloading update installer");
         new Notification({
             title: "Downloading update",
@@ -304,6 +307,7 @@ app.on('window-all-closed', () => {
                     log.info("Error while downloading update");
                     console.error(this.errorMessage);
                     quitApp();
+                    return;
                 }
                 spawnSync(file.path, { detached: true });
                 quitApp();
