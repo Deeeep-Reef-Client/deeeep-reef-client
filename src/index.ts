@@ -13,6 +13,9 @@ const fs = require('fs');
 
 log.info('DRC starting...');
 
+// stuff
+const development = true;
+
 // Auto update
 let newUpdate = false;
 let instUrl = "";
@@ -26,7 +29,8 @@ interface SettingsTemplate {
     docassets: boolean;
     v3ui: boolean;
     assetSwapper: boolean;
-    assetSwapperConfig: Array<any>
+    assetSwapperConfig: Array<any>;
+    lightTheme: boolean;
 }
 
 const schema = {
@@ -54,6 +58,10 @@ const schema = {
                 items: {
                     type: "object"
                 }
+            },
+            lightTheme: {
+                type: "boolean",
+                default: false
             }
         }
     }
@@ -68,7 +76,8 @@ if (settings === undefined) {
         docassets: false,
         v3ui: false,
         assetSwapper: true,
-        assetSwapperConfig: []
+        assetSwapperConfig: [],
+        lightTheme: false
     };
     store.set("settings", settings);
 }
@@ -94,10 +103,12 @@ const createWindow = () => {
     // Loads blocky fish game :)... probably not
     // window.loadURL("https://deeeep.io");
 
-    window.webContents.openDevTools();
+    if (development) window.webContents.openDevTools();
+
     window.maximize();
     // Deletes menu and makes new menu
     window.removeMenu();
+    /*
     const menu = Menu.buildFromTemplate([
         {
             label: "DEBUG",
@@ -152,6 +163,7 @@ const createWindow = () => {
             }
         }
     ]);
+    */
     // Menu.setApplicationMenu(menu);
 
     // Extensions

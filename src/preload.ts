@@ -17,13 +17,16 @@ interface SettingsTemplate {
     v3ui: boolean;
     assetSwapper: boolean;
     assetSwapperConfig: Array<any>;
+    lightTheme: boolean;
 }
+
 let settings: SettingsTemplate = {
     customTheme: true,
     docassets: false,
     v3ui: false,
     assetSwapper: true,
-    assetSwapperConfig: []
+    assetSwapperConfig: [],
+    lightTheme: false
 };
 ipcRenderer.on("settings", (_event: Event, s: SettingsTemplate) => {
     settings = s;
@@ -42,7 +45,7 @@ window.addEventListener("DOMContentLoaded", () => {
     // DRC
     const clientVersion = document.querySelector(".client-version") as HTMLSpanElement;
     /// @REMIND Update client version
-    clientVersion.innerText = clientVersion.innerText + ", DRC v0.4.2b";
+    clientVersion.innerText = clientVersion.innerText + ", DRC v0.4.3b";
 
     // Custom stylesheet
     const customTheme = document.createElement("link");
@@ -51,6 +54,15 @@ window.addEventListener("DOMContentLoaded", () => {
     customTheme.setAttribute("id", "customThemeStyle");
     customTheme.href = settings.customTheme ? "https://deeeep-reef-client.netlify.app/assets/customtheme.css" : '';
     document.head.appendChild(customTheme);
+
+    // Light Theme
+    if (settings.lightTheme) {
+        document.getElementsByTagName("html")[0].classList.remove("dark");
+        document.getElementsByTagName("html")[0].classList.add("light");
+    } else {
+        document.getElementsByTagName("html")[0].classList.add("dark");
+        document.getElementsByTagName("html")[0].classList.remove("light");
+    }
 
     // V3 UI
     const v3uiStyle = document.createElement("link");
@@ -94,6 +106,35 @@ window.addEventListener("DOMContentLoaded", () => {
                 saveSettings();
             });
             graphicsPane!.appendChild(customThemeSetting);
+
+            // Docassets
+            const lightThemeSetting = graphicsPane!.childNodes[2].cloneNode(true) as HTMLDivElement;
+            const lightThemeName = lightThemeSetting.querySelector(".el-form-item__label") as HTMLDivElement;
+            const lightThemeDesc = lightThemeSetting.querySelector(".notes") as HTMLSpanElement;
+            const lightThemeCheckbox = lightThemeSetting.querySelector(".el-checkbox__input > input") as HTMLInputElement;
+            lightThemeName!.setAttribute("id", "lightThemeName");
+            lightThemeName!.innerText = "Light Theme";
+            lightThemeDesc!.innerText = "Toggles light theme";
+            if (settings.lightTheme) {
+                lightThemeSetting.querySelector(".el-checkbox__input")!.classList.add("is-checked");
+            } else {
+                lightThemeSetting.querySelector(".el-checkbox__input")!.classList.remove("is-checked");
+            }
+            lightThemeCheckbox.addEventListener("click", () => {
+                if (settings.lightTheme) {
+                    settings.lightTheme = false;
+                    lightThemeSetting.querySelector(".el-checkbox__input")!.classList.remove("is-checked");
+                    document.getElementsByTagName("html")[0].classList.add("dark");
+                    document.getElementsByTagName("html")[0].classList.remove("light");
+                } else {
+                    settings.lightTheme = true;
+                    lightThemeSetting.querySelector(".el-checkbox__input")!.classList.add("is-checked");
+                    document.getElementsByTagName("html")[0].classList.remove("dark");
+                    document.getElementsByTagName("html")[0].classList.add("light");
+                };
+                saveSettings();
+            });
+            graphicsPane!.appendChild(lightThemeSetting);
 
             // Docassets
             const docassetsSetting = graphicsPane!.childNodes[2].cloneNode(true) as HTMLDivElement;
