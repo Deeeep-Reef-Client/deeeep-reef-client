@@ -241,6 +241,10 @@ window.addEventListener("DOMContentLoaded", () => {
         color: rgba(229, 231, 235, 1);
     }
     
+    .light .drc-modal-title {
+        color: rgba(31, 41, 55, 1);
+    }
+    
     .drc-modal-content {
         flex-grow: 1;
         overflow-y: auto;
@@ -266,7 +270,6 @@ window.addEventListener("DOMContentLoaded", () => {
     }
     
     .drc-modal-modal-content {
-        background-color: rgba(31, 41, 55, 1);
         border-radius: .75rem;
         --tw-shadow-color: 0, 0, 0;
         --tw-shadow: 0 25px 50px -12px rgba(var(--tw-shadow-color), 0.25);
@@ -285,6 +288,14 @@ window.addEventListener("DOMContentLoaded", () => {
         margin: 0 1rem;
         border: 1px solid;
         min-width: 20rem;
+    }
+    
+    .dark .drc-modal-modal-content {
+        background-color: rgba(31, 41, 55, 1);
+    }
+    
+    .light .drc-modal-modal-content {
+        background-color: rgba(255, 255, 255, 1);
     }
     
     .drc-modal-hidden {
