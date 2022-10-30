@@ -18,6 +18,8 @@ interface SettingsTemplate {
     assetSwapper: boolean;
     assetSwapperConfig: Array<any>;
     lightTheme: boolean;
+    userTheme: boolean;
+    userThemeData: Object;
 }
 
 let settings: SettingsTemplate = {
@@ -26,7 +28,9 @@ let settings: SettingsTemplate = {
     v3ui: false,
     assetSwapper: true,
     assetSwapperConfig: [],
-    lightTheme: false
+    lightTheme: false,
+    userTheme: false,
+    userThemeData: []
 };
 ipcRenderer.on("settings", (_event: Event, s: SettingsTemplate) => {
     settings = s;

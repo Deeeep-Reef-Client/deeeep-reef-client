@@ -24,7 +24,9 @@ let settings = {
     v3ui: false,
     assetSwapper: true,
     assetSwapperConfig: [],
-    lightTheme: false
+    lightTheme: false,
+    userTheme: false,
+    userThemeData: []
 };
 ipcRenderer.on("settings", (_event, s) => {
     settings = s;

@@ -31,6 +31,8 @@ interface SettingsTemplate {
     assetSwapper: boolean;
     assetSwapperConfig: Array<any>;
     lightTheme: boolean;
+    userTheme: boolean;
+    userThemeData: Object;
 }
 
 const schema = {
@@ -62,6 +64,16 @@ const schema = {
             lightTheme: {
                 type: "boolean",
                 default: false
+            },
+            userTheme: {
+                type: "boolean",
+                default: false
+            },
+            userThemeData: {
+                type: "array",
+                items: {
+                    type: "object"
+                }
             }
         }
     }
@@ -77,7 +89,9 @@ if (settings === undefined) {
         v3ui: false,
         assetSwapper: true,
         assetSwapperConfig: [],
-        lightTheme: false
+        lightTheme: false,
+        userTheme: false,
+        userThemeData: []
     };
     store.set("settings", settings);
 }
