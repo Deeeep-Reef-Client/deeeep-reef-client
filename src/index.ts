@@ -14,7 +14,7 @@ const fs = require('fs');
 log.info('DRC starting...');
 
 // stuff
-const development = false;
+const development = true;
 
 // Auto update
 let newUpdate = false;
@@ -103,7 +103,7 @@ const createWindow = () => {
     // Loads blocky fish game :)... probably not
     // window.loadURL("https://deeeep.io");
 
-    if (development) window.webContents.openDevTools();
+    window.webContents.openDevTools();
 
     window.maximize();
     // Deletes menu and makes new menu
@@ -218,6 +218,7 @@ const createWindow = () => {
 
 app.on('ready', () => {
     // Check for updates
+    log.info("Checking updates...");
     https.request({
         host: "deeeep-reef-client.netlify.app",
         path: "/api/versionid.txt"
@@ -270,7 +271,10 @@ app.on('window-all-closed', () => {
     log.info("Window all closed");
     // Auto update
     // Don't try updating when in development
-    if (development) quitApp();
+    if (development) {
+        quitApp();
+        return;
+    }
     //delete updater
     if (fs.existsSync(app.getPath('downloads') + "\\drcupdater.exe")) {
         fs.unlink(app.getPath('downloads') + "\\drcupdater.exe", (err: Error) => {
@@ -285,7 +289,6 @@ app.on('window-all-closed', () => {
     }
     // download installer
     if (newUpdate) {
-        if (development) return;
         log.info("Downloading update installer");
         new Notification({
             title: "Downloading update",
