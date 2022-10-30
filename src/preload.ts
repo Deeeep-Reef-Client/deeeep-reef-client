@@ -664,6 +664,53 @@ window.addEventListener("DOMContentLoaded", () => {
         assetSwapperModalContainer!.classList.toggle("drc-modal-hidden");
     });
 
+    // Custom theme
+    // Custom theme button
+    const customThemeButtonWrapper = settingsButtonWrapper!.cloneNode(true) as HTMLDivElement;
+    const customThemeButton = customThemeButtonWrapper.firstElementChild as HTMLButtonElement;
+    customThemeButtonWrapper.setAttribute("id", "customThemeButtonWrapper");
+    customThemeButton.setAttribute("id", "customThemeButton");
+    customThemeButton.querySelector("span[class]")!.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box" viewBox="0 0 16 16">
+    <path d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5 8 5.961 14.154 3.5 8.186 1.113zM15 4.239l-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923l6.5 2.6zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.662a1 1 0 0 1-.629.928l-7.185 2.874a.5.5 0 0 1-.372 0L.63 13.09a1 1 0 0 1-.63-.928V3.5a.5.5 0 0 1 .314-.464L7.443.184z"/>
+  </svg>`
+    topRightNav!.insertBefore(customThemeButtonWrapper, settingsButtonWrapper);
+
+    // Custom Theme Modal
+    const customThemeDiv = document.createElement("div");
+    document.getElementById("app")!.appendChild(customThemeDiv);
+    customThemeDiv.outerHTML = `
+    <div id="customThemeModalContainer" class="drc-modal-modal-container drc-modal-hidden">
+    <div class="drc-modal-overlay vfm--overlay"></div>
+    <div id="customThemeContainer" class="drc-modal-container">
+        <div id="customThemeModal" class="modal-content drc-modal-modal-content">
+            <span class="drc-modal-title">
+                <div></div>
+                <div class="justify-self-center">Themes</div>
+                <div></div>
+            </span>
+            <div class="drc-modal-content tree-modal-content">
+                <p>TBC</p>
+            </div>
+            <button id="customThemeCloseButton" class="drc-modal-close"><svg width="1.125em" height="1.125em" viewBox="0 0 24 24"
+                    class="svg-icon" color="gray" style="--sx:1; --sy:1; --r:0deg;">
+                    <path
+                        d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z">
+                    </path>
+                </svg></button>
+        </div>
+    </div>
+</div>
+`;
+    const customThemeModalContainer = document.getElementById("customThemeModalContainer");
+    const customThemeCloseButton = document.getElementById("customThemeCloseButton");
+    // Tree button onclick
+    customThemeButton.addEventListener("click", () => {
+        customThemeModalContainer!.classList.toggle("drc-modal-hidden");
+    });
+    customThemeCloseButton!.addEventListener("click", () => {
+        customThemeModalContainer!.classList.toggle("drc-modal-hidden");
+    });
+
     // Watch for match start
     const btn = document.querySelector(".play");
     btn!.addEventListener("click", () => {
