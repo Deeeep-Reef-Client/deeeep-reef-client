@@ -706,12 +706,13 @@ window.addEventListener("DOMContentLoaded", () => {
                 <div class="justify-self-center">Themes</div>
                 <div></div>
             </span>
-            <div class="drc-modal-content tree-modal-content">
+            <div class="drc-modal-content">
                 <button id="themeMakerButton" class="assetswapper-new-button assetswapper-add-button"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                     class="bi bi-plus" viewBox="0 0 16 16">
                     <path
                         d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
                 </svg>Theme Maker</button>
+                <div id="themeMakerThemeList"></div>
             </div>
             <button id="customThemeCloseButton" class="drc-modal-close"><svg width="1.125em" height="1.125em" viewBox="0 0 24 24"
                     class="svg-icon" color="gray" style="--sx:1; --sy:1; --r:0deg;">
@@ -723,18 +724,41 @@ window.addEventListener("DOMContentLoaded", () => {
     </div>
 </div>
 `;
+    const themeMakerThemeList = document.getElementById("themeMakerThemeList");
+    function updateThemeList() {
+        themeMakerThemeList.innerHTML = "";
+        for (let i in settings.userThemeData) {
+            const mainElem = document.createElement("div");
+            mainElem.classList.add("assetswapper-list-rule");
+            // theme name
+            const nameElem = document.createElement("p");
+            nameElem.innerText = settings.userThemeData[i].name;
+            mainElem.appendChild(nameElem);
+            const spacer1 = document.createElement("div");
+            spacer1.classList.add("spacer");
+            mainElem.appendChild(spacer1);
+            // Delete button
+            const deleteElem = document.createElement("button");
+            deleteElem.classList.add("assetswapper-new-button");
+            deleteElem.innerText = "Delete";
+            deleteElem.addEventListener("click", () => {
+                settings.userThemeData = settings.userThemeData.filter(item => item != settings.userThemeData[i]);
+                saveSettings();
+                updateThemeList();
+            });
+            mainElem.appendChild(deleteElem);
+            themeMakerThemeList.appendChild(mainElem);
+        }
+    }
     const customThemeModalContainer = document.getElementById("customThemeModalContainer");
     const customThemeCloseButton = document.getElementById("customThemeCloseButton");
     // Custom Theme button onclick
     customThemeButton.addEventListener("click", () => {
         customThemeModalContainer.classList.toggle("drc-modal-hidden");
+        updateThemeList();
     });
     customThemeCloseButton.addEventListener("click", () => {
         customThemeModalContainer.classList.toggle("drc-modal-hidden");
-    });
-    const themeMakerButton = document.getElementById("themeMakerButton");
-    themeMakerButton.addEventListener("click", () => {
-        themeMakerModalContainer.classList.toggle("drc-modal-hidden");
     });
     // Theme maker modal
     // create new swap rule
@@ -750,6 +774,37 @@ window.addEventListener("DOMContentLoaded", () => {
                 <div></div>
             </span>
             <div class="drc-modal-content">
+                <div>
+                    <div class="assetswapper-list-rule">
+                        <p>Name: </p>
+                        <div class="spacer"></div>
+                        <input type="text" id="themeMakerOptionsName" placeholder="Theme Name" value="Theme 0">
+                    </div>
+                    <div class="spacer"></div>
+                    <div class="assetswapper-list-rule">
+                        <p>Background Image: </p>
+                        <div class="spacer"></div>
+                        <input type="text" id="themeMakerOptionsBgImage" placeholder="URL to image">
+                    </div>
+                    <div class="spacer"></div>
+                    <div class="assetswapper-list-rule">
+                        <p>Modal Colour: </p>
+                        <div class="spacer"></div>
+                        <input type="color" id="themeMakerOptionsModalBgColour" value="#FFFFFF">
+                    </div>
+                    <div class="spacer"></div>
+                    <div class="assetswapper-list-rule">
+                        <p>Text Colour: </p>
+                        <div class="spacer"></div>
+                        <input type="color" id="themeMakerOptionsModalTextColour" value="#000000">
+                    </div>
+                    <div class="spacer"></div>
+                    <div class="assetswapper-list-rule">
+                        <p>Loading Background Image: </p>
+                        <div class="spacer"></div>
+                        <input type="text" id="themeMakerOptionsLoadingBgImage" placeholder="URL to image">
+                    </div>
+                </div>
                 <button id="themeMakerAddButton" class="assetswapper-add-button">Save</button>
             </div>
             <button id="themeMakerCloseButton" class="drc-modal-close"><svg width="1.125em" height="1.125em"
@@ -762,15 +817,79 @@ window.addEventListener("DOMContentLoaded", () => {
     </div>
 </div>
 `;
+    const themeMakerOptionsName = document.getElementById("themeMakerOptionsName");
+    const themeMakerOptionsBgImage = document.getElementById("themeMakerOptionsBgImage");
+    const themeMakerOptionsModalBgColour = document.getElementById("themeMakerOptionsModalBgColour");
+    const themeMakerOptionsModalTextColour = document.getElementById("themeMakerOptionsModalTextColour");
+    const themeMakerOptionsLoadingBgImage = document.getElementById("themeMakerOptionsLoadingBgImage");
     const themeMakerModalContainer = document.getElementById("themeMakerModalContainer");
     const themeMakerAddButton = document.getElementById("themeMakerAddButton");
+    // Moved to here bc vars must be initialised
+    const themeMakerButton = document.getElementById("themeMakerButton");
+    themeMakerButton.addEventListener("click", () => {
+        // changes depending on amount of themes :)
+        themeMakerOptionsName.value = "Theme " + settings.userThemeData.length;
+        themeMakerModalContainer.classList.toggle("drc-modal-hidden");
+    });
+    function formatThemeMakerCSS() {
+        let homeBg, loadingBg = "";
+        if (themeMakerOptionsBgImage.value != "") {
+            homeBg = `
+            .home-page .home-bg {
+                background-image: url(${themeMakerOptionsBgImage.value}) !important;
+            }
+            `;
+        }
+        if (themeMakerOptionsLoadingBgImage.value != "") {
+            loadingBg = `
+            .loading-container {
+                background-image: url(${themeMakerOptionsLoadingBgImage.value}) !important;
+            }
+            `;
+        }
+        return `
+        .dark .modal-content {
+            background-color: ${themeMakerOptionsModalBgColour.value} !important;
+        }
+        .modal__title {
+            color: ${themeMakerOptionsModalTextColour.value} !important;
+        }
+        .modal__content {
+            color: ${themeMakerOptionsModalTextColour.value} !important;
+        }
+        .drc-modal-title {
+            color: ${themeMakerOptionsModalTextColour.value} !important;
+        }
+        .drc-modal-modal-content {
+            background-color: ${themeMakerOptionsModalBgColour.value} !important;
+        }
+        ${homeBg}
+        ${loadingBg}
+        `;
+    }
     themeMakerAddButton.addEventListener("click", () => {
-        console.log("do stuf");
+        settings.userThemeData.push({
+            name: themeMakerOptionsName.value,
+            src: formatThemeMakerCSS()
+        });
+        updateThemeList();
         saveSettings();
+        // reset all values
+        themeMakerOptionsName.value = "";
+        themeMakerOptionsBgImage.value = "";
+        themeMakerOptionsLoadingBgImage.value = "";
+        themeMakerOptionsModalBgColour.value = "#FFFFFF";
+        themeMakerOptionsModalTextColour.value = "#000000";
         themeMakerModalContainer.classList.toggle("drc-modal-hidden");
     });
     const themeMakerCloseButton = document.getElementById("themeMakerCloseButton");
     themeMakerCloseButton.addEventListener("click", () => {
+        // reset all values
+        themeMakerOptionsName.value = "";
+        themeMakerOptionsBgImage.value = "";
+        themeMakerOptionsLoadingBgImage.value = "";
+        themeMakerOptionsModalBgColour.value = "#FFFFFF";
+        themeMakerOptionsModalTextColour.value = "#000000";
         themeMakerModalContainer.classList.toggle("drc-modal-hidden");
     });
     // Watch for match start

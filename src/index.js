@@ -195,6 +195,11 @@ const createWindow = () => {
         store.set("settings", settings);
     }
     ;
+    if (settings.userThemeData === undefined) {
+        settings.userThemeData = [];
+        store.set("settings", settings);
+    }
+    ;
     // Loads settings
     window.webContents.send("settings", settings);
     ipcMain.on("evalInBrowserContext", (_event, code) => {

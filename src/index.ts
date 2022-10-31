@@ -32,7 +32,7 @@ interface SettingsTemplate {
     assetSwapperConfig: Array<any>;
     lightTheme: boolean;
     userTheme: boolean;
-    userThemeData: Object;
+    userThemeData: Array<any>;
 }
 
 const schema = {
@@ -217,6 +217,11 @@ const createWindow = () => {
     // init settings if undefined
     if (settings.assetSwapperConfig === undefined) {
         settings.assetSwapperConfig = [];
+        store.set("settings", settings);
+    };
+
+    if (settings.userThemeData === undefined) {
+        settings.userThemeData = [];
         store.set("settings", settings);
     };
 
