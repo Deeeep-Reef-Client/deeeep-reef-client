@@ -90,7 +90,7 @@ window.addEventListener("DOMContentLoaded", () => {
             const customThemeDesc = customThemeSetting.querySelector(".notes") as HTMLSpanElement;
             const customThemeCheckbox = customThemeSetting.querySelector(".el-checkbox__input > input") as HTMLInputElement;
             customThemeName!.setAttribute("id", "customThemeName");
-            customThemeName!.innerText = "Theme";
+            customThemeName!.innerText = "Reef Theme";
             customThemeDesc!.innerText = "Custom reef theme";
             if (settings.customTheme) {
                 customThemeSetting.querySelector(".el-checkbox__input")!.classList.add("is-checked");
@@ -111,7 +111,33 @@ window.addEventListener("DOMContentLoaded", () => {
             });
             graphicsPane!.appendChild(customThemeSetting);
 
-            // Docassets
+             // Custom Theme
+             const userThemeSetting = graphicsPane!.childNodes[2].cloneNode(true) as HTMLDivElement;
+             const userThemeName = userThemeSetting.querySelector(".el-form-item__label") as HTMLDivElement;
+             const userThemeDesc = userThemeSetting.querySelector(".notes") as HTMLSpanElement;
+             const userThemeCheckbox = userThemeSetting.querySelector(".el-checkbox__input > input") as HTMLInputElement;
+             userThemeName!.setAttribute("id", "userThemeName");
+             userThemeName!.innerText = "Custom Theme";
+             userThemeDesc!.innerText = "Custom user themes. Overrides the Reef Theme";
+             if (settings.userTheme) {
+                 userThemeSetting.querySelector(".el-checkbox__input")!.classList.add("is-checked");
+             } else {
+                 userThemeSetting.querySelector(".el-checkbox__input")!.classList.remove("is-checked");
+             }
+             userThemeCheckbox.addEventListener("click", () => {
+                 if (settings.userTheme) {
+                     settings.userTheme = false;
+                     userThemeSetting.querySelector(".el-checkbox__input")!.classList.remove("is-checked");
+                 } else {
+                     settings.userTheme = true;
+                     userThemeSetting.querySelector(".el-checkbox__input")!.classList.add("is-checked");
+                 };
+                 saveSettings();
+             });
+             graphicsPane!.appendChild(userThemeSetting);
+
+             
+            // Light Theme
             const lightThemeSetting = graphicsPane!.childNodes[2].cloneNode(true) as HTMLDivElement;
             const lightThemeName = lightThemeSetting.querySelector(".el-form-item__label") as HTMLDivElement;
             const lightThemeDesc = lightThemeSetting.querySelector(".notes") as HTMLSpanElement;
