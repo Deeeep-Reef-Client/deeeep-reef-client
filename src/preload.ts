@@ -1,4 +1,5 @@
 import { ThreadChannel } from "discord.js";
+import { load } from "dotenv";
 
 const { ipcRenderer } = require('electron');
 
@@ -37,6 +38,7 @@ ipcRenderer.on("settings", (_event: Event, s: SettingsTemplate) => {
 })
 
 function saveSettings() {
+    console.log(settings);
     console.log("Settings saved!");
     ipcRenderer.send("saveSettings", settings);
 }
@@ -58,6 +60,56 @@ window.addEventListener("DOMContentLoaded", () => {
     customTheme.setAttribute("id", "customThemeStyle");
     customTheme.href = settings.customTheme ? "https://deeeep-reef-client.netlify.app/assets/customtheme.css" : '';
     document.head.appendChild(customTheme);
+
+    const userTheme = document.createElement("style");
+    userTheme.setAttribute("id", "userThemeStyle");
+    document.head.appendChild(userTheme);
+
+    function reloadCustomTheme() {
+        function loadActiveCustomTheme() {
+            customTheme.href = "";
+            userTheme.innerHTML = "";
+            if (settings.userThemeData.length == 0) return;
+
+            let userStyle = "";
+            for (let i in settings.userThemeData) {
+                if (settings.userThemeData[i].active) {
+                    userStyle = settings.userThemeData[i].src;
+                    break;
+                }
+            }
+
+            userTheme.innerHTML = userStyle;
+        }
+        if (settings.customTheme) {
+            if (settings.userTheme) {
+                let hasActive;
+                for (let i in settings.userThemeData) {
+                    if (settings.userThemeData[i].active) {
+                        hasActive = true;
+                        break;
+                    }
+                }
+                if (hasActive) {
+                    loadActiveCustomTheme();
+                } else {
+                    userTheme.innerHTML = "";
+                    document.getElementById("customThemeStyle")!.setAttribute("href", "https://deeeep-reef-client.netlify.app/assets/customtheme.css");
+                }
+            } else {
+                userTheme.innerHTML = "";
+                document.getElementById("customThemeStyle")!.setAttribute("href", "https://deeeep-reef-client.netlify.app/assets/customtheme.css");
+            }
+        } else {
+            document.getElementById("customThemeStyle")!.setAttribute("href", "");
+            if (settings.userTheme) loadActiveCustomTheme()
+            else {
+                userTheme.innerHTML = "";
+            };
+        }; }
+   
+
+    reloadCustomTheme();
 
     // Light Theme
     if (settings.lightTheme) {
@@ -101,13 +153,12 @@ window.addEventListener("DOMContentLoaded", () => {
                 if (settings.customTheme) {
                     settings.customTheme = false;
                     customThemeSetting.querySelector(".el-checkbox__input")!.classList.remove("is-checked");
-                    document.getElementById("customThemeStyle")!.setAttribute("href", '');
                 } else {
                     settings.customTheme = true;
                     customThemeSetting.querySelector(".el-checkbox__input")!.classList.add("is-checked");
-                    document.getElementById("customThemeStyle")!.setAttribute("href", "https://deeeep-reef-client.netlify.app/assets/customtheme.css");
                 };
                 saveSettings();
+                reloadCustomTheme();
             });
             graphicsPane!.appendChild(customThemeSetting);
 
@@ -133,6 +184,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     userThemeSetting.querySelector(".el-checkbox__input")!.classList.add("is-checked");
                 };
                 saveSettings();
+                reloadCustomTheme();
             });
             graphicsPane!.appendChild(userThemeSetting);
 
@@ -723,6 +775,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     <path
                         d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
                 </svg>Theme Maker</button>
+                <button id="clearUserThemes" class="assetswapper-new-button assetswapper-add-button">Clear Selected</button>
                 <div id="themeMakerThemeList"></div>
             </div>
             <button id="customThemeCloseButton" class="drc-modal-close"><svg width="1.125em" height="1.125em" viewBox="0 0 24 24"
@@ -736,12 +789,44 @@ window.addEventListener("DOMContentLoaded", () => {
 </div>
 `;
     const themeMakerThemeList = document.getElementById("themeMakerThemeList");
-
+    const clearSelectedUserTheme = document.getElementById("clearUserThemes");
+    clearSelectedUserTheme?.addEventListener("click", () => {
+        const elems = document.querySelectorAll("input[name=userThemeList]");
+        for (let e in elems) {
+            if (typeof(elems[e]) != "object") continue;
+            (elems[e] as HTMLInputElement).checked = false;
+        }
+        for (let j in settings.userThemeData) {
+            settings.userThemeData[j].active = false;
+        }
+        saveSettings();
+        reloadCustomTheme();
+        
+    })
     function updateThemeList() {
         themeMakerThemeList!.innerHTML = "";
         for (let i in settings.userThemeData) {
             const mainElem = document.createElement("div");
+            mainElem.setAttribute("id", settings.userThemeData[i].name);
             mainElem.classList.add("assetswapper-list-rule")
+
+            const selectElem = document.createElement("input");
+            selectElem.type = "radio";
+            selectElem.name = "userThemeList"
+            selectElem.addEventListener("click", () => {
+                // clear active
+                for (let j in settings.userThemeData) {
+                    settings.userThemeData[j].active = false;
+                }
+                settings.userThemeData[i].active = true;
+                saveSettings();
+                reloadCustomTheme();
+            });
+            mainElem.appendChild(selectElem);
+
+            const spacer0 = document.createElement("div");
+            spacer0.classList.add("spacer");
+            mainElem.appendChild(spacer0);
 
             // theme name
             const nameElem = document.createElement("p");
@@ -760,6 +845,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 settings.userThemeData = settings.userThemeData.filter(item => item != settings.userThemeData[i]);
                 saveSettings();
                 updateThemeList();
+                reloadCustomTheme();
             });
             mainElem.appendChild(deleteElem);
             themeMakerThemeList!.appendChild(mainElem);
@@ -792,6 +878,7 @@ window.addEventListener("DOMContentLoaded", () => {
             </span>
             <div class="drc-modal-content">
                 <div>
+                    <div class="spacer"></div>
                     <div class="assetswapper-list-rule">
                         <p>Name: </p>
                         <div class="spacer"></div>
@@ -801,13 +888,19 @@ window.addEventListener("DOMContentLoaded", () => {
                     <div class="assetswapper-list-rule">
                         <p>Background Image: </p>
                         <div class="spacer"></div>
-                        <input type="text" id="themeMakerOptionsBgImage" placeholder="URL to image">
+                        <input type="url" id="themeMakerOptionsBgImage" placeholder="URL to image">
                     </div>
                     <div class="spacer"></div>
                     <div class="assetswapper-list-rule">
                         <p>Modal Colour: </p>
                         <div class="spacer"></div>
                         <input type="color" id="themeMakerOptionsModalBgColour" value="#FFFFFF">
+                    </div>
+                    <div class="spacer"></div>
+                    <div class="assetswapper-list-rule">
+                        <p>Modal Transparency: </p>
+                        <div class="spacer"></div>
+                        <input type="range" id="themeMakerOptionsModalTransparency" min="1" max="10">
                     </div>
                     <div class="spacer"></div>
                     <div class="assetswapper-list-rule">
@@ -819,7 +912,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     <div class="assetswapper-list-rule">
                         <p>Loading Background Image: </p>
                         <div class="spacer"></div>
-                        <input type="text" id="themeMakerOptionsLoadingBgImage" placeholder="URL to image">
+                        <input type="url" id="themeMakerOptionsLoadingBgImage" placeholder="URL to image">
                     </div>
                 </div>
                 <button id="themeMakerAddButton" class="assetswapper-add-button">Save</button>
@@ -839,6 +932,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const themeMakerOptionsModalBgColour = document.getElementById("themeMakerOptionsModalBgColour") as HTMLInputElement;
     const themeMakerOptionsModalTextColour = document.getElementById("themeMakerOptionsModalTextColour") as HTMLInputElement;
     const themeMakerOptionsLoadingBgImage = document.getElementById("themeMakerOptionsLoadingBgImage") as HTMLInputElement;
+    const themeMakerOptionsModalTransparency = document.getElementById("themeMakerOptionsModalTransparency") as HTMLInputElement;
 
     const themeMakerModalContainer = document.getElementById("themeMakerModalContainer");
     const themeMakerAddButton = document.getElementById("themeMakerAddButton") as HTMLButtonElement;
@@ -869,40 +963,82 @@ window.addEventListener("DOMContentLoaded", () => {
             `
         }
 
+        let bgColour = themeMakerOptionsModalBgColour.value;
+        let alpha = "";
+        switch (themeMakerOptionsModalTransparency.value) {
+            case "0":
+                alpha = "00";
+                break;
+            case "1":
+                alpha = "1A";
+                break;
+            case "2":
+                alpha = "33";
+                break;
+            case "3":
+                alpha = "4D";
+                break;
+            case "4":
+                alpha = "66";
+                break;
+            case "5":
+                alpha = "80";
+                break;
+            case "6":
+                alpha = "99";
+                break;
+            case "7":
+                alpha = "B3";
+                break;
+            case "8":
+                alpha = "CC";
+                break;
+            case "9":
+                alpha = "E6";
+                break;
+            case "10":
+                alpha = "FF";
+                break;
+        }
+        bgColour += alpha;
+
         return `
-        .dark .modal-content {
-            background-color: ${themeMakerOptionsModalBgColour.value} !important;
+        div.modal-content {
+            background-color: ${bgColour} !important;
         }
-        .modal__title {
+        span.modal__title {
             color: ${themeMakerOptionsModalTextColour.value} !important;
         }
-        .modal__content {
+        div.modal__content {
             color: ${themeMakerOptionsModalTextColour.value} !important;
         }
-        .drc-modal-title {
+        span.drc-modal-title {
             color: ${themeMakerOptionsModalTextColour.value} !important;
         }
-        .drc-modal-modal-content {
-            background-color: ${themeMakerOptionsModalBgColour.value} !important;
+        div.drc-modal-modal-content {
+            background-color: ${bgColour} !important;
         }
         ${homeBg}
         ${loadingBg}
-        `
+        `;
     }
 
     themeMakerAddButton.addEventListener("click", () => {
         settings.userThemeData.push({
             name: themeMakerOptionsName.value,
-            src: formatThemeMakerCSS()
+            src: formatThemeMakerCSS(),
+            active: false
         })
         updateThemeList();
         saveSettings();
+        reloadCustomTheme();
         // reset all values
         themeMakerOptionsName.value = "";
         themeMakerOptionsBgImage.value = "";
         themeMakerOptionsLoadingBgImage.value = "";
         themeMakerOptionsModalBgColour.value = "#FFFFFF";
         themeMakerOptionsModalTextColour.value = "#000000";
+        themeMakerOptionsModalTransparency.value = "0";
 
         themeMakerModalContainer!.classList.toggle("drc-modal-hidden");
     });
