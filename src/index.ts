@@ -117,7 +117,7 @@ const createWindow = () => {
     // Loads blocky fish game :)... probably not
     // window.loadURL("https://deeeep.io");
 
-    window.webContents.openDevTools();
+    if (development) window.webContents.openDevTools();
 
     window.maximize();
     // Deletes menu and makes new menu
