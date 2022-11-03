@@ -112,7 +112,8 @@ const createWindow = () => {
         show: false,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
-        },
+            sandbox: false
+        }
     });
     // Loads blocky fish game :)... probably not
     // window.loadURL("https://deeeep.io");
@@ -233,6 +234,11 @@ const createWindow = () => {
     })
 
     // window.show();
+
+    // listen for app path requests
+    ipcMain.on("getPath", (_event: Event, path: string) => {
+        window.webContents.send("gettedPath", app.getPath(path));
+    })
 };
 
 app.on('ready', () => {

@@ -9,7 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const { ipcRenderer } = require('electron');
+const { ipcRenderer, app } = require('electron');
+const fs = require('fs');
 // Maintain compatibility when update
 let API_URL = "";
 if (window.location.hostname.startsWith("beta")) {
@@ -74,7 +75,6 @@ window.addEventListener("DOMContentLoaded", () => {
             if (settings.userTheme) {
                 let hasActive;
                 for (let i in settings.userThemeData) {
-                    console.log(settings.userThemeData[i]);
                     if (settings.userThemeData[i].active) {
                         hasActive = true;
                         break;
@@ -769,6 +769,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     <path
                         d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
                 </svg>Theme Maker</button>
+                <button id="themeMakerImportExportButton" class="assetswapper-new-button assetswapper-add-button">Import/Export</button>
                 <button id="clearUserThemes" class="assetswapper-new-button assetswapper-add-button">Clear Selected</button>
                 <div class="spacer"></div>
                 <div id="themeMakerThemeList"></div>
@@ -784,6 +785,7 @@ window.addEventListener("DOMContentLoaded", () => {
 </div>
 `;
     const themeMakerThemeList = document.getElementById("themeMakerThemeList");
+    const themeMakerImportExportButton = document.getElementById("themeMakerImportExportButton");
     const clearSelectedUserTheme = document.getElementById("clearUserThemes");
     clearSelectedUserTheme === null || clearSelectedUserTheme === void 0 ? void 0 : clearSelectedUserTheme.addEventListener("click", () => {
         const elems = document.querySelectorAll("input[name=userThemeList]");
@@ -1034,6 +1036,83 @@ window.addEventListener("DOMContentLoaded", () => {
         themeMakerOptionsModalBgColour.value = "#FFFFFF";
         themeMakerOptionsModalTextColour.value = "#000000";
         themeMakerModalContainer.classList.toggle("drc-modal-hidden");
+    });
+    // Import/export theme
+    const themeMakerImportExportDiv = document.createElement("div");
+    document.getElementById("app").appendChild(themeMakerImportExportDiv);
+    themeMakerImportExportDiv.outerHTML = `
+    <div id="themeMakerImportExportModalContainer" class="drc-modal-modal-container drc-modal-hidden">
+    <div id="themeMakerImportExportContainer" class="drc-modal-container">
+        <div id="themeMakerImportExportModal" class="modal-content drc-modal-modal-content">
+            <span class="drc-modal-title">
+                <div></div>
+                <div class="justify-self-center">Import / Export</div>
+                <div></div>
+            </span>
+            <div class="drc-modal-content">
+                <div class="spacer"></div>
+                <div style="display:flex">
+                    <select id="exportThemeDropdown"></select>
+                    <div class="spacer"></div>
+                    <button id="themeMakerExportButton"
+                        class="assetswapper-new-button">Export</button>
+                </div>
+            </div>
+            <button id="themeMakerImportExportCloseButton" class="drc-modal-close"><svg width="1.125em" height="1.125em"
+                    viewBox="0 0 24 24" class="svg-icon" color="gray" style="--sx:1; --sy:1; --r:0deg;">
+                    <path
+                        d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z">
+                    </path>
+                </svg></button>
+        </div>
+    </div>
+</div>
+`;
+    const themeMakerImportExportModalContainer = document.getElementById("themeMakerImportExportModalContainer");
+    const themeMakerImportExportCloseButton = document.getElementById("themeMakerImportExportCloseButton");
+    const exportThemeDropdown = document.getElementById("exportThemeDropdown");
+    const themeMakerExportButton = document.getElementById("themeMakerExportButton");
+    function reloadExportThemeDropdown() {
+        exportThemeDropdown.innerHTML = "";
+        for (let i in settings.userThemeData) {
+            const elem = document.createElement("option");
+            elem.setAttribute("value", JSON.stringify(settings.userThemeData[i]));
+            elem.innerText = settings.userThemeData[i].name;
+            exportThemeDropdown.appendChild(elem);
+        }
+    }
+    // button onclick
+    themeMakerImportExportButton.addEventListener("click", () => {
+        themeMakerImportExportModalContainer.classList.toggle("drc-modal-hidden");
+        reloadExportThemeDropdown();
+    });
+    themeMakerImportExportCloseButton.addEventListener("click", () => {
+        themeMakerImportExportModalContainer.classList.toggle("drc-modal-hidden");
+    });
+    // export
+    themeMakerExportButton.addEventListener("click", () => {
+        const exportedTheme = JSON.parse(exportThemeDropdown.value);
+        themeMakerImportExportModalContainer.classList.toggle("drc-modal-hidden");
+        const content = JSON.stringify({
+            name: exportedTheme.name,
+            src: exportedTheme.src
+        });
+        ipcRenderer.send("getPath", "downloads");
+        ipcRenderer.on("gettedPath", (_event, path) => {
+            try {
+                fs.writeFileSync(path + `/${exportedTheme.name.replace(/[^a-zA-Z0-9]/g, '')}.drctheme.json`, content);
+                new Notification("Theme exported!", {
+                    body: `Your theme has been exported to ${exportedTheme.name.replace(/[^a-zA-Z0-9]/g, '')}.drctheme.json in your Downloads folder. `
+                });
+                // file written successfully
+            }
+            catch (err) {
+                console.error(err);
+                new Notification("Something went wrong", {
+                    body: `An error occurred while exporting your theme.`
+                });
+            }
+        });
     });
     // Watch for match start
     const btn = document.querySelector(".play");
