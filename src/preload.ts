@@ -30,7 +30,7 @@ let settings: SettingsTemplate = {
     assetSwapper: true,
     assetSwapperConfig: [],
     lightTheme: false,
-    userTheme: false,
+    userTheme: true,
     userThemeData: []
 };
 ipcRenderer.on("settings", (_event: Event, s: SettingsTemplate) => {
@@ -45,6 +45,9 @@ function saveSettings() {
 
 // Prevent starting RPC when game already started
 let gameStarted = false;
+
+// IDK what happened but this is to prevent a bug from happening
+let reloadCustomTheme = () => {};
 
 window.addEventListener("DOMContentLoaded", () => {
 
@@ -65,7 +68,7 @@ window.addEventListener("DOMContentLoaded", () => {
     userTheme.setAttribute("id", "userThemeStyle");
     document.head.appendChild(userTheme);
 
-    function reloadCustomTheme() {
+    reloadCustomTheme = () => {
         function loadActiveCustomTheme() {
             customTheme.href = "";
             userTheme.innerHTML = "";
@@ -85,12 +88,14 @@ window.addEventListener("DOMContentLoaded", () => {
             if (settings.userTheme) {
                 let hasActive;
                 for (let i in settings.userThemeData) {
+                    console.log(settings.userThemeData[i])
                     if (settings.userThemeData[i].active) {
                         hasActive = true;
                         break;
                     }
                 }
                 if (hasActive) {
+                    document.getElementById("customThemeStyle")!.setAttribute("href", "");
                     loadActiveCustomTheme();
                 } else {
                     userTheme.innerHTML = "";
@@ -106,7 +111,8 @@ window.addEventListener("DOMContentLoaded", () => {
             else {
                 userTheme.innerHTML = "";
             };
-        }; }
+        }; 
+    }
    
 
     reloadCustomTheme();
@@ -776,6 +782,7 @@ window.addEventListener("DOMContentLoaded", () => {
                         d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
                 </svg>Theme Maker</button>
                 <button id="clearUserThemes" class="assetswapper-new-button assetswapper-add-button">Clear Selected</button>
+                <div class="spacer"></div>
                 <div id="themeMakerThemeList"></div>
             </div>
             <button id="customThemeCloseButton" class="drc-modal-close"><svg width="1.125em" height="1.125em" viewBox="0 0 24 24"
@@ -823,6 +830,9 @@ window.addEventListener("DOMContentLoaded", () => {
                 reloadCustomTheme();
             });
             mainElem.appendChild(selectElem);
+            if (settings.userThemeData[i].active) {
+                selectElem.checked = true;
+            }
 
             const spacer0 = document.createElement("div");
             spacer0.classList.add("spacer");
@@ -1138,4 +1148,8 @@ window.addEventListener("DOMContentLoaded", () => {
             subtree: true
         });
     })
+});
+window.addEventListener("load", () => {
+    // reload custom theme when everything loaded to prevent bug
+    reloadCustomTheme();
 });
