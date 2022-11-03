@@ -288,6 +288,8 @@ function quitApp() {
 
 app.on('window-all-closed', () => {
     log.info("Window all closed");
+    // Save settings 1 last time, just in case
+    store.set("settings", settings);
     // Auto update
     // Don't try updating when in development
     if (development) {
