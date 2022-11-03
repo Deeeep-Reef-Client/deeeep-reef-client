@@ -67,7 +67,7 @@ const schema = {
             },
             userTheme: {
                 type: "boolean",
-                default: false
+                default: true
             },
             userThemeData: {
                 type: "array",
@@ -90,7 +90,7 @@ if (settings === undefined) {
         assetSwapper: true,
         assetSwapperConfig: [],
         lightTheme: false,
-        userTheme: false,
+        userTheme: true,
         userThemeData: []
     };
     store.set("settings", settings);
