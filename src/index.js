@@ -12,11 +12,11 @@ const spawnSync = require('child_process').spawnSync;
 const fs = require('fs');
 log.info('DRC starting...');
 // stuff
-const development = true;
+const development = false;
 // Auto update
 let newUpdate = false;
 let instUrl = "";
-const versionId = "v0.5.0-beta";
+const versionId = "v0.6.0-beta";
 let currentVersionId = "";
 const schema = {
     settings: {
