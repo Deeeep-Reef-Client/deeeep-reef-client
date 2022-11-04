@@ -1039,8 +1039,13 @@ window.addEventListener("DOMContentLoaded", () => {
         settings.userThemeData.push({
             name: themeMakerOptionsName.value,
             src: formatThemeMakerCSS(),
-            active: false
-        })
+            active: true
+        });
+        for (let i in settings.userThemeData) {
+            settings.userThemeData[i].active = false;
+        }
+        settings.userThemeData[settings.userThemeData.length - 1].active = true;
+    
         updateThemeList();
         saveSettings();
         reloadCustomTheme();
@@ -1177,10 +1182,15 @@ window.addEventListener("DOMContentLoaded", () => {
             settings.userThemeData.push({
                 name: parsedTheme.name,
                 src: parsedTheme.src,
-                active: false
+                active: true
             })
             themeMakerImportExportModalContainer!.classList.toggle("drc-modal-hidden");
-            // TODO make imported auto active
+
+            for (let i in settings.userThemeData) {
+                settings.userThemeData[i].active = false;
+            }
+            settings.userThemeData[settings.userThemeData.length - 1].active = true;
+        
             updateThemeList();
             reloadCustomTheme();
         });
