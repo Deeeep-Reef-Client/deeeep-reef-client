@@ -978,37 +978,37 @@ window.addEventListener("DOMContentLoaded", () => {
         let bgColour = themeMakerOptionsModalBgColour.value;
         let alpha = "";
         switch (themeMakerOptionsModalTransparency.value) {
-            case "0":
+            case "10":
                 alpha = "00";
                 break;
-            case "1":
+            case "9":
                 alpha = "1A";
                 break;
-            case "2":
+            case "8":
                 alpha = "33";
                 break;
-            case "3":
+            case "7":
                 alpha = "4D";
                 break;
-            case "4":
+            case "6":
                 alpha = "66";
                 break;
             case "5":
                 alpha = "80";
                 break;
-            case "6":
+            case "4":
                 alpha = "99";
                 break;
-            case "7":
+            case "3":
                 alpha = "B3";
                 break;
-            case "8":
+            case "2":
                 alpha = "CC";
                 break;
-            case "9":
+            case "1":
                 alpha = "E6";
                 break;
-            case "10":
+            case "0":
                 alpha = "FF";
                 break;
         }
