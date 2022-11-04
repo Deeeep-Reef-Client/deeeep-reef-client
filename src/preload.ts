@@ -1086,6 +1086,13 @@ window.addEventListener("DOMContentLoaded", () => {
                     <button id="themeMakerExportButton"
                         class="assetswapper-new-button">Export</button>
                 </div>
+                <div class="spacer"></div>
+                <div style="display:flex">
+                    <input type="file" accept=".json" id="importThemeFile">
+                    <div class="spacer"></div>
+                    <button id="themeMakerImportButton"
+                        class="assetswapper-new-button">Import</button>
+                </div>
             </div>
             <button id="themeMakerImportExportCloseButton" class="drc-modal-close"><svg width="1.125em" height="1.125em"
                     viewBox="0 0 24 24" class="svg-icon" color="gray" style="--sx:1; --sy:1; --r:0deg;">
@@ -1101,7 +1108,9 @@ window.addEventListener("DOMContentLoaded", () => {
     const themeMakerImportExportModalContainer = document.getElementById("themeMakerImportExportModalContainer");
     const themeMakerImportExportCloseButton = document.getElementById("themeMakerImportExportCloseButton");
     const exportThemeDropdown = document.getElementById("exportThemeDropdown") as HTMLSelectElement;
+    const importThemeFile = document.getElementById("importThemeFile") as HTMLInputElement;
     const themeMakerExportButton = document.getElementById("themeMakerExportButton");
+    const themeMakerImportButton = document.getElementById("themeMakerImportButton");
 
     function reloadExportThemeDropdown() {
         exportThemeDropdown.innerHTML = "";
@@ -1146,6 +1155,36 @@ window.addEventListener("DOMContentLoaded", () => {
                 });
             }
         })
+    });
+
+    // import
+    themeMakerImportButton!.addEventListener("click", () => {
+        // @ts-ignore I KNOW BETTER
+        if (importThemeFile.files.length == 0) return;
+        // @ts-ignore I KNOW BETTER
+        const theme = importThemeFile.files[0];
+        const reader = new FileReader();
+        reader.addEventListener('load', (event: Event) => {
+            let parsedTheme: any = {};
+            try {
+                // @ts-ignore I KNOW BETTER
+                parsedTheme = JSON.parse(atob(event.target.result.split(new RegExp(","))[1]));
+            } catch (e) {
+                new Notification("Something went wrong", {
+                    body: "Something went wrong while importing your theme. Check that it is not corrupted."
+                });
+            }
+            settings.userThemeData.push({
+                name: parsedTheme.name,
+                src: parsedTheme.src,
+                active: false
+            })
+            themeMakerImportExportModalContainer!.classList.toggle("drc-modal-hidden");
+            // TODO make imported auto active
+            updateThemeList();
+            reloadCustomTheme();
+        });
+        reader.readAsDataURL(theme);
     });
 
     // Watch for match start
