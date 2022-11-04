@@ -7,6 +7,7 @@ A simple client for Deeeep.io
 
 -  Asset swapper  
 - Custom Theme  
+- Theme Maker  
 - Discord Rich Presence  
 - Built-in Docassets  
 - Better UI  
@@ -44,4 +45,4 @@ npm run start
 ```
 
 # License  
-DRC is licensed under the [GNU GPL](https://www.gnu.org/licenses/gpl-3.0.en.html)  
+DRC is licensed under the [GNU GPL v3](https://www.gnu.org/licenses/gpl-3.0.en.html)  
