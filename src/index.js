@@ -16,7 +16,7 @@ const development = false;
 // Auto update
 let newUpdate = false;
 let instUrl = "";
-const versionId = "v0.6.0-beta";
+const versionId = "v0.6.1-beta";
 let currentVersionId = "";
 const schema = {
     settings: {
