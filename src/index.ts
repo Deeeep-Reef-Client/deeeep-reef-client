@@ -231,14 +231,19 @@ const createWindow = () => {
 
     ipcMain.on("evalInBrowserContext", (_event: Event, code: string) => {
         window.webContents.executeJavaScript(code);
-    })
+    });
 
     // window.show();
 
     // listen for app path requests
     ipcMain.on("getPath", (_event: Event, path: string) => {
         window.webContents.send("gettedPath", app.getPath(path));
-    })
+    });
+
+    // toggle DevTools on request
+    ipcMain.on("openDevTools", () => {
+        window.webContents.openDevTools();
+    });
 };
 
 app.on('ready', () => {

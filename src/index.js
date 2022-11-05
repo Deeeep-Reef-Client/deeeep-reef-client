@@ -212,6 +212,10 @@ const createWindow = () => {
     ipcMain.on("getPath", (_event, path) => {
         window.webContents.send("gettedPath", app.getPath(path));
     });
+    // toggle DevTools on request
+    ipcMain.on("openDevTools", () => {
+        window.webContents.openDevTools();
+    });
 };
 app.on('ready', () => {
     // Check for updates
