@@ -452,6 +452,17 @@ window.addEventListener("DOMContentLoaded", () => {
     treeCloseButton.addEventListener("click", () => {
         treeModalContainer.classList.toggle("drc-modal-hidden");
     });
+    // hotkey V for toggling evolution tree
+    window.addEventListener("keydown", (key) => {
+        if (!(key.code == "KeyV"))
+            return;
+        treeModalContainer.classList.remove("drc-modal-hidden");
+    });
+    window.addEventListener("keyup", (key) => {
+        if (!(key.code == "KeyV"))
+            return;
+        treeModalContainer.classList.add("drc-modal-hidden");
+    });
     // Asset swapper
     // Asset swapper button
     const topRightNav = document.querySelector("div.el-row.top-right-nav.items-center");
