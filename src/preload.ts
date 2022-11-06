@@ -1213,19 +1213,30 @@ window.addEventListener("DOMContentLoaded", () => {
         reader.readAsDataURL(theme);
     });
 
-       // Plugins button
-       const pluginsButtonWrapper = settingsButtonWrapper!.cloneNode(true) as HTMLDivElement;
-       const pluginsButton = pluginsButtonWrapper.firstElementChild as HTMLButtonElement;
-       pluginsButtonWrapper.setAttribute("id", "pluginsButtonWrapper");
-       pluginsButton.setAttribute("id", "pluginsButton");
-       pluginsButton.querySelector("span[class]")!.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-wrench" viewBox="0 0 16 16">
+    // Plugins button
+    let pluginList: any = {};
+    fetch("https://deeeep-reef-client.github.io/plugins-api/registry.json")
+        .then(res => res.json())
+        .then(data => pluginList = data);
+
+    const pluginsButtonWrapper = settingsButtonWrapper!.cloneNode(true) as HTMLDivElement;
+    const pluginsButton = pluginsButtonWrapper.firstElementChild as HTMLButtonElement;
+    pluginsButtonWrapper.setAttribute("id", "pluginsButtonWrapper");
+    pluginsButton.setAttribute("id", "pluginsButton");
+    pluginsButton.querySelector("span[class]")!.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-wrench" viewBox="0 0 16 16">
        <path d="M.102 2.223A3.004 3.004 0 0 0 3.78 5.897l6.341 6.252A3.003 3.003 0 0 0 13 16a3 3 0 1 0-.851-5.878L5.897 3.781A3.004 3.004 0 0 0 2.223.1l2.141 2.142L4 4l-1.757.364L.102 2.223zm13.37 9.019.528.026.287.445.445.287.026.529L15 13l-.242.471-.026.529-.445.287-.287.445-.529.026L13 15l-.471-.242-.529-.026-.287-.445-.445-.287-.026-.529L11 13l.242-.471.026-.529.445-.287.287-.445.529-.026L13 11l.471.242z"/>
      </svg>`
-       topRightNav!.insertBefore(pluginsButtonWrapper, settingsButtonWrapper);
-   
-       const pluginsDiv = document.createElement("div");
-       document.getElementById("app")!.appendChild(pluginsDiv);
-       pluginsDiv.outerHTML = `
+    topRightNav!.insertBefore(pluginsButtonWrapper, settingsButtonWrapper);
+
+    const pluginsStyle = document.createElement("style");
+    pluginsStyle.innerHTML = `
+    
+    `;
+    document.head.appendChild(pluginsStyle);
+
+    const pluginsDiv = document.createElement("div");
+    document.getElementById("app")!.appendChild(pluginsDiv);
+    pluginsDiv.outerHTML = `
        <div id="pluginsModalContainer" class="drc-modal-modal-container drc-modal-hidden">
        <div class="drc-modal-overlay vfm--overlay"></div>
        <div id="pluginsContainer" class="drc-modal-container">
@@ -1252,21 +1263,21 @@ window.addEventListener("DOMContentLoaded", () => {
        </div>
    </div>
    `;
-       const pluginsModalContainer = document.getElementById("pluginsModalContainer");
-       const pluginsCloseButton = document.getElementById("pluginsCloseButton");
-       const searchPluginsButton = document.getElementById("searchPluginsButton") as HTMLButtonElement;
+    const pluginsModalContainer = document.getElementById("pluginsModalContainer");
+    const pluginsCloseButton = document.getElementById("pluginsCloseButton");
+    const searchPluginsButton = document.getElementById("searchPluginsButton") as HTMLButtonElement;
 
-       // Plugins button onclick
-       pluginsButton.addEventListener("click", () => {
-           pluginsModalContainer!.classList.toggle("drc-modal-hidden");
-       });
-       pluginsCloseButton!.addEventListener("click", () => {
-           pluginsModalContainer!.classList.toggle("drc-modal-hidden");
-       });
+    // Plugins button onclick
+    pluginsButton.addEventListener("click", () => {
+        pluginsModalContainer!.classList.toggle("drc-modal-hidden");
+    });
+    pluginsCloseButton!.addEventListener("click", () => {
+        pluginsModalContainer!.classList.toggle("drc-modal-hidden");
+    });
 
-       const searchPluginsDiv = document.createElement("div");
-       document.getElementById("app")!.appendChild(searchPluginsDiv);
-       searchPluginsDiv.outerHTML = `
+    const searchPluginsDiv = document.createElement("div");
+    document.getElementById("app")!.appendChild(searchPluginsDiv);
+    searchPluginsDiv.outerHTML = `
        <div id="searchPluginsModalContainer" class="drc-modal-modal-container drc-modal-hidden">
        <div id="searchPluginsContainer" class="drc-modal-container">
            <div id="searchPluginsModal" class="modal-content drc-modal-modal-content">
@@ -1276,7 +1287,7 @@ window.addEventListener("DOMContentLoaded", () => {
                    <div></div>
                </span>
                <div class="drc-modal-content">
-                   Idk
+               <div id="searchPluginsList"></div>
                </div>
                <button id="searchPluginsCloseButton" class="drc-modal-close"><svg width="1.125em" height="1.125em" viewBox="0 0 24 24"
                        class="svg-icon" color="gray" style="--sx:1; --sy:1; --r:0deg;">
@@ -1288,16 +1299,65 @@ window.addEventListener("DOMContentLoaded", () => {
        </div>
    </div>
    `;
-       const searchPluginsModalContainer = document.getElementById("searchPluginsModalContainer");
-       const searchPluginsCloseButton = document.getElementById("searchPluginsCloseButton");
+    const searchPluginsModalContainer = document.getElementById("searchPluginsModalContainer");
+    const searchPluginsCloseButton = document.getElementById("searchPluginsCloseButton");
+    const searchPluginsList = document.getElementById("searchPluginsList");
 
-       // Plugins button onclick
-       searchPluginsButton!.addEventListener("click", () => {
-           searchPluginsModalContainer!.classList.toggle("drc-modal-hidden");
-       });
-       searchPluginsCloseButton!.addEventListener("click", () => {
-           searchPluginsModalContainer!.classList.toggle("drc-modal-hidden");
-       });
+    function updateSearchPluginsList() {
+        searchPluginsList!.innerHTML = "";
+        for (let i in pluginList.list) {
+            const mainElem = document.createElement("div");
+            mainElem.setAttribute("id", pluginList.list[i]);
+            mainElem.classList.add("assetswapper-list-rule")
+
+            // plugin name
+            const nameElem = document.createElement("p");
+            nameElem.innerText = pluginList.list[i]!.name;
+            mainElem.appendChild(nameElem);
+
+            const spacer1 = document.createElement("div");
+            spacer1.classList.add("spacer");
+            mainElem.appendChild(spacer1);
+
+            // plugin description
+            const descElem = document.createElement("p");
+            descElem.innerText = pluginList.list[i]!.description;
+            mainElem.appendChild(descElem);
+
+            const spacer2 = document.createElement("div");
+            spacer2.classList.add("spacer");
+            mainElem.appendChild(spacer2);
+
+            // plugin author
+            const authorElem = document.createElement("p");
+            authorElem.innerText = pluginList.list[i]!.author;
+            mainElem.appendChild(authorElem);
+
+            const spacer3 = document.createElement("div");
+            spacer3.classList.add("spacer");
+            mainElem.appendChild(spacer3);
+
+            // Install button
+            const installElem = document.createElement("button");
+            installElem.classList.add("assetswapper-new-button");
+            installElem.innerText = "Install";
+            installElem.addEventListener("click", () => {
+                console.log("idk");
+            });
+            mainElem.appendChild(installElem);
+
+            searchPluginsList!.appendChild(mainElem);
+        }
+    };
+
+    // Plugins button onclick
+    searchPluginsButton!.addEventListener("click", () => {
+        searchPluginsModalContainer!.classList.toggle("drc-modal-hidden");
+        updateSearchPluginsList();
+    });
+    searchPluginsCloseButton!.addEventListener("click", () => {
+        searchPluginsModalContainer!.classList.toggle("drc-modal-hidden");
+    });
 
 
     // Watch for match start
