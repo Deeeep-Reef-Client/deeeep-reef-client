@@ -1236,7 +1236,11 @@ window.addEventListener("DOMContentLoaded", () => {
                    <div></div>
                </span>
                <div class="drc-modal-content">
-                   idk
+                   <button id="searchPluginsButton" class="assetswapper-new-button assetswapper-add-button"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                       class="bi bi-plus" viewBox="0 0 16 16">
+                       <path
+                           d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                   </svg>Search</button>
                </div>
                <button id="pluginsCloseButton" class="drc-modal-close"><svg width="1.125em" height="1.125em" viewBox="0 0 24 24"
                        class="svg-icon" color="gray" style="--sx:1; --sy:1; --r:0deg;">
@@ -1250,12 +1254,49 @@ window.addEventListener("DOMContentLoaded", () => {
    `;
        const pluginsModalContainer = document.getElementById("pluginsModalContainer");
        const pluginsCloseButton = document.getElementById("pluginsCloseButton");
+       const searchPluginsButton = document.getElementById("searchPluginsButton") as HTMLButtonElement;
+
        // Plugins button onclick
        pluginsButton.addEventListener("click", () => {
            pluginsModalContainer!.classList.toggle("drc-modal-hidden");
        });
        pluginsCloseButton!.addEventListener("click", () => {
            pluginsModalContainer!.classList.toggle("drc-modal-hidden");
+       });
+
+       const searchPluginsDiv = document.createElement("div");
+       document.getElementById("app")!.appendChild(searchPluginsDiv);
+       searchPluginsDiv.outerHTML = `
+       <div id="searchPluginsModalContainer" class="drc-modal-modal-container drc-modal-hidden">
+       <div id="searchPluginsContainer" class="drc-modal-container">
+           <div id="searchPluginsModal" class="modal-content drc-modal-modal-content">
+               <span class="drc-modal-title">
+                   <div></div>
+                   <div class="justify-self-center">Search Plugins / Themes</div>
+                   <div></div>
+               </span>
+               <div class="drc-modal-content">
+                   Idk
+               </div>
+               <button id="searchPluginsCloseButton" class="drc-modal-close"><svg width="1.125em" height="1.125em" viewBox="0 0 24 24"
+                       class="svg-icon" color="gray" style="--sx:1; --sy:1; --r:0deg;">
+                       <path
+                           d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z">
+                       </path>
+                   </svg></button>
+           </div>
+       </div>
+   </div>
+   `;
+       const searchPluginsModalContainer = document.getElementById("searchPluginsModalContainer");
+       const searchPluginsCloseButton = document.getElementById("searchPluginsCloseButton");
+
+       // Plugins button onclick
+       searchPluginsButton!.addEventListener("click", () => {
+           searchPluginsModalContainer!.classList.toggle("drc-modal-hidden");
+       });
+       searchPluginsCloseButton!.addEventListener("click", () => {
+           searchPluginsModalContainer!.classList.toggle("drc-modal-hidden");
        });
 
 
