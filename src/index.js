@@ -12,7 +12,7 @@ const spawnSync = require('child_process').spawnSync;
 const fs = require('fs');
 log.info('DRC starting...');
 // stuff
-const development = false;
+const development = true;
 // Auto update
 let newUpdate = false;
 let instUrl = "";

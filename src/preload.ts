@@ -55,7 +55,7 @@ window.addEventListener("DOMContentLoaded", () => {
     // DRC
     const clientVersion = document.querySelector(".client-version") as HTMLSpanElement;
     /// @REMIND Update client version
-    clientVersion.innerText = clientVersion.innerText + ", DRC v0.6.1b";
+    clientVersion.innerText = clientVersion.innerText + ", DRC v0.7.0b";
 
     // devtools
     window.addEventListener("keydown", (key: KeyboardEvent) => {
@@ -1213,6 +1213,52 @@ window.addEventListener("DOMContentLoaded", () => {
         reader.readAsDataURL(theme);
     });
 
+       // Plugins button
+       const pluginsButtonWrapper = settingsButtonWrapper!.cloneNode(true) as HTMLDivElement;
+       const pluginsButton = pluginsButtonWrapper.firstElementChild as HTMLButtonElement;
+       pluginsButtonWrapper.setAttribute("id", "pluginsButtonWrapper");
+       pluginsButton.setAttribute("id", "pluginsButton");
+       pluginsButton.querySelector("span[class]")!.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-wrench" viewBox="0 0 16 16">
+       <path d="M.102 2.223A3.004 3.004 0 0 0 3.78 5.897l6.341 6.252A3.003 3.003 0 0 0 13 16a3 3 0 1 0-.851-5.878L5.897 3.781A3.004 3.004 0 0 0 2.223.1l2.141 2.142L4 4l-1.757.364L.102 2.223zm13.37 9.019.528.026.287.445.445.287.026.529L15 13l-.242.471-.026.529-.445.287-.287.445-.529.026L13 15l-.471-.242-.529-.026-.287-.445-.445-.287-.026-.529L11 13l.242-.471.026-.529.445-.287.287-.445.529-.026L13 11l.471.242z"/>
+     </svg>`
+       topRightNav!.insertBefore(pluginsButtonWrapper, settingsButtonWrapper);
+   
+       const pluginsDiv = document.createElement("div");
+       document.getElementById("app")!.appendChild(pluginsDiv);
+       pluginsDiv.outerHTML = `
+       <div id="pluginsModalContainer" class="drc-modal-modal-container drc-modal-hidden">
+       <div class="drc-modal-overlay vfm--overlay"></div>
+       <div id="pluginsContainer" class="drc-modal-container">
+           <div id="pluginsModal" class="modal-content drc-modal-modal-content">
+               <span class="drc-modal-title">
+                   <div></div>
+                   <div class="justify-self-center">Plugins</div>
+                   <div></div>
+               </span>
+               <div class="drc-modal-content">
+                   idk
+               </div>
+               <button id="pluginsCloseButton" class="drc-modal-close"><svg width="1.125em" height="1.125em" viewBox="0 0 24 24"
+                       class="svg-icon" color="gray" style="--sx:1; --sy:1; --r:0deg;">
+                       <path
+                           d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z">
+                       </path>
+                   </svg></button>
+           </div>
+       </div>
+   </div>
+   `;
+       const pluginsModalContainer = document.getElementById("pluginsModalContainer");
+       const pluginsCloseButton = document.getElementById("pluginsCloseButton");
+       // Plugins button onclick
+       pluginsButton.addEventListener("click", () => {
+           pluginsModalContainer!.classList.toggle("drc-modal-hidden");
+       });
+       pluginsCloseButton!.addEventListener("click", () => {
+           pluginsModalContainer!.classList.toggle("drc-modal-hidden");
+       });
+
+
     // Watch for match start
     const btn = document.querySelector(".play");
     btn!.addEventListener("click", () => {
@@ -1296,7 +1342,8 @@ window.addEventListener("DOMContentLoaded", () => {
             characterData: false,
             subtree: true
         });
-    })
+    });
+
 });
 window.addEventListener("load", () => {
     // reload custom theme when everything loaded to prevent bug
