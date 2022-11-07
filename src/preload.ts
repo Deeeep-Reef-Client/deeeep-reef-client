@@ -1238,7 +1238,11 @@ window.addEventListener("DOMContentLoaded", () => {
 
     const pluginsStyle = document.createElement("style");
     pluginsStyle.innerHTML = `
-    
+        .plugins-search-bar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
     `;
     document.head.appendChild(pluginsStyle);
 
@@ -1286,30 +1290,43 @@ window.addEventListener("DOMContentLoaded", () => {
     const searchPluginsDiv = document.createElement("div");
     document.getElementById("app")!.appendChild(searchPluginsDiv);
     searchPluginsDiv.outerHTML = `
-       <div id="searchPluginsModalContainer" class="drc-modal-modal-container drc-modal-hidden">
-       <div id="searchPluginsContainer" class="drc-modal-container">
-           <div id="searchPluginsModal" class="modal-content drc-modal-modal-content">
-               <span class="drc-modal-title">
-                   <div></div>
-                   <div class="justify-self-center">Search Plugins / Themes</div>
-                   <div></div>
-               </span>
-               <div class="drc-modal-content">
-               <div id="searchPluginsList"></div>
-               </div>
-               <button id="searchPluginsCloseButton" class="drc-modal-close"><svg width="1.125em" height="1.125em" viewBox="0 0 24 24"
-                       class="svg-icon" color="gray" style="--sx:1; --sy:1; --r:0deg;">
-                       <path
-                           d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z">
-                       </path>
-                   </svg></button>
-           </div>
-       </div>
-   </div>
+    <div id="searchPluginsModalContainer" class="drc-modal-modal-container drc-modal-hidden">
+    <div id="searchPluginsContainer" class="drc-modal-container">
+        <div id="searchPluginsModal" class="modal-content drc-modal-modal-content">
+            <span class="drc-modal-title">
+                <div></div>
+                <div class="justify-self-center">Search Plugins / Themes</div>
+                <div></div>
+            </span>
+            <div class="drc-modal-content">
+                <div class="plugins-search-bar">
+                    <input id="pluginsSearchQuery" placeholder="Find plugin">
+                    <div class="spacer"></div>
+                    <button id="pluginsSearchButton" class="assetswapper-new-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-search" viewBox="0 0 16 16">
+                            <path
+                                d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                        </svg>Search</button>
+                </div>
+                <div id="searchPluginsList"></div>
+            </div>
+            <button id="searchPluginsCloseButton" class="drc-modal-close"><svg width="1.125em" height="1.125em"
+                    viewBox="0 0 24 24" class="svg-icon" color="gray" style="--sx:1; --sy:1; --r:0deg;">
+                    <path
+                        d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z">
+                    </path>
+                </svg></button>
+        </div>
+    </div>
+</div>
    `;
     const searchPluginsModalContainer = document.getElementById("searchPluginsModalContainer");
     const searchPluginsCloseButton = document.getElementById("searchPluginsCloseButton");
     const searchPluginsList = document.getElementById("searchPluginsList");
+
+    const pluginsSearchQuery = document.getElementById("pluginsSearchQuery");
+    const pluginsSearchButton = document.getElementById("pluginsSearchButton");
 
     function updateSearchPluginsList() {
         searchPluginsList!.innerHTML = "";
