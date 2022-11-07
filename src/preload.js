@@ -299,6 +299,10 @@ window.addEventListener("DOMContentLoaded", () => {
         width: 10px;
         height: 10px;
     }
+    .hw-spacer{
+        width: 5px;
+        height: 10px;
+    }
     `;
     document.head.appendChild(miscStyles);
     // Evolution tree button
@@ -1180,9 +1184,13 @@ window.addEventListener("DOMContentLoaded", () => {
     });
     // Plugins button
     let pluginList = {};
+    let filteredPluginList = {};
     fetch("https://deeeep-reef-client.github.io/plugins-api/registry.json")
         .then(res => res.json())
-        .then(data => pluginList = data);
+        .then(data => {
+        pluginList = data;
+        filteredPluginList = data;
+    });
     const pluginsButtonWrapper = settingsButtonWrapper.cloneNode(true);
     const pluginsButton = pluginsButtonWrapper.firstElementChild;
     pluginsButtonWrapper.setAttribute("id", "pluginsButtonWrapper");
@@ -1264,31 +1272,56 @@ window.addEventListener("DOMContentLoaded", () => {
     const searchPluginsList = document.getElementById("searchPluginsList");
     function updateSearchPluginsList() {
         searchPluginsList.innerHTML = "";
-        for (let i in pluginList.list) {
+        for (let i in filteredPluginList.list) {
             const mainElem = document.createElement("div");
-            mainElem.setAttribute("id", pluginList.list[i]);
+            mainElem.setAttribute("id", filteredPluginList.list[i].id);
             mainElem.classList.add("assetswapper-list-rule");
             // plugin name
             const nameElem = document.createElement("p");
-            nameElem.innerText = pluginList.list[i].name;
+            nameElem.innerText = filteredPluginList.list[i].name;
             mainElem.appendChild(nameElem);
-            const spacer1 = document.createElement("div");
-            spacer1.classList.add("spacer");
-            mainElem.appendChild(spacer1);
+            const spacer11 = document.createElement("div");
+            spacer11.classList.add("hw-spacer");
+            mainElem.appendChild(spacer11);
+            const hyphen1 = document.createElement("p");
+            hyphen1.innerText = "-";
+            mainElem.appendChild(hyphen1);
+            const spacer12 = document.createElement("div");
+            spacer12.classList.add("hw-spacer");
+            mainElem.appendChild(spacer12);
             // plugin description
             const descElem = document.createElement("p");
-            descElem.innerText = pluginList.list[i].description;
+            descElem.innerText = filteredPluginList.list[i].description;
             mainElem.appendChild(descElem);
-            const spacer2 = document.createElement("div");
-            spacer2.classList.add("spacer");
-            mainElem.appendChild(spacer2);
+            const spacer21 = document.createElement("div");
+            spacer21.classList.add("hw-spacer");
+            mainElem.appendChild(spacer21);
+            const hyphen2 = document.createElement("p");
+            hyphen2.innerText = "-";
+            mainElem.appendChild(hyphen2);
+            const spacer22 = document.createElement("div");
+            spacer22.classList.add("hw-spacer");
+            mainElem.appendChild(spacer22);
+            // plugin type
+            const typeElem = document.createElement("p");
+            typeElem.innerText = filteredPluginList.list[i].type;
+            mainElem.appendChild(typeElem);
+            const spacer31 = document.createElement("div");
+            spacer31.classList.add("hw-spacer");
+            mainElem.appendChild(spacer31);
+            const hyphen3 = document.createElement("p");
+            hyphen3.innerText = "-";
+            mainElem.appendChild(hyphen3);
+            const spacer32 = document.createElement("div");
+            spacer32.classList.add("hw-spacer");
+            mainElem.appendChild(spacer32);
             // plugin author
             const authorElem = document.createElement("p");
-            authorElem.innerText = pluginList.list[i].author;
+            authorElem.innerText = filteredPluginList.list[i].author;
             mainElem.appendChild(authorElem);
-            const spacer3 = document.createElement("div");
-            spacer3.classList.add("spacer");
-            mainElem.appendChild(spacer3);
+            const spacer4 = document.createElement("div");
+            spacer4.classList.add("spacer");
+            mainElem.appendChild(spacer4);
             // Install button
             const installElem = document.createElement("button");
             installElem.classList.add("assetswapper-new-button");
