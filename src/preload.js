@@ -27,7 +27,8 @@ let settings = {
     assetSwapperConfig: [],
     lightTheme: false,
     userTheme: true,
-    userThemeData: []
+    userThemeData: [],
+    pluginsData: []
 };
 ipcRenderer.on("settings", (_event, s) => {
     settings = s;

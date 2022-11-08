@@ -73,7 +73,8 @@ if (settings === undefined) {
         assetSwapperConfig: [],
         lightTheme: false,
         userTheme: true,
-        userThemeData: []
+        userThemeData: [],
+        pluginsData: []
     };
     store.set("settings", settings);
 }
@@ -199,6 +200,11 @@ const createWindow = () => {
     ;
     if (settings.userThemeData === undefined) {
         settings.userThemeData = [];
+        store.set("settings", settings);
+    }
+    ;
+    if (settings.pluginsData === undefined) {
+        settings.pluginsData = [];
         store.set("settings", settings);
     }
     ;

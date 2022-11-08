@@ -33,6 +33,7 @@ interface SettingsTemplate {
     lightTheme: boolean;
     userTheme: boolean;
     userThemeData: Array<any>;
+    pluginsData: Array<any>;
 }
 
 const schema = {
@@ -91,7 +92,8 @@ if (settings === undefined) {
         assetSwapperConfig: [],
         lightTheme: false,
         userTheme: true,
-        userThemeData: []
+        userThemeData: [],
+        pluginsData: []
     };
     store.set("settings", settings);
 }
@@ -226,6 +228,10 @@ const createWindow = () => {
         store.set("settings", settings);
     };
 
+    if (settings.pluginsData === undefined) {
+        settings.pluginsData = [];
+        store.set("settings", settings);
+    };
     // Loads settings
     window.webContents.send("settings", settings);
 

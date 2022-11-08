@@ -22,6 +22,7 @@ interface SettingsTemplate {
     lightTheme: boolean;
     userTheme: boolean;
     userThemeData: Array<any>;
+    pluginsData: Array<any>;
 }
 
 let settings: SettingsTemplate = {
@@ -32,7 +33,8 @@ let settings: SettingsTemplate = {
     assetSwapperConfig: [],
     lightTheme: false,
     userTheme: true,
-    userThemeData: []
+    userThemeData: [],
+    pluginsData: []
 };
 ipcRenderer.on("settings", (_event: Event, s: SettingsTemplate) => {
     settings = s;
