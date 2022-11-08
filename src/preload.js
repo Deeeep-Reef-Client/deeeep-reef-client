@@ -1346,9 +1346,42 @@ window.addEventListener("DOMContentLoaded", () => {
             const installElem = document.createElement("button");
             installElem.classList.add("assetswapper-new-button");
             installElem.innerText = "Install";
-            installElem.addEventListener("click", () => {
-                console.log("idk");
-            });
+            installElem.addEventListener("click", () => __awaiter(this, void 0, void 0, function* () {
+                for (const i in settings.pluginsData) {
+                    if (settings.pluginsData[i].id == filteredPluginList.list[i].id) {
+                        new Notification("This plugin is already installed", {
+                            body: "You have already installed this plugin."
+                        });
+                        return;
+                    }
+                }
+                // fetch plugin src from plugin.json
+                const pluginSrc = yield fetch(`https://deeeep-reef-client.github.io/plugins-api/plugins/${filteredPluginList.list[i].id}/plugin.json`)
+                    .then(res => res.json());
+                if (filteredPluginList.list[i].type == "plugin") {
+                    // Plugin
+                }
+                else {
+                    // Theme
+                    settings.userThemeData.push({
+                        name: pluginSrc.name,
+                        src: pluginSrc.src,
+                        active: true
+                    });
+                    for (let i in settings.userThemeData) {
+                        settings.userThemeData[i].active = false;
+                    }
+                    settings.userThemeData[settings.userThemeData.length - 1].active = true;
+                    reloadCustomTheme();
+                }
+                ;
+                new Notification("Plugin installed!", {
+                    body: `The ${filteredPluginList.list[i].type} ${filteredPluginList.list[i].name} has been installed.`
+                });
+                saveSettings();
+                searchPluginsModalContainer.classList.toggle("drc-modal-hidden");
+                window.removeEventListener("keydown", searchPluginsEnterListener);
+            }));
             mainElem.appendChild(installElem);
             searchPluginsList.appendChild(mainElem);
         }
