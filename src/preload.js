@@ -1286,6 +1286,9 @@ window.addEventListener("DOMContentLoaded", () => {
     const searchPluginsList = document.getElementById("searchPluginsList");
     const pluginsSearchQuery = document.getElementById("pluginsSearchQuery");
     const pluginsSearchButton = document.getElementById("pluginsSearchButton");
+    pluginsSearchButton === null || pluginsSearchButton === void 0 ? void 0 : pluginsSearchButton.addEventListener("click", () => {
+        updateFilteredPlugins();
+    });
     function updateSearchPluginsList() {
         searchPluginsList.innerHTML = "";
         for (let i in filteredPluginList.list) {
@@ -1350,13 +1353,51 @@ window.addEventListener("DOMContentLoaded", () => {
         }
     }
     ;
+    function updateFilteredPlugins() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const search = pluginsSearchQuery.value.split(new RegExp(" "));
+            yield fetch("https://deeeep-reef-client.github.io/plugins-api/registry.json")
+                .then(res => res.json())
+                .then(data => {
+                pluginList = data;
+                filteredPluginList = data;
+            });
+            filteredPluginList.list = filteredPluginList.list.filter((p) => {
+                let result = false;
+                for (const i in search) {
+                    if (p.name.toLowerCase().includes(search[i].toLowerCase()) ||
+                        p.description.toLowerCase().includes(search[i].toLowerCase())) {
+                        result = true;
+                        break;
+                    }
+                }
+                return result;
+            });
+            updateSearchPluginsList();
+        });
+    }
+    ;
     // Plugins button onclick
-    searchPluginsButton.addEventListener("click", () => {
+    function searchPluginsEnterListener(key) {
+        if (key.code == "Enter")
+            updateFilteredPlugins();
+    }
+    ;
+    searchPluginsButton.addEventListener("click", () => __awaiter(void 0, void 0, void 0, function* () {
         searchPluginsModalContainer.classList.toggle("drc-modal-hidden");
+        pluginsSearchQuery.value = "";
+        yield fetch("https://deeeep-reef-client.github.io/plugins-api/registry.json")
+            .then(res => res.json())
+            .then(data => {
+            pluginList = data;
+            filteredPluginList = data;
+        });
         updateSearchPluginsList();
-    });
+        window.addEventListener("keydown", searchPluginsEnterListener);
+    }));
     searchPluginsCloseButton.addEventListener("click", () => {
         searchPluginsModalContainer.classList.toggle("drc-modal-hidden");
+        window.removeEventListener("keydown", searchPluginsEnterListener);
     });
     // Watch for match start
     const btn = document.querySelector(".play");
