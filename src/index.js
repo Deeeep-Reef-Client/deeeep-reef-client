@@ -355,3 +355,13 @@ rpc.on('ready', () => setDiscordActivity({
 ipcMain.on("gameInfo", (_event, gameInfo) => {
     setDiscordActivity(gameInfo);
 });
+// plugins
+for (const i in settings.pluginsData) {
+    if (settings.pluginsData[i].src.length == 0)
+        continue;
+    for (const j in settings.pluginsData[i].src) {
+        if (settings.pluginsData[i].src[j].type == "startup") {
+            eval(settings.pluginsData[i].src[j].src);
+        }
+    }
+}
