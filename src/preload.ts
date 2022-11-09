@@ -1656,6 +1656,16 @@ window.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    // plugins
+    for (const i in settings.pluginsData) {
+        if (settings.pluginsData[i].src.length == 0) continue;
+        for (const j in settings.pluginsData[i].src) {
+            if (settings.pluginsData[i].src[j].type == "domloaded") {
+                eval(settings.pluginsData[i].src[j].src);
+            }
+        }
+    }
+
 });
 window.addEventListener("load", () => {
     // reload custom theme when everything loaded to prevent bug
