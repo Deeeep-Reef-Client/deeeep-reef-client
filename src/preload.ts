@@ -1587,6 +1587,16 @@ window.addEventListener("DOMContentLoaded", () => {
                     url: window.location.href
                 });
 
+                // plugins
+                for (const i in settings.pluginsData) {
+                    if (settings.pluginsData[i].src.length == 0) continue;
+                    for (const j in settings.pluginsData[i].src) {
+                        if (settings.pluginsData[i].src[j].type == "game") {
+                            ipcRenderer.send("evalInBrowserContext", settings.pluginsData[i].src[j].src);
+                        }
+                    }
+                }
+
                 // watch for game start
                 const evolveObserver = new MutationObserver((mutations) => {
                     for (let i in settings.assetSwapperConfig) {
