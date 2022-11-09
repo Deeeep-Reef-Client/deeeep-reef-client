@@ -1251,43 +1251,109 @@ window.addEventListener("DOMContentLoaded", () => {
     const pluginsDiv = document.createElement("div");
     document.getElementById("app")!.appendChild(pluginsDiv);
     pluginsDiv.outerHTML = `
-       <div id="pluginsModalContainer" class="drc-modal-modal-container drc-modal-hidden">
-       <div class="drc-modal-overlay vfm--overlay"></div>
-       <div id="pluginsContainer" class="drc-modal-container">
-           <div id="pluginsModal" class="modal-content drc-modal-modal-content">
-               <span class="drc-modal-title">
-                   <div></div>
-                   <div class="justify-self-center">Plugins</div>
-                   <div></div>
-               </span>
-               <div class="drc-modal-content">
-                   <button id="searchPluginsButton" class="assetswapper-new-button assetswapper-add-button"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                       class="bi bi-plus" viewBox="0 0 16 16">
-                       <path
-                           d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
-                   </svg>Search</button>
-               </div>
-               <button id="pluginsCloseButton" class="drc-modal-close"><svg width="1.125em" height="1.125em" viewBox="0 0 24 24"
-                       class="svg-icon" color="gray" style="--sx:1; --sy:1; --r:0deg;">
-                       <path
-                           d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z">
-                       </path>
-                   </svg></button>
-           </div>
-       </div>
-   </div>
+    <div id="pluginsModalContainer" class="drc-modal-modal-container drc-modal-hidden">
+    <div class="drc-modal-overlay vfm--overlay"></div>
+    <div id="pluginsContainer" class="drc-modal-container">
+        <div id="pluginsModal" class="modal-content drc-modal-modal-content">
+            <span class="drc-modal-title">
+                <div></div>
+                <div class="justify-self-center">Plugins</div>
+                <div></div>
+            </span>
+            <div class="drc-modal-content">
+                <button id="searchPluginsButton" class="assetswapper-new-button assetswapper-add-button"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-plus" viewBox="0 0 16 16">
+                    <path
+                        d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                </svg>Search</button>
+                <div id="installedPluginsList"></div>
+            </div>
+            <button id="pluginsCloseButton" class="drc-modal-close"><svg width="1.125em" height="1.125em" viewBox="0 0 24 24"
+                    class="svg-icon" color="gray" style="--sx:1; --sy:1; --r:0deg;">
+                    <path
+                        d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z">
+                    </path>
+                </svg></button>
+        </div>
+    </div>
+</div>
    `;
     const pluginsModalContainer = document.getElementById("pluginsModalContainer");
     const pluginsCloseButton = document.getElementById("pluginsCloseButton");
     const searchPluginsButton = document.getElementById("searchPluginsButton") as HTMLButtonElement;
+    const installedPluginsList = document.getElementById("installedPluginsList");
+
+
+    function updateInstalledPluginsList() {
+        installedPluginsList!.innerHTML = "";
+        for (let i in settings.pluginsData) {
+            const mainElem = document.createElement("div");
+            mainElem.setAttribute("id", settings.pluginsData[i].id);
+            mainElem.classList.add("assetswapper-list-rule")
+
+            // plugin name
+            const nameElem = document.createElement("p");
+            nameElem.innerText = settings.pluginsData[i]!.name;
+            mainElem.appendChild(nameElem);
+
+            const spacer11 = document.createElement("div");
+            spacer11.classList.add("hw-spacer");
+            mainElem.appendChild(spacer11);
+            const hyphen1 = document.createElement("p");
+            hyphen1.innerText = "-";
+            mainElem.appendChild(hyphen1);
+            const spacer12 = document.createElement("div");
+            spacer12.classList.add("hw-spacer");
+            mainElem.appendChild(spacer12);
+
+            // plugin description
+            const descElem = document.createElement("p");
+            descElem.innerText = settings.pluginsData[i]!.description;
+            mainElem.appendChild(descElem);
+
+            const spacer21 = document.createElement("div");
+            spacer21.classList.add("hw-spacer");
+            mainElem.appendChild(spacer21);
+            const hyphen2 = document.createElement("p");
+            hyphen2.innerText = "-";
+            mainElem.appendChild(hyphen2);
+            const spacer22 = document.createElement("div");
+            spacer22.classList.add("hw-spacer");
+            mainElem.appendChild(spacer22);
+
+            // plugin author
+            const authorElem = document.createElement("p");
+            authorElem.innerText = settings.pluginsData[i]!.author;
+            mainElem.appendChild(authorElem);
+
+            const spacer3 = document.createElement("div");
+            spacer3.classList.add("spacer");
+            mainElem.appendChild(spacer3);
+
+            // delete button
+            const uninstallElem = document.createElement("button");
+            uninstallElem.classList.add("assetswapper-new-button");
+            uninstallElem.innerText = "Uninstall";
+            uninstallElem.addEventListener("click", () => {
+                settings.pluginsData = settings.pluginsData.filter(item => item != settings.pluginsData[i]);
+                saveSettings();
+                updateInstalledPluginsList();
+            });
+            mainElem.appendChild(uninstallElem);
+
+            installedPluginsList!.appendChild(mainElem);
+        }
+    }
 
     // Plugins button onclick
     pluginsButton.addEventListener("click", () => {
+        updateInstalledPluginsList();
         pluginsModalContainer!.classList.toggle("drc-modal-hidden");
     });
     pluginsCloseButton!.addEventListener("click", () => {
         pluginsModalContainer!.classList.toggle("drc-modal-hidden");
     });
+
 
     const searchPluginsDiv = document.createElement("div");
     document.getElementById("app")!.appendChild(searchPluginsDiv);
@@ -1400,6 +1466,7 @@ window.addEventListener("DOMContentLoaded", () => {
             installElem.classList.add("assetswapper-new-button");
             installElem.innerText = "Install";
             installElem.addEventListener("click", async () => {
+                /*
                 for (const i in settings.pluginsData) {
                     if (settings.pluginsData[i].id == filteredPluginList.list[i].id) {
                         new Notification("This plugin is already installed", {
@@ -1407,12 +1474,29 @@ window.addEventListener("DOMContentLoaded", () => {
                         });
                         return;
                     }
-                }
+                }*/
                 // fetch plugin src from plugin.json
+                let errorDownloading = false;
                 const pluginSrc = await fetch(`https://deeeep-reef-client.github.io/plugins-api/plugins/${filteredPluginList.list[i].id}/plugin.json`)
-                    .then(res => res.json());
+                    .then(res => res.json())
+                    .catch((err) => {
+                        new Notification("Something went wrong", {
+                            body: `An error occurred while downloading your plugin`
+                        });
+                        console.error(err);
+                        errorDownloading = true;
+                    });
+                if (errorDownloading) return;
                 if (filteredPluginList.list[i].type == "plugin") {
                     // Plugin
+                    settings.pluginsData.push({
+                        name: pluginSrc.name,
+                        id: pluginSrc.id,
+                        description: pluginSrc.description,
+                        author: pluginSrc.author,
+                        src: pluginSrc.src
+                    });
+                    updateInstalledPluginsList();
                 } else {
                     // Theme
                     settings.userThemeData.push({
