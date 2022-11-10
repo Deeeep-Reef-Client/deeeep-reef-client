@@ -14,12 +14,12 @@ const fs = require('fs');
 log.info('DRC starting...');
 
 // stuff
-const development = true;
+const development = false;
 
 // Auto update
 let newUpdate = false;
 let instUrl = "";
-const versionId = "v0.6.1-beta";
+const versionId = "v0.7.0-beta";
 let currentVersionId = "";
 
 // Store!
