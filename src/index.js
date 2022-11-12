@@ -171,20 +171,48 @@ const createWindow = () => {
         docassetsOn = false;
     }
     ;
+    // Loads Adblocker
+    let adBlockerOn = settings.adBlocker;
+    if (adBlockerOn === undefined) {
+        settings.adBlocker = true;
+        store.set("settings", settings);
+        adBlockerOn = true;
+    }
+    ;
     if (docassetsOn) {
         window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/docassets").then(() => {
-            // loads DRC modified js
-            window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/drc-assetswapper").then(() => {
-                window.loadURL("https://deeeep.io");
-            });
+            if (adBlockerOn) {
+                window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/ublock").then(() => {
+                    // loads DRC modified js
+                    window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/drc-assetswapper").then(() => {
+                        window.loadURL("https://deeeep.io");
+                    });
+                });
+            }
+            else {
+                // loads DRC modified js
+                window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/drc-assetswapper").then(() => {
+                    window.loadURL("https://deeeep.io");
+                });
+            }
         });
     }
     else {
         window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/drc-as-copy").then(() => {
-            // loads DRC modified js
-            window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/drc-assetswapper").then(() => {
-                window.loadURL("https://deeeep.io");
-            });
+            if (adBlockerOn) {
+                window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/ublock").then(() => {
+                    // loads DRC modified js
+                    window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/drc-assetswapper").then(() => {
+                        window.loadURL("https://deeeep.io");
+                    });
+                });
+            }
+            else {
+                // loads DRC modified js
+                window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/drc-assetswapper").then(() => {
+                    window.loadURL("https://deeeep.io");
+                });
+            }
         });
     }
     ;
@@ -211,11 +239,6 @@ const createWindow = () => {
     ;
     if (settings.pluginsData === undefined) {
         settings.pluginsData = [];
-        store.set("settings", settings);
-    }
-    ;
-    if (settings.adBlocker === undefined) {
-        settings.adBlocker = true;
         store.set("settings", settings);
     }
     ;
