@@ -421,6 +421,7 @@ window.addEventListener("DOMContentLoaded", () => {
         position: absolute;
         width: 100vw;
         height: 100vh;
+        backdrop-filter: blur(5px);
     }
     
     .tree-modal-content {
