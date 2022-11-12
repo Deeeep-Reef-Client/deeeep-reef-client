@@ -505,11 +505,11 @@ window.addEventListener("DOMContentLoaded", () => {
     });
     // hotkey V for toggling evolution tree
     window.addEventListener("keydown", (key: KeyboardEvent) => {
-        if (!(key.code == "KeyV")) return;
+        if (key.code != "KeyV" || !gameStarted) return;
         treeModalContainer!.classList.remove("drc-modal-hidden");
     });
     window.addEventListener("keyup", (key: KeyboardEvent) => {
-        if (!(key.code == "KeyV")) return;
+        if (key.code != "KeyV") return;
         treeModalContainer!.classList.add("drc-modal-hidden");
     });
 

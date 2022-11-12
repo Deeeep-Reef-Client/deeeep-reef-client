@@ -47,7 +47,7 @@ window.addEventListener("DOMContentLoaded", () => {
     // DRC
     const clientVersion = document.querySelector(".client-version");
     /// @REMIND Update client version
-    clientVersion.innerText = clientVersion.innerText + ", DRC v0.7.0b";
+    clientVersion.innerText = clientVersion.innerText + ", DRC v0.8.0b";
     // devtools
     window.addEventListener("keydown", (key) => {
         if (key.code == "F12") {
@@ -498,12 +498,12 @@ window.addEventListener("DOMContentLoaded", () => {
     });
     // hotkey V for toggling evolution tree
     window.addEventListener("keydown", (key) => {
-        if (!(key.code == "KeyV"))
+        if (key.code != "KeyV" || !gameStarted)
             return;
         treeModalContainer.classList.remove("drc-modal-hidden");
     });
     window.addEventListener("keyup", (key) => {
-        if (!(key.code == "KeyV"))
+        if (key.code != "KeyV")
             return;
         treeModalContainer.classList.add("drc-modal-hidden");
     });
