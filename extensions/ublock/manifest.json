@@ -31,18 +31,38 @@
          "description": "__MSG_toggleCosmeticFiltering__"
       }
    },
-   "content_scripts": [ {
-      "all_frames": true,
-      "js": [ "/js/vapi.js", "/js/vapi-client.js", "/js/contentscript.js" ],
-      "match_about_blank": true,
-      "matches": [ "http://*/*", "https://*/*" ],
-      "run_at": "document_start"
-   }, {
-      "all_frames": false,
-      "js": [ "/js/scriptlets/subscriber.js" ],
-      "matches": [ "https://easylist.to/*", "https://*.fanboy.co.nz/*", "https://filterlists.com/*", "https://forums.lanik.us/*", "https://github.com/*", "https://*.github.io/*", "https://*.letsblock.it/*" ],
-      "run_at": "document_idle"
-   } ],
+   "content_scripts": [
+      {
+         "all_frames": true,
+         "js": [
+            "/js/vapi.js",
+            "/js/vapi-client.js",
+            "/js/contentscript.js"
+         ],
+         "match_about_blank": true,
+         "matches": [
+            "http://*/*",
+            "https://*/*"
+         ],
+         "run_at": "document_start"
+      },
+      {
+         "all_frames": false,
+         "js": [
+            "/js/scriptlets/subscriber.js"
+         ],
+         "matches": [
+            "https://easylist.to/*",
+            "https://*.fanboy.co.nz/*",
+            "https://filterlists.com/*",
+            "https://forums.lanik.us/*",
+            "https://github.com/*",
+            "https://*.github.io/*",
+            "https://*.letsblock.it/*"
+         ],
+         "run_at": "document_idle"
+      }
+   ],
    "content_security_policy": "script-src 'self'; object-src 'self'",
    "default_locale": "en",
    "description": "__MSG_extShortDesc__",
@@ -62,12 +82,24 @@
       "open_in_tab": true,
       "page": "dashboard.html"
    },
-   "permissions": [ "contextMenus", "privacy", "storage", "tabs", "unlimitedStorage", "webNavigation", "webRequest", "webRequestBlocking", "\u003Call_urls>" ],
+   "permissions": [
+      "contextMenus",
+      "privacy",
+      "storage",
+      "tabs",
+      "unlimitedStorage",
+      "webNavigation",
+      "webRequest",
+      "webRequestBlocking",
+      "\u003Call_urls>"
+   ],
    "short_name": "uBlock₀",
    "storage": {
       "managed_schema": "managed_storage.json"
    },
    "update_url": "https://clients2.google.com/service/update2/crx",
    "version": "1.43.0",
-   "web_accessible_resources": [ "/web_accessible_resources/*" ]
+   "web_accessible_resources": [
+      "/web_accessible_resources/*"
+   ]
 }
