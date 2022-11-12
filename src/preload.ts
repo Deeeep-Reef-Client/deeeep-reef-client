@@ -1216,6 +1216,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
             updateThemeList();
             reloadCustomTheme();
+            saveSettings();
         });
         reader.readAsDataURL(theme);
     });
@@ -1570,7 +1571,6 @@ window.addEventListener("DOMContentLoaded", () => {
         searchPluginsModalContainer!.classList.toggle("drc-modal-hidden");
         window.removeEventListener("keydown", searchPluginsEnterListener);
     });
-
 
     // Watch for match start
     const btn = document.querySelector(".play");

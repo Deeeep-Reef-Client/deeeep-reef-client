@@ -1181,6 +1181,7 @@ window.addEventListener("DOMContentLoaded", () => {
             settings.userThemeData[settings.userThemeData.length - 1].active = true;
             updateThemeList();
             reloadCustomTheme();
+            saveSettings();
         });
         reader.readAsDataURL(theme);
     });
