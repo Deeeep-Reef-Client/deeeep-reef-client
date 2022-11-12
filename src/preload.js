@@ -22,13 +22,14 @@ else {
 let settings = {
     customTheme: true,
     docassets: false,
-    v3ui: false,
+    v3ui: true,
     assetSwapper: true,
     assetSwapperConfig: [],
     lightTheme: false,
     userTheme: true,
     userThemeData: [],
-    pluginsData: []
+    pluginsData: [],
+    adBlocker: true
 };
 ipcRenderer.on("settings", (_event, s) => {
     settings = s;
@@ -285,6 +286,37 @@ window.addEventListener("DOMContentLoaded", () => {
                 saveSettings();
             });
             graphicsPane.appendChild(v3uiSetting);
+            // Adblocker
+            const adBlockerSetting = graphicsPane.childNodes[2].cloneNode(true);
+            const adBlockerName = adBlockerSetting.querySelector(".el-form-item__label");
+            const adBlockerDesc = adBlockerSetting.querySelector(".notes");
+            const adBlockerCheckbox = adBlockerSetting.querySelector(".el-checkbox__input > input");
+            adBlockerName.setAttribute("id", "adBlockerName");
+            adBlockerName.innerText = "Adblocker";
+            adBlockerDesc.innerText = "Blocks advertisements";
+            if (settings.adBlocker) {
+                adBlockerSetting.querySelector(".el-checkbox__input").classList.add("is-checked");
+            }
+            else {
+                adBlockerSetting.querySelector(".el-checkbox__input").classList.remove("is-checked");
+            }
+            adBlockerCheckbox.addEventListener("click", () => {
+                new Notification("Settings updated!", {
+                    body: "Please restart the client for your changes to take effect."
+                });
+                if (settings.adBlocker) {
+                    settings.adBlocker = false;
+                    adBlockerSetting.querySelector(".el-checkbox__input").classList.remove("is-checked");
+                }
+                else {
+                    settings.adBlocker = true;
+                    adBlockerSetting.querySelector(".el-checkbox__input").classList.add("is-checked");
+                }
+                ;
+                saveSettings();
+                reloadCustomTheme();
+            });
+            graphicsPane.appendChild(adBlockerSetting);
         }
     });
     observer.observe(document.querySelector(".modals-container"), {

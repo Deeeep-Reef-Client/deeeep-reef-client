@@ -12,7 +12,7 @@ const spawnSync = require('child_process').spawnSync;
 const fs = require('fs');
 log.info('DRC starting...');
 // stuff
-const development = false;
+const development = true;
 // Auto update
 let newUpdate = false;
 let instUrl = "";
@@ -68,13 +68,14 @@ if (settings === undefined) {
     settings = {
         customTheme: true,
         docassets: false,
-        v3ui: false,
+        v3ui: true,
         assetSwapper: true,
         assetSwapperConfig: [],
         lightTheme: false,
         userTheme: true,
         userThemeData: [],
-        pluginsData: []
+        pluginsData: [],
+        adBlocker: true
     };
     store.set("settings", settings);
 }
@@ -193,6 +194,11 @@ const createWindow = () => {
         return { action: 'deny' };
     });
     // init settings if undefined
+    if (settings.customTheme === undefined) {
+        settings.customTheme = true;
+        store.set("settings", settings);
+    }
+    ;
     if (settings.assetSwapperConfig === undefined) {
         settings.assetSwapperConfig = [];
         store.set("settings", settings);
@@ -205,6 +211,11 @@ const createWindow = () => {
     ;
     if (settings.pluginsData === undefined) {
         settings.pluginsData = [];
+        store.set("settings", settings);
+    }
+    ;
+    if (settings.adBlocker === undefined) {
+        settings.adBlocker = true;
         store.set("settings", settings);
     }
     ;
