@@ -466,7 +466,31 @@ window.addEventListener("DOMContentLoaded", () => {
     .tree-modal-content {
         display: flex;
         justify-content: center;
-    }`;
+    }
+
+    .drc-hotkey {
+        border-color: rgba(107, 114, 128, 1);
+        border-width: 1px;
+        display: inline-block;
+        border-radius: 0.375rem;
+        border-radius: 0.375rem;
+        padding-left: 0.25rem;
+        padding-right: 0.25rem;
+        padding-top: 0.3em;
+        padding-bottom: 0.2em;
+        line-height: 1em;
+        pointer-events: none;
+        position: absolute;
+        bottom: -0.175rem;
+        right: -0.175rem;
+        font-size: .8em;
+    }
+
+    .drc-hotkey--dark {
+        background-color: rgba(0, 0, 0, 0.3);
+    }
+    
+    `;
     document.head.appendChild(treeStyle);
     const treeDiv = document.createElement("div");
     document.getElementById("app")!.appendChild(treeDiv);
@@ -1618,6 +1642,26 @@ window.addEventListener("DOMContentLoaded", () => {
                     gamemode: (document.querySelector('.block, .modes')!.querySelector('.selected')!.querySelector('.name') as HTMLElement)!.innerText,
                     url: window.location.href
                 });
+
+                // exit button
+                const gameOverlay = document.querySelector("div.overlay.gm-1");
+                const topRightGameOverlay = gameOverlay!.querySelector("div.top-right");
+                const topRightButtonsGameOverlay = topRightGameOverlay!.querySelector("div.buttons.button-bar > div.inner");
+                const mapButton = topRightGameOverlay!.querySelector("button.el-button.el-button--small.button.btn.nice-button.black.depressed.has-icon.square.only-icon.button");
+
+                const gameTreeButton = mapButton!.cloneNode(true) as HTMLButtonElement;
+                topRightButtonsGameOverlay!.insertBefore(gameTreeButton, mapButton);
+                gameTreeButton.querySelector("span[class]")!.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">
+                    <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5ZM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5 5 5Z"/>
+                </svg>
+                <div class="drc-hotkey hotkey drc-hotkey--dark hotkey--dark hotkey">V</div>
+                `;
+
+                gameTreeButton.addEventListener("click", () => {
+                    treeModalContainer!.classList.toggle("drc-modal-hidden");
+                });
+
 
                 // plugins
                 for (const i in settings.pluginsData) {
