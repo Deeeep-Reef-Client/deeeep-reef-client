@@ -342,6 +342,11 @@ window.addEventListener("DOMContentLoaded", () => {
                     viewingGhostsSetting.querySelector(".el-checkbox__input").classList.add("is-checked");
                 }
                 ;
+                if (gameStarted) {
+                    ipcRenderer.send("evalInBrowserContext", `
+                        game.currentScene.viewingGhosts = ${settings.viewingGhosts};
+                    `);
+                }
                 saveSettings();
             });
             graphicsPane.appendChild(viewingGhostsSetting);
@@ -1608,7 +1613,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     gamemode: document.querySelector('.block, .modes').querySelector('.selected').querySelector('.name').innerText,
                     url: window.location.href
                 });
-                // exit button
+                // tree button
                 const gameOverlay = document.querySelector("div.overlay.gm-1");
                 const topRightGameOverlay = gameOverlay.querySelector("div.top-right");
                 const topRightButtonsGameOverlay = topRightGameOverlay.querySelector("div.buttons.button-bar > div.inner");
@@ -1624,6 +1629,17 @@ window.addEventListener("DOMContentLoaded", () => {
                 gameTreeButton.addEventListener("click", () => {
                     treeModalContainer.classList.toggle("drc-modal-hidden");
                 });
+                // ghosts
+                if (settings.viewingGhosts) {
+                    ipcRenderer.send("evalInBrowserContext", `
+                        game.currentScene.viewingGhosts = true;
+                    `);
+                }
+                else {
+                    ipcRenderer.send("evalInBrowserContext", `
+                        game.currentScene.viewingGhosts = false;
+                    `);
+                }
                 // plugins
                 for (const i in settings.pluginsData) {
                     if (settings.pluginsData[i].src.length == 0)
