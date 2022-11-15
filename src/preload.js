@@ -1613,6 +1613,16 @@ window.addEventListener("DOMContentLoaded", () => {
                     gamemode: document.querySelector('.block, .modes').querySelector('.selected').querySelector('.name').innerText,
                     url: window.location.href
                 });
+                function ghostSuicide(key) {
+                    if (key.code != "KeyX")
+                        return;
+                    ipcRenderer.send("evalInBrowserContext", `
+                    if (game.currentScene.myAnimal._visibleFishLevel == 33) {
+                        game.inputManager.handleGhostSuicide();
+                    }
+                    `);
+                }
+                ;
                 // tree button
                 const gameOverlay = document.querySelector("div.overlay.gm-1");
                 const topRightGameOverlay = gameOverlay.querySelector("div.top-right");
@@ -1640,6 +1650,7 @@ window.addEventListener("DOMContentLoaded", () => {
                         game.currentScene.viewingGhosts = false;
                     `);
                 }
+                window.addEventListener("keydown", ghostSuicide);
                 // plugins
                 for (const i in settings.pluginsData) {
                     if (settings.pluginsData[i].src.length == 0)
@@ -1689,6 +1700,7 @@ window.addEventListener("DOMContentLoaded", () => {
                         gamemode: "Menu",
                         url: ''
                     });
+                    window.removeEventListener("keydown", ghostSuicide);
                 }
                 // Watch for game end
                 const closeObserver = new MutationObserver((mutations) => {
