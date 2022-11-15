@@ -14,7 +14,7 @@ const fs = require('fs');
 log.info('DRC starting...');
 
 // stuff
-const development = false;
+const development = true;
 
 // Auto update
 let newUpdate = false;
@@ -35,6 +35,7 @@ interface SettingsTemplate {
     userThemeData: Array<any>;
     pluginsData: Array<any>;
     adBlocker: boolean;
+    viewingGhosts: boolean;
 }
 
 const schema = {
@@ -76,6 +77,14 @@ const schema = {
                 items: {
                     type: "object"
                 }
+            },
+            adBlocker: {
+                type: "boolean",
+                default: true
+            },
+            viewingGhosts: {
+                type: "boolean",
+                default: true
             }
         }
     }
@@ -95,7 +104,8 @@ if (settings === undefined) {
         userTheme: true,
         userThemeData: [],
         pluginsData: [],
-        adBlocker: true
+        adBlocker: true,
+        viewingGhosts: true
     };
     store.set("settings", settings);
 }
@@ -250,6 +260,11 @@ const createWindow = () => {
     // init settings if undefined
     if (settings.customTheme === undefined) {
         settings.customTheme = true;
+        store.set("settings", settings);
+    };
+
+    if (settings.viewingGhosts === undefined) {
+        settings.viewingGhosts = true;
         store.set("settings", settings);
     };
 

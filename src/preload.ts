@@ -24,6 +24,7 @@ interface SettingsTemplate {
     userThemeData: Array<any>;
     pluginsData: Array<any>;
     adBlocker: boolean;
+    viewingGhosts: boolean;
 }
 
 let settings: SettingsTemplate = {
@@ -36,7 +37,8 @@ let settings: SettingsTemplate = {
     userTheme: true,
     userThemeData: [],
     pluginsData: [],
-    adBlocker: true
+    adBlocker: true,
+    viewingGhosts: true
 };
 ipcRenderer.on("settings", (_event: Event, s: SettingsTemplate) => {
     settings = s;
@@ -321,6 +323,31 @@ window.addEventListener("DOMContentLoaded", () => {
                 reloadCustomTheme();
             });
             graphicsPane!.appendChild(adBlockerSetting);
+
+            // Viewing Ghosts
+            const viewingGhostsSetting = graphicsPane!.childNodes[2].cloneNode(true) as HTMLDivElement;
+            const viewingGhostsName = viewingGhostsSetting.querySelector(".el-form-item__label") as HTMLDivElement;
+            const viewingGhostsDesc = viewingGhostsSetting.querySelector(".notes") as HTMLSpanElement;
+            const viewingGhostsCheckbox = viewingGhostsSetting.querySelector(".el-checkbox__input > input") as HTMLInputElement;
+            viewingGhostsName!.setAttribute("id", "viewingGhostsName");
+            viewingGhostsName!.innerText = "Viewing Ghosts";
+            viewingGhostsDesc!.innerText = "Toggles whether you see Ghosts (spectators)";
+            if (settings.viewingGhosts) {
+                viewingGhostsSetting.querySelector(".el-checkbox__input")!.classList.add("is-checked");
+            } else {
+                viewingGhostsSetting.querySelector(".el-checkbox__input")!.classList.remove("is-checked");
+            }
+            viewingGhostsCheckbox.addEventListener("click", () => {
+                if (settings.viewingGhosts) {
+                    settings.viewingGhosts = false;
+                    viewingGhostsSetting.querySelector(".el-checkbox__input")!.classList.remove("is-checked");
+                } else {
+                    settings.viewingGhosts = true;
+                    viewingGhostsSetting.querySelector(".el-checkbox__input")!.classList.add("is-checked");
+                };
+                saveSettings();
+            });
+            graphicsPane!.appendChild(viewingGhostsSetting);
         }
     });
     observer.observe(document.querySelector(".modals-container")!, {

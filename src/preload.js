@@ -29,7 +29,8 @@ let settings = {
     userTheme: true,
     userThemeData: [],
     pluginsData: [],
-    adBlocker: true
+    adBlocker: true,
+    viewingGhosts: true
 };
 ipcRenderer.on("settings", (_event, s) => {
     settings = s;
@@ -317,6 +318,33 @@ window.addEventListener("DOMContentLoaded", () => {
                 reloadCustomTheme();
             });
             graphicsPane.appendChild(adBlockerSetting);
+            // Viewing Ghosts
+            const viewingGhostsSetting = graphicsPane.childNodes[2].cloneNode(true);
+            const viewingGhostsName = viewingGhostsSetting.querySelector(".el-form-item__label");
+            const viewingGhostsDesc = viewingGhostsSetting.querySelector(".notes");
+            const viewingGhostsCheckbox = viewingGhostsSetting.querySelector(".el-checkbox__input > input");
+            viewingGhostsName.setAttribute("id", "viewingGhostsName");
+            viewingGhostsName.innerText = "Viewing Ghosts";
+            viewingGhostsDesc.innerText = "Toggles whether you see Ghosts (spectators)";
+            if (settings.viewingGhosts) {
+                viewingGhostsSetting.querySelector(".el-checkbox__input").classList.add("is-checked");
+            }
+            else {
+                viewingGhostsSetting.querySelector(".el-checkbox__input").classList.remove("is-checked");
+            }
+            viewingGhostsCheckbox.addEventListener("click", () => {
+                if (settings.viewingGhosts) {
+                    settings.viewingGhosts = false;
+                    viewingGhostsSetting.querySelector(".el-checkbox__input").classList.remove("is-checked");
+                }
+                else {
+                    settings.viewingGhosts = true;
+                    viewingGhostsSetting.querySelector(".el-checkbox__input").classList.add("is-checked");
+                }
+                ;
+                saveSettings();
+            });
+            graphicsPane.appendChild(viewingGhostsSetting);
         }
     });
     observer.observe(document.querySelector(".modals-container"), {
