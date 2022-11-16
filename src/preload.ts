@@ -25,6 +25,7 @@ interface SettingsTemplate {
     pluginsData: Array<any>;
     adBlocker: boolean;
     viewingGhosts: boolean;
+    advancedProfanityFilter: boolean;
 }
 
 let settings: SettingsTemplate = {
@@ -38,7 +39,8 @@ let settings: SettingsTemplate = {
     userThemeData: [],
     pluginsData: [],
     adBlocker: true,
-    viewingGhosts: true
+    viewingGhosts: true,
+    advancedProfanityFilter: true
 };
 ipcRenderer.on("settings", (_event: Event, s: SettingsTemplate) => {
     settings = s;
@@ -154,6 +156,9 @@ window.addEventListener("DOMContentLoaded", () => {
         if (document.contains(document.querySelector(".vfm__content, .modal-content"))) {
 
             const graphicsPane = document.querySelector("#pane-0 > .el-form");
+            const chatPane = document.querySelector("#pane-1 > .el-form");
+
+            // Graphics Settings
 
             // Custom Theme
             const customThemeSetting = graphicsPane!.childNodes[2].cloneNode(true) as HTMLDivElement;
@@ -353,6 +358,31 @@ window.addEventListener("DOMContentLoaded", () => {
                 saveSettings();
             });
             graphicsPane!.appendChild(viewingGhostsSetting);
+
+            // Chat Settings
+
+            // Advanced Profanity Filter
+            const advancedProfanityFilterSetting = chatPane!.childNodes[1].cloneNode(true) as HTMLDivElement;
+            const advancedProfanityFilterName = advancedProfanityFilterSetting.querySelector(".el-form-item__label") as HTMLDivElement;
+            const advancedProfanityFilterCheckbox = advancedProfanityFilterSetting.querySelector(".el-checkbox__input > input") as HTMLInputElement;
+            advancedProfanityFilterName!.setAttribute("id", "advancedProfanityFilterName");
+            advancedProfanityFilterName!.innerText = "Advanced Profanity Filter";
+            if (settings.advancedProfanityFilter) {
+                advancedProfanityFilterSetting.querySelector(".el-checkbox__input")!.classList.add("is-checked");
+            } else {
+                advancedProfanityFilterSetting.querySelector(".el-checkbox__input")!.classList.remove("is-checked");
+            }
+            advancedProfanityFilterCheckbox.addEventListener("click", () => {
+                if (settings.advancedProfanityFilter) {
+                    settings.advancedProfanityFilter = false;
+                    advancedProfanityFilterSetting.querySelector(".el-checkbox__input")!.classList.remove("is-checked");
+                } else {
+                    settings.advancedProfanityFilter = true;
+                    advancedProfanityFilterSetting.querySelector(".el-checkbox__input")!.classList.add("is-checked");
+                };
+                saveSettings();
+            });
+            chatPane!.appendChild(advancedProfanityFilterSetting);
         }
     });
     observer.observe(document.querySelector(".modals-container")!, {

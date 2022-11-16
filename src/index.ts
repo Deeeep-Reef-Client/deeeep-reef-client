@@ -36,6 +36,7 @@ interface SettingsTemplate {
     pluginsData: Array<any>;
     adBlocker: boolean;
     viewingGhosts: boolean;
+    advancedProfanityFilter: boolean;
 }
 
 const schema = {
@@ -85,6 +86,10 @@ const schema = {
             viewingGhosts: {
                 type: "boolean",
                 default: true
+            },
+            advancedProfanityFilter: {
+                type: "boolean",
+                default: true
             }
         }
     }
@@ -105,7 +110,8 @@ if (settings === undefined) {
         userThemeData: [],
         pluginsData: [],
         adBlocker: true,
-        viewingGhosts: true
+        viewingGhosts: true,
+        advancedProfanityFilter: true
     };
     store.set("settings", settings);
 }
@@ -265,6 +271,11 @@ const createWindow = () => {
 
     if (settings.viewingGhosts === undefined) {
         settings.viewingGhosts = true;
+        store.set("settings", settings);
+    };
+
+    if (settings.advancedProfanityFilter === undefined) {
+        settings.advancedProfanityFilter = true;
         store.set("settings", settings);
     };
 
