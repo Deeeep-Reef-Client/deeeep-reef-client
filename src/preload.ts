@@ -1684,6 +1684,14 @@ window.addEventListener("DOMContentLoaded", () => {
                     `);
                 };
 
+                function cancelBoost(key: KeyboardEvent) {
+                    if (key.code != "KeyC") return;
+                    ipcRenderer.send("evalInBrowserContext", `
+                    game.inputManager.pressElapsed = 0
+                    game.inputManager.pointerDown = false;
+                    `);
+                }
+
                 // tree button
                 const gameOverlay = document.querySelector("div.overlay.gm-1");
                 const topRightGameOverlay = gameOverlay!.querySelector("div.top-right");
@@ -1715,6 +1723,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 }
 
                 window.addEventListener("keydown", ghostSuicide);
+                window.addEventListener("keydown", cancelBoost);
 
                 // plugins
                 for (const i in settings.pluginsData) {
@@ -1769,6 +1778,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     });
 
                     window.removeEventListener("keydown", ghostSuicide);
+                    window.removeEventListener("keydown", cancelBoost);
                 }
 
                 // Watch for game end
