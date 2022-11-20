@@ -301,6 +301,18 @@ const createWindow = () => {
         window.webContents.executeJavaScript(code);
     });
 
+    interface ipcProxy {
+        channel: string;
+        data: any;
+    }
+
+    ipcMain.on("ipcProxy", (_event: Event, ipc: ipcProxy) => {
+        window.webContents.send(
+            ipc.channel,
+            ipc.data
+        )
+    })
+
     // window.show();
 
     // listen for app path requests

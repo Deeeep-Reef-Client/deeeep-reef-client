@@ -9,7 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const { ipcRenderer, app } = require('electron');
+const { ipcRenderer, app, contextBridge } = require('electron');
+const Filter = require('bad-words');
 const fs = require('fs');
 // Maintain compatibility when update
 let API_URL = "";
@@ -19,6 +20,10 @@ if (window.location.hostname.startsWith("beta")) {
 else {
     API_URL = "https://api.deeeep.io";
 }
+// expose IPC to main world
+contextBridge.exposeInMainWorld('electronAPI', {
+    ipcRenderer
+});
 let settings = {
     customTheme: true,
     docassets: false,
@@ -43,6 +48,10 @@ function saveSettings() {
 }
 // Prevent starting RPC when game already started
 let gameStarted = false;
+// expose needed APIs
+// profanity filter
+const profanityFilter = new Filter();
+profanityFilter.addWords("test");
 // IDK what happened but this is to prevent a bug from happening
 let reloadCustomTheme = () => { };
 window.addEventListener("DOMContentLoaded", () => {
@@ -1660,6 +1669,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     game.inputManager.pointerDown = false;
                     `);
                 }
+                ;
                 // tree button
                 const gameOverlay = document.querySelector("div.overlay.gm-1");
                 const topRightGameOverlay = gameOverlay.querySelector("div.top-right");
@@ -1689,6 +1699,39 @@ window.addEventListener("DOMContentLoaded", () => {
                 }
                 window.addEventListener("keydown", ghostSuicide);
                 window.addEventListener("keydown", cancelBoost);
+                let advancedProfanityFilter = setInterval(() => {
+                    ipcRenderer.send("evalInBrowserContext", `
+                        var data = [];
+                        for (let i in game.currentScene.chatMessages) {
+                            data.push({
+                                text: {
+                                    _text: game.currentScene.chatMessages[i].text._text
+                                }
+                            });
+                        }
+                        window.electronAPI.ipcRenderer.send("ipcProxy", {
+                            channel: "gameChatMessages",
+                            data
+                        });
+                    `);
+                    ipcRenderer.once("gameChatMessages", (_event, chatMessages) => {
+                        for (let i in chatMessages) {
+                            const message = chatMessages[i].text._text;
+                            if (profanityFilter.isProfane(message)) {
+                                const cleaned = profanityFilter.clean(message);
+                                console.log(cleaned);
+                                ipcRenderer.send("evalInBrowserContext", `
+                                console.log(game.currentScene.chatMessages[${i}])
+                                console.log(game.currentScene.chatMessages[${i}].setText)
+                                
+                                    game.currentScene.chatMessages[${i}].setText(
+                                        "${cleaned}"
+                                    );
+                                `);
+                            }
+                        }
+                    });
+                }, 200);
                 // plugins
                 for (const i in settings.pluginsData) {
                     if (settings.pluginsData[i].src.length == 0)
@@ -1740,6 +1783,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     });
                     window.removeEventListener("keydown", ghostSuicide);
                     window.removeEventListener("keydown", cancelBoost);
+                    clearInterval(advancedProfanityFilter);
                 }
                 // Watch for game end
                 const closeObserver = new MutationObserver((mutations) => {

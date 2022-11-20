@@ -271,6 +271,9 @@ const createWindow = () => {
     ipcMain.on("evalInBrowserContext", (_event, code) => {
         window.webContents.executeJavaScript(code);
     });
+    ipcMain.on("ipcProxy", (_event, ipc) => {
+        window.webContents.send(ipc.channel, ipc.data);
+    });
     // window.show();
     // listen for app path requests
     ipcMain.on("getPath", (_event, path) => {
