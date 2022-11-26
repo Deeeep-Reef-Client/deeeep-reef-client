@@ -18,6 +18,14 @@ contextBridge.exposeInMainWorld('electronAPI', {
     ipcRenderer
 })
 
+
+interface ConsoleMessageEvent {
+    level: Number;
+    message: string;
+    line: Number;
+    sourceId: string;
+}
+
 // Settings
 interface SettingsTemplate {
     customTheme: boolean;
@@ -1708,15 +1716,44 @@ window.addEventListener("DOMContentLoaded", () => {
         if (gameStarted) return;
         const element = document.getElementById("app");
 
+        /*ipcRenderer.on("console-message", (_event: Event, message: ConsoleMessageEvent) => {
+            console.log(message.message)
+        });*/
+        /*Common.playLoadProgress (old, new),100,0
+        ['Common.playLoadProgress (old, new)', 100, 0]*/
+
         // Wait until game finished loading to log URL for RPC
+        let gamemode = "";
+        let prePd = false; // insert cryptic name because I can't think of anything else
         const openObserver = new MutationObserver((mutations: MutationRecord[]) => {
             if (document.contains(document.querySelector(".playing"))) {
                 gameStarted = true;
-                openObserver.disconnect();
+                gamemode = (document.querySelector('.block, .modes')!.querySelector('.selected')!.querySelector('.name') as HTMLElement)!.innerText;
                 ipcRenderer.send("gameInfo", {
-                    gamemode: (document.querySelector('.block, .modes')!.querySelector('.selected')!.querySelector('.name') as HTMLElement)!.innerText,
+                    gamemode,
                     url: window.location.href
                 });
+
+                if (gamemode.toLowerCase() == "ffa" || gamemode.toLowerCase() == "tffa") {
+                    console.log("FFA and TFFA detected");
+                    openObserver.disconnect();
+                } else {
+                    console.log("PD and 1v1 detected.");
+                };
+
+                if (
+                    !document.contains(document.querySelector("div.pd-preparation")) &&
+                    (gamemode.toLowerCase() != "ffa" && gamemode.toLowerCase() != "tffa")
+                ) {
+                    if (!prePd) {
+                        prePd = true;
+                        return;
+                    }
+                    console.log("Game started.")
+                    openObserver.disconnect();
+                } else if (gamemode.toLowerCase() != "ffa" && gamemode.toLowerCase() != "tffa") {
+                    return;
+                };
 
                 function ghostSuicide(key: KeyboardEvent) {
                     if (key.code != "KeyX") return;
@@ -1736,23 +1773,25 @@ window.addEventListener("DOMContentLoaded", () => {
                 };
 
                 // tree button
-                const gameOverlay = document.querySelector("div.overlay.gm-1");
-                const topRightGameOverlay = gameOverlay!.querySelector("div.top-right");
-                const topRightButtonsGameOverlay = topRightGameOverlay!.querySelector("div.buttons.button-bar > div.inner");
-                const mapButton = topRightGameOverlay!.querySelector("button.el-button.el-button--small.button.btn.nice-button.black.depressed.has-icon.square.only-icon.button");
+                try {
+                    const gameOverlay = document.querySelector("div.overlay.gm-1");
+                    const topRightGameOverlay = gameOverlay!.querySelector("div.top-right");
+                    const topRightButtonsGameOverlay = topRightGameOverlay!.querySelector("div.buttons.button-bar > div.inner");
+                    const mapButton = topRightGameOverlay!.querySelector("button.el-button.el-button--small.button.btn.nice-button.black.depressed.has-icon.square.only-icon.button");
 
-                const gameTreeButton = mapButton!.cloneNode(true) as HTMLButtonElement;
-                topRightButtonsGameOverlay!.insertBefore(gameTreeButton, mapButton);
-                gameTreeButton.querySelector("span[class]")!.innerHTML = `
+                    const gameTreeButton = mapButton!.cloneNode(true) as HTMLButtonElement;
+                    topRightButtonsGameOverlay!.insertBefore(gameTreeButton, mapButton);
+                    gameTreeButton.querySelector("span[class]")!.innerHTML = `
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-diagram-3-fill" viewBox="0 0 16 16">
     <path fill-rule="evenodd" d="M6 3.5A1.5 1.5 0 0 1 7.5 2h1A1.5 1.5 0 0 1 10 3.5v1A1.5 1.5 0 0 1 8.5 6v1H14a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0V8h-5v.5a.5.5 0 0 1-1 0V8h-5v.5a.5.5 0 0 1-1 0v-1A.5.5 0 0 1 2 7h5.5V6A1.5 1.5 0 0 1 6 4.5v-1zm-6 8A1.5 1.5 0 0 1 1.5 10h1A1.5 1.5 0 0 1 4 11.5v1A1.5 1.5 0 0 1 2.5 14h-1A1.5 1.5 0 0 1 0 12.5v-1zm6 0A1.5 1.5 0 0 1 7.5 10h1a1.5 1.5 0 0 1 1.5 1.5v1A1.5 1.5 0 0 1 8.5 14h-1A1.5 1.5 0 0 1 6 12.5v-1zm6 0a1.5 1.5 0 0 1 1.5-1.5h1a1.5 1.5 0 0 1 1.5 1.5v1a1.5 1.5 0 0 1-1.5 1.5h-1a1.5 1.5 0 0 1-1.5-1.5v-1z"/>
   </svg>
                 <div class="drc-hotkey hotkey drc-hotkey--dark hotkey--dark hotkey">V</div>
                 `;
 
-                gameTreeButton.addEventListener("click", () => {
-                    treeModalContainer!.classList.toggle("drc-modal-hidden");
-                });
+                    gameTreeButton.addEventListener("click", () => {
+                        treeModalContainer!.classList.toggle("drc-modal-hidden");
+                    });
+                } catch (e) { console.error(e) };
 
                 // ghosts
                 if (settings.viewingGhosts) {

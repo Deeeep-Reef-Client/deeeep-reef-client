@@ -271,6 +271,11 @@ const createWindow = () => {
     ipcMain.on("evalInBrowserContext", (_event, code) => {
         window.webContents.executeJavaScript(code);
     });
+    window.webContents.on("console-message", (event, level, message, line, sourceId) => {
+        window.webContents.send("console-message", {
+            level, message, line, sourceId
+        });
+    });
     ipcMain.on("ipcProxy", (_event, ipc) => {
         window.webContents.send(ipc.channel, ipc.data);
     });

@@ -301,6 +301,12 @@ const createWindow = () => {
         window.webContents.executeJavaScript(code);
     });
 
+    window.webContents.on("console-message", (event: Event, level: Number, message: string, line: Number, sourceId: string) => {
+        window.webContents.send("console-message", {
+            level, message, line, sourceId
+        });
+    });
+
     interface ipcProxy {
         channel: string;
         data: any;
