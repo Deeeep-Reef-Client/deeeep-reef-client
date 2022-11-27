@@ -1716,44 +1716,17 @@ window.addEventListener("DOMContentLoaded", () => {
         if (gameStarted) return;
         const element = document.getElementById("app");
 
-        /*ipcRenderer.on("console-message", (_event: Event, message: ConsoleMessageEvent) => {
-            console.log(message.message)
-        });*/
-        /*Common.playLoadProgress (old, new),100,0
-        ['Common.playLoadProgress (old, new)', 100, 0]*/
-
         // Wait until game finished loading to log URL for RPC
         let gamemode = "";
-        let prePd = false; // insert cryptic name because I can't think of anything else
         const openObserver = new MutationObserver((mutations: MutationRecord[]) => {
             if (document.contains(document.querySelector(".playing"))) {
                 gameStarted = true;
+                openObserver.disconnect();
                 gamemode = (document.querySelector('.block, .modes')!.querySelector('.selected')!.querySelector('.name') as HTMLElement)!.innerText;
                 ipcRenderer.send("gameInfo", {
                     gamemode,
                     url: window.location.href
                 });
-
-                if (gamemode.toLowerCase() == "ffa" || gamemode.toLowerCase() == "tffa") {
-                    console.log("FFA and TFFA detected");
-                    openObserver.disconnect();
-                } else {
-                    console.log("PD and 1v1 detected.");
-                };
-
-                if (
-                    !document.contains(document.querySelector("div.pd-preparation")) &&
-                    (gamemode.toLowerCase() != "ffa" && gamemode.toLowerCase() != "tffa")
-                ) {
-                    if (!prePd) {
-                        prePd = true;
-                        return;
-                    }
-                    console.log("Game started.")
-                    openObserver.disconnect();
-                } else if (gamemode.toLowerCase() != "ffa" && gamemode.toLowerCase() != "tffa") {
-                    return;
-                };
 
                 function ghostSuicide(key: KeyboardEvent) {
                     if (key.code != "KeyX") return;
