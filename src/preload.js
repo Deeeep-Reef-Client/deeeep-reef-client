@@ -36,7 +36,8 @@ let settings = {
     pluginsData: [],
     adBlocker: true,
     viewingGhosts: true,
-    advancedProfanityFilter: true
+    advancedProfanityFilter: true,
+    gameName: ""
 };
 ipcRenderer.on("settings", (_event, s) => {
     settings = s;
@@ -396,6 +397,16 @@ window.addEventListener("DOMContentLoaded", () => {
         characterData: false,
         subtree: true
     });
+    // Save name
+    document.querySelector("div.name-input > div.el-input__wrapper > input.el-input__inner").addEventListener("change", (e) => {
+        settings.gameName = e.target.value;
+        saveSettings();
+    });
+    if (settings.gameName === undefined) {
+        settings.gameName = "";
+        saveSettings();
+    }
+    document.querySelector("div.name-input > div.el-input__wrapper > input.el-input__inner").value = settings.gameName;
     // misc styles
     const miscStyles = document.createElement("style");
     miscStyles.innerHTML = `

@@ -40,6 +40,7 @@ interface SettingsTemplate {
     adBlocker: boolean;
     viewingGhosts: boolean;
     advancedProfanityFilter: boolean;
+    gameName: string;
 }
 
 let settings: SettingsTemplate = {
@@ -54,7 +55,8 @@ let settings: SettingsTemplate = {
     pluginsData: [],
     adBlocker: true,
     viewingGhosts: true,
-    advancedProfanityFilter: true
+    advancedProfanityFilter: true,
+    gameName: ""
 };
 ipcRenderer.on("settings", (_event: Event, s: SettingsTemplate) => {
     settings = s;
@@ -412,6 +414,18 @@ window.addEventListener("DOMContentLoaded", () => {
         characterData: false,
         subtree: true
     });
+
+    // Save name
+    document.querySelector("div.name-input > div.el-input__wrapper > input.el-input__inner")!.addEventListener("change", (e: any) => {
+        settings.gameName = e.target.value;
+        saveSettings();
+    });
+    if (settings.gameName === undefined) {
+        settings.gameName = "";
+        saveSettings();
+    }
+    (document.querySelector("div.name-input > div.el-input__wrapper > input.el-input__inner") as HTMLInputElement).value = settings.gameName;
+
 
     // misc styles
     const miscStyles = document.createElement("style");
@@ -1713,6 +1727,7 @@ window.addEventListener("DOMContentLoaded", () => {
     // Watch for match start
     const btn = document.querySelector(".play");
     btn!.addEventListener("click", () => {
+
         if (gameStarted) return;
         const element = document.getElementById("app");
 
