@@ -115,6 +115,17 @@ const createWindow = () => {
             sandbox: false
         }
     });
+    window.hide();
+    const loadingWindow = new BrowserWindow({
+        width: 960,
+        height: 540,
+    });
+    loadingWindow.loadFile("src/loading.html");
+    loadingWindow.removeMenu();
+    window.webContents.once('did-finish-load', () => {
+        loadingWindow.close();
+        window.show();
+    });
     // Loads blocky fish game :)... probably not
     // window.loadURL("https://deeeep.io");
     if (development)
