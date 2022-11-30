@@ -472,6 +472,23 @@ window.addEventListener("DOMContentLoaded", () => {
             swapAccountButton.addEventListener("click", () => {
                 accountsModalContainer.classList.toggle("drc-modal-hidden");
             });
+            function saveAccount() {
+                const username = document.querySelector("div.modal__content > div.text-center > form.el-form > div.el-form-item input.el-input__inner[type='text']").value;
+                const password = document.querySelector("div.modal__content > div.text-center > form.el-form > div.el-form-item input.el-input__inner[type='password']").value;
+                settings.gameAccounts = settings.gameAccounts.filter((acc) => {
+                    return acc.username.toLowerCase() != username.toLowerCase();
+                });
+                settings.gameAccounts.push({
+                    username, password
+                });
+                saveSettings();
+            }
+            document.querySelector("div.modal__action > div#routeModalActions > button.el-button.btn.nice-button.green").addEventListener("click", saveAccount);
+            window.addEventListener("keydown", (key) => {
+                if (key.key != "Enter")
+                    return;
+                saveAccount();
+            });
         });
         loginObserver.observe(document.getElementById("app"), {
             attributes: false,
