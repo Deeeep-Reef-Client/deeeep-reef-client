@@ -415,34 +415,6 @@ window.addEventListener("DOMContentLoaded", () => {
         subtree: true
     });
 
-    // Account swapper
-    const userWidget = document.querySelector("div.user-widget");
-    const loginButton = userWidget!.querySelector("button.el-button.btn.nice-button.blue.has-icon") as HTMLButtonElement;
-
-    loginButton!.addEventListener("click", () => {
-        const loginObserver = new MutationObserver((mutations: MutationRecord[]) => {
-            if (!document.contains(document.querySelector("div.modal__action > div#routeModalActions > button.el-button.btn.nice-button.gray"))) return;
-            loginObserver.disconnect();
-            const routeModalActions = document.getElementById("routeModalActions");
-            // switch account button
-            const swapAccountButton = document.querySelector("div.modal__action > div#routeModalActions > button.el-button.btn.nice-button.gray")!.cloneNode(true) as HTMLButtonElement;
-            (swapAccountButton.querySelector("span[class] > span.inner") as HTMLSpanElement)!.innerHTML = `
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
-  <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7Zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216ZM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"/>
-</svg>
-            `;
-            routeModalActions!.insertBefore(swapAccountButton, routeModalActions!.childNodes[2]);
-        });
-        loginObserver.observe(document.getElementById("app")!, {
-            attributes: false,
-            childList: true,
-            characterData: false,
-            subtree: true
-        });
-    });
-
-
-
     // Save name
     document.querySelector("div.name-input > div.el-input__wrapper > input.el-input__inner")!.addEventListener("change", (e: any) => {
         settings.gameName = e.target.value;
@@ -468,6 +440,70 @@ window.addEventListener("DOMContentLoaded", () => {
     }
     `;
     document.head.appendChild(miscStyles);
+
+    // Account swapper modal
+    const accountsDiv = document.createElement("div");
+    document.getElementById("app")!.appendChild(accountsDiv);
+    accountsDiv.outerHTML = `
+    <div id="accountsModalContainer" class="drc-modal-modal-container drc-modal-hidden">
+    <div class="drc-modal-overlay vfm--overlay"></div>
+    <div id="accountsContainer" class="drc-modal-container">
+        <div id="accountsModal" class="modal-content drc-modal-modal-content">
+            <span class="drc-modal-title">
+                <div></div>
+                <div class="justify-self-center">Accounts</div>
+                <div></div>
+            </span>
+            <div class="drc-modal-content">
+                <p>Login accounts are automatically saved.</p>
+            </div>
+            <button id="accountsCloseButton" class="drc-modal-close"><svg width="1.125em" height="1.125em"
+                    viewBox="0 0 24 24" class="svg-icon" color="gray" style="--sx:1; --sy:1; --r:0deg;">
+                    <path
+                        d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z">
+                    </path>
+                </svg></button>
+        </div>
+    </div>
+</div>
+    `;
+
+
+    const accountsModalContainer = document.getElementById("accountsModalContainer");
+    const accountsCloseButton = document.getElementById("accountsCloseButton");
+    accountsCloseButton!.addEventListener("click", () => {
+        accountsModalContainer!.classList.toggle("drc-modal-hidden");
+    });
+
+    // Account swapper
+    const userWidget = document.querySelector("div.user-widget");
+    const loginButton = userWidget!.querySelector("button.el-button.btn.nice-button.blue.has-icon") as HTMLButtonElement;
+
+    loginButton!.addEventListener("click", () => {
+        const loginObserver = new MutationObserver((mutations: MutationRecord[]) => {
+            if (!document.contains(document.querySelector("div.modal__action > div#routeModalActions > button.el-button.btn.nice-button.gray"))) return;
+            loginObserver.disconnect();
+            const routeModalActions = document.getElementById("routeModalActions");
+            // switch account button
+            const swapAccountButton = document.querySelector("div.modal__action > div#routeModalActions > button.el-button.btn.nice-button.gray")!.cloneNode(true) as HTMLButtonElement;
+            (swapAccountButton.querySelector("span[class] > span.inner") as HTMLSpanElement)!.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
+      <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7Zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216ZM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"/>
+    </svg>
+                `;
+            routeModalActions!.insertBefore(swapAccountButton, routeModalActions!.childNodes[2]);
+            swapAccountButton.addEventListener("click", () => {
+                accountsModalContainer!.classList.toggle("drc-modal-hidden");
+            });
+        });
+        loginObserver.observe(document.getElementById("app")!, {
+            attributes: false,
+            childList: true,
+            characterData: false,
+            subtree: true
+        });
+    });
+
 
     // Evolution tree button
     const sidePaneTop = document.querySelector("div.p-2.sidebar.right.space-y-2 > .container > div.el-row.justify-center") as HTMLDivElement;
