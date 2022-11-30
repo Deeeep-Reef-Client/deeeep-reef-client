@@ -37,7 +37,8 @@ let settings = {
     adBlocker: true,
     viewingGhosts: true,
     advancedProfanityFilter: true,
-    gameName: ""
+    gameName: "",
+    gameAccounts: []
 };
 ipcRenderer.on("settings", (_event, s) => {
     settings = s;

@@ -38,6 +38,7 @@ interface SettingsTemplate {
     viewingGhosts: boolean;
     advancedProfanityFilter: boolean;
     gameName: string;
+    gameAccounts: Array<any>;
 }
 
 const schema = {
@@ -95,6 +96,12 @@ const schema = {
             gameName: {
                 type: "string",
                 default: ""
+            },
+            gameAccounts: {
+                type: "array",
+                items: {
+                    type: "object"
+                }
             }
         }
     }
@@ -117,7 +124,8 @@ if (settings === undefined) {
         adBlocker: true,
         viewingGhosts: true,
         advancedProfanityFilter: true,
-        gameName: ""
+        gameName: "",
+        gameAccounts: []
     };
     store.set("settings", settings);
 }
@@ -294,6 +302,11 @@ const createWindow = () => {
 
     if (settings.gameName === undefined) {
         settings.gameName = "";
+        store.set("settings", settings);
+    }
+
+    if (settings.gameAccounts === undefined) {
+        settings.gameAccounts = [];
         store.set("settings", settings);
     }
 

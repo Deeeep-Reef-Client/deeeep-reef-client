@@ -41,6 +41,7 @@ interface SettingsTemplate {
     viewingGhosts: boolean;
     advancedProfanityFilter: boolean;
     gameName: string;
+    gameAccounts: Array<any>;
 }
 
 let settings: SettingsTemplate = {
@@ -56,7 +57,8 @@ let settings: SettingsTemplate = {
     adBlocker: true,
     viewingGhosts: true,
     advancedProfanityFilter: true,
-    gameName: ""
+    gameName: "",
+    gameAccounts: []
 };
 ipcRenderer.on("settings", (_event: Event, s: SettingsTemplate) => {
     settings = s;
