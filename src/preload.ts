@@ -479,10 +479,9 @@ window.addEventListener("DOMContentLoaded", () => {
 
     // Account swapper
     const userWidget = document.querySelector("div.user-widget");
-    const loginButton = userWidget!.querySelector("button.el-button.btn.nice-button.blue.has-icon") as HTMLButtonElement;
-
-    loginButton!.addEventListener("click", () => {
+    function accountOnLogin() {
         const loginObserver = new MutationObserver((mutations: MutationRecord[]) => {
+
             if (!document.contains(document.querySelector("div.modal__action > div#routeModalActions > button.el-button.btn.nice-button.gray"))) return;
             loginObserver.disconnect();
             const routeModalActions = document.getElementById("routeModalActions");
@@ -521,7 +520,11 @@ window.addEventListener("DOMContentLoaded", () => {
             characterData: false,
             subtree: true
         });
-    });
+    }
+
+    setInterval(() => {
+        userWidget?.querySelector("button.el-button.btn.nice-button.blue.has-icon")!.addEventListener("click", accountOnLogin);
+    }, 300);
 
 
     // Evolution tree button

@@ -454,8 +454,7 @@ window.addEventListener("DOMContentLoaded", () => {
     });
     // Account swapper
     const userWidget = document.querySelector("div.user-widget");
-    const loginButton = userWidget.querySelector("button.el-button.btn.nice-button.blue.has-icon");
-    loginButton.addEventListener("click", () => {
+    function accountOnLogin() {
         const loginObserver = new MutationObserver((mutations) => {
             if (!document.contains(document.querySelector("div.modal__action > div#routeModalActions > button.el-button.btn.nice-button.gray")))
                 return;
@@ -496,7 +495,10 @@ window.addEventListener("DOMContentLoaded", () => {
             characterData: false,
             subtree: true
         });
-    });
+    }
+    setInterval(() => {
+        userWidget === null || userWidget === void 0 ? void 0 : userWidget.querySelector("button.el-button.btn.nice-button.blue.has-icon").addEventListener("click", accountOnLogin);
+    }, 300);
     // Evolution tree button
     const sidePaneTop = document.querySelector("div.p-2.sidebar.right.space-y-2 > .container > div.el-row.justify-center");
     const treeButtonContainer = sidePaneTop.querySelector("div").cloneNode(true);
