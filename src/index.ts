@@ -161,7 +161,15 @@ const createWindow = () => {
     window.webContents.once('did-finish-load', () => {
         loadingWindow.close();
         window.show();
-    })
+    });
+    window.webContents.once('did-fail-load', () => {
+        loadingWindow.close();
+        window.close();
+        new Notification({
+            title: "Failed to load the game",
+            body: "Please check your internet and try again."
+        }).show();
+    });
     // Loads blocky fish game :)... probably not
     // window.loadURL("https://deeeep.io");
 
