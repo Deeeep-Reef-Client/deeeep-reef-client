@@ -1479,28 +1479,27 @@ window.addEventListener("DOMContentLoaded", () => {
     });
 
     // export
-    themeMakerExportButton!.addEventListener("click", () => {
+    themeMakerExportButton!.addEventListener("click", async () => {
         const exportedTheme = JSON.parse(exportThemeDropdown.value);
         themeMakerImportExportModalContainer!.classList.toggle("drc-modal-hidden");
         const content = JSON.stringify({
             name: exportedTheme.name,
             src: exportedTheme.src
         });
-        ipcRenderer.send("getPath", "downloads");
-        ipcRenderer.on("gettedPath", (_event: Event, path: string) => {
-            try {
-                fs.writeFileSync(path + `/${exportedTheme.name.replace(/[^a-zA-Z0-9]/g, '')}.drctheme.json`, content);
-                new Notification("Theme exported!", {
-                    body: `Your theme has been exported to ${exportedTheme.name.replace(/[^a-zA-Z0-9]/g, '')}.drctheme.json in your Downloads folder. `
-                });
-                // file written successfully
-            } catch (err) {
-                console.error(err);
-                new Notification("Something went wrong", {
-                    body: `An error occurred while exporting your theme.`
-                });
-            }
-        })
+        const path = await ipcRenderer.invoke("getPath", "downloads");
+        try {
+            fs.writeFileSync(path + `/${exportedTheme.name.replace(/[^a-zA-Z0-9]/g, '')}.drctheme.json`, content);
+            new Notification("Theme exported!", {
+                body: `Your theme has been exported to ${exportedTheme.name.replace(/[^a-zA-Z0-9]/g, '')}.drctheme.json in your Downloads folder. `
+            });
+            // file written successfully
+        } catch (err) {
+            console.error(err);
+            new Notification("Something went wrong", {
+                body: `An error occurred while exporting your theme.`
+            });
+        }
+
     });
 
     // import

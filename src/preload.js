@@ -1407,30 +1407,28 @@ window.addEventListener("DOMContentLoaded", () => {
         themeMakerImportExportModalContainer.classList.toggle("drc-modal-hidden");
     });
     // export
-    themeMakerExportButton.addEventListener("click", () => {
+    themeMakerExportButton.addEventListener("click", () => __awaiter(void 0, void 0, void 0, function* () {
         const exportedTheme = JSON.parse(exportThemeDropdown.value);
         themeMakerImportExportModalContainer.classList.toggle("drc-modal-hidden");
         const content = JSON.stringify({
             name: exportedTheme.name,
             src: exportedTheme.src
         });
-        ipcRenderer.send("getPath", "downloads");
-        ipcRenderer.on("gettedPath", (_event, path) => {
-            try {
-                fs.writeFileSync(path + `/${exportedTheme.name.replace(/[^a-zA-Z0-9]/g, '')}.drctheme.json`, content);
-                new Notification("Theme exported!", {
-                    body: `Your theme has been exported to ${exportedTheme.name.replace(/[^a-zA-Z0-9]/g, '')}.drctheme.json in your Downloads folder. `
-                });
-                // file written successfully
-            }
-            catch (err) {
-                console.error(err);
-                new Notification("Something went wrong", {
-                    body: `An error occurred while exporting your theme.`
-                });
-            }
-        });
-    });
+        const path = yield ipcRenderer.invoke("getPath", "downloads");
+        try {
+            fs.writeFileSync(path + `/${exportedTheme.name.replace(/[^a-zA-Z0-9]/g, '')}.drctheme.json`, content);
+            new Notification("Theme exported!", {
+                body: `Your theme has been exported to ${exportedTheme.name.replace(/[^a-zA-Z0-9]/g, '')}.drctheme.json in your Downloads folder. `
+            });
+            // file written successfully
+        }
+        catch (err) {
+            console.error(err);
+            new Notification("Something went wrong", {
+                body: `An error occurred while exporting your theme.`
+            });
+        }
+    }));
     // import
     themeMakerImportButton.addEventListener("click", () => {
         // @ts-ignore I KNOW BETTER

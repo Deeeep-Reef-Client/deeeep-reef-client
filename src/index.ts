@@ -375,8 +375,8 @@ const createWindow = () => {
     // window.show();
 
     // listen for app path requests
-    ipcMain.on("getPath", (_event: Event, path: string) => {
-        window.webContents.send("gettedPath", app.getPath(path));
+    ipcMain.handle("getPath", async (_event: Event, path: string) => {
+        return app.getPath(path);
     });
 
     // toggle DevTools on request
