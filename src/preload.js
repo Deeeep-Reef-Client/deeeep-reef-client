@@ -426,7 +426,6 @@ window.addEventListener("DOMContentLoaded", () => {
     document.getElementById("app").appendChild(accountsDiv);
     accountsDiv.outerHTML = `
     <div id="accountsModalContainer" class="drc-modal-modal-container drc-modal-hidden">
-    <div class="drc-modal-overlay vfm--overlay"></div>
     <div id="accountsContainer" class="drc-modal-container">
         <div id="accountsModal" class="modal-content drc-modal-modal-content">
             <span class="drc-modal-title">
@@ -435,7 +434,9 @@ window.addEventListener("DOMContentLoaded", () => {
                 <div></div>
             </span>
             <div class="drc-modal-content">
-                <p>Login accounts are automatically saved.</p>
+                <p>Logged in accounts are automatically saved.</p>
+                <div class="spacer"></div>
+                <div id="accountsList"></div>
             </div>
             <button id="accountsCloseButton" class="drc-modal-close"><svg width="1.125em" height="1.125em"
                     viewBox="0 0 24 24" class="svg-icon" color="gray" style="--sx:1; --sy:1; --r:0deg;">
@@ -447,6 +448,66 @@ window.addEventListener("DOMContentLoaded", () => {
     </div>
 </div>
     `;
+    const accountsList = document.getElementById("accountsList");
+    function updateAccountsList() {
+        accountsList.innerHTML = "";
+        for (let i in settings.gameAccounts) {
+            const username = settings.gameAccounts[i].username;
+            const password = settings.gameAccounts[i].password;
+            const mainElem = document.createElement("div");
+            mainElem.classList.add("assetswapper-list-rule");
+            // login button
+            const autoLoginElem = document.createElement("button");
+            autoLoginElem.classList.add("assetswapper-new-button");
+            autoLoginElem.innerText = "Login";
+            autoLoginElem.addEventListener("click", () => {
+                const usernameField = document.querySelector("div.modal__content > div.text-center > form.el-form > div.el-form-item input.el-input__inner[type='text']");
+                const passwordField = document.querySelector("div.modal__content > div.text-center > form.el-form > div.el-form-item input.el-input__inner[type='password']");
+                accountsModalContainer.classList.toggle("drc-modal-hidden");
+                usernameField.value = username.slice(0, -1);
+                usernameField.focus();
+                ipcRenderer.send("sendKeyPress", username.slice(-1));
+                usernameField.addEventListener("keyup", () => {
+                    passwordField.value = password.slice(0, -1);
+                    passwordField.focus();
+                    ipcRenderer.send("sendKeyPress", password.slice(-1));
+                    passwordField.addEventListener("keyup", () => {
+                        document.querySelector("div.modal__action > div#routeModalActions > button.el-button.btn.nice-button.green").dispatchEvent(new MouseEvent("click"));
+                    });
+                });
+            });
+            mainElem.appendChild(autoLoginElem);
+            // username
+            const usernameElem = document.createElement("p");
+            usernameElem.innerText = settings.gameAccounts[i].username;
+            mainElem.appendChild(usernameElem);
+            const spacer1 = document.createElement("div");
+            spacer1.classList.add("spacer");
+            mainElem.appendChild(spacer1);
+            // password
+            const passwordElem = document.createElement("p");
+            passwordElem.innerText = settings.gameAccounts[i].password[0] + "****";
+            mainElem.appendChild(passwordElem);
+            const spacer3 = document.createElement("div");
+            spacer3.classList.add("spacer");
+            mainElem.appendChild(spacer3);
+            // Delete button
+            const deleteElem = document.createElement("button");
+            deleteElem.classList.add("assetswapper-new-button");
+            deleteElem.innerText = "Remove";
+            deleteElem.addEventListener("click", () => {
+                settings.gameAccounts = settings.gameAccounts.filter(acc => acc != settings.gameAccounts[i]);
+                saveSettings();
+                updateAccountsList();
+            });
+            mainElem.appendChild(deleteElem);
+            accountsList.appendChild(mainElem);
+            const spacer4 = document.createElement("div");
+            spacer4.classList.add("spacer");
+            accountsList.appendChild(spacer4);
+        }
+    }
+    updateAccountsList();
     const accountsModalContainer = document.getElementById("accountsModalContainer");
     const accountsCloseButton = document.getElementById("accountsCloseButton");
     accountsCloseButton.addEventListener("click", () => {
@@ -472,8 +533,10 @@ window.addEventListener("DOMContentLoaded", () => {
                 accountsModalContainer.classList.toggle("drc-modal-hidden");
             });
             function saveAccount() {
-                const username = document.querySelector("div.modal__content > div.text-center > form.el-form > div.el-form-item input.el-input__inner[type='text']").value;
-                const password = document.querySelector("div.modal__content > div.text-center > form.el-form > div.el-form-item input.el-input__inner[type='password']").value;
+                const username = document.querySelector("div.modal__content > div.text-center > form.el-form > div.el-form-item input.el-input__inner[type='text']").value || undefined;
+                const password = document.querySelector("div.modal__content > div.text-center > form.el-form > div.el-form-item input.el-input__inner[type='password']").value || undefined;
+                if (username == undefined || password == undefined)
+                    return;
                 settings.gameAccounts = settings.gameAccounts.filter((acc) => {
                     return acc.username.toLowerCase() != username.toLowerCase();
                 });
@@ -481,6 +544,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     username, password
                 });
                 saveSettings();
+                updateAccountsList();
             }
             document.querySelector("div.modal__action > div#routeModalActions > button.el-button.btn.nice-button.green").addEventListener("click", saveAccount);
             window.addEventListener("keydown", (key) => {

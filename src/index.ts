@@ -366,8 +366,12 @@ const createWindow = () => {
             ipc.channel,
             ipc.data
         )
-    })
-
+    });
+    ipcMain.on("sendKeyPress", (_event: Event, keyCode: string) => {
+        window.webContents.sendInputEvent({ type: "keyDown", keyCode });
+        window.webContents.sendInputEvent({ type: "char", keyCode });
+        window.webContents.sendInputEvent({ type: "keyUp", keyCode });
+    });
     // window.show();
 
     // listen for app path requests
