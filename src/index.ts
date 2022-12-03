@@ -448,7 +448,7 @@ app.on('window-all-closed', () => {
     store.set("settings", settings);
     // Auto update
     // Don't try updating when in development
-    if (development) {
+    if (settings.developer) {
         quitApp();
         return;
     }
