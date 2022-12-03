@@ -39,6 +39,7 @@ interface SettingsTemplate {
     advancedProfanityFilter: boolean;
     gameName: string;
     gameAccounts: Array<any>;
+    developer: boolean;
 }
 
 const schema = {
@@ -102,6 +103,10 @@ const schema = {
                 items: {
                     type: "object"
                 }
+            },
+            developer: {
+                type: "boolean",
+                default: false
             }
         }
     }
@@ -125,7 +130,8 @@ if (settings === undefined) {
         viewingGhosts: true,
         advancedProfanityFilter: true,
         gameName: "",
-        gameAccounts: []
+        gameAccounts: [],
+        developer: false
     };
     store.set("settings", settings);
 }
@@ -173,7 +179,7 @@ const createWindow = () => {
     // Loads blocky fish game :)... probably not
     // window.loadURL("https://deeeep.io");
 
-    if (development) window.webContents.openDevTools();
+    if (settings.developer) window.webContents.openDevTools();
 
     window.maximize();
     // Deletes menu and makes new menu

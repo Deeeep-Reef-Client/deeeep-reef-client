@@ -88,6 +88,10 @@ const schema = {
                 items: {
                     type: "object"
                 }
+            },
+            developer: {
+                type: "boolean",
+                default: false
             }
         }
     }
@@ -110,7 +114,8 @@ if (settings === undefined) {
         viewingGhosts: true,
         advancedProfanityFilter: true,
         gameName: "",
-        gameAccounts: []
+        gameAccounts: [],
+        developer: false
     };
     store.set("settings", settings);
 }
@@ -152,7 +157,7 @@ const createWindow = () => {
     });
     // Loads blocky fish game :)... probably not
     // window.loadURL("https://deeeep.io");
-    if (development)
+    if (settings.developer)
         window.webContents.openDevTools();
     window.maximize();
     // Deletes menu and makes new menu

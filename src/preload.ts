@@ -42,6 +42,7 @@ interface SettingsTemplate {
     advancedProfanityFilter: boolean;
     gameName: string;
     gameAccounts: Array<any>;
+    developer: boolean;
 }
 
 let settings: SettingsTemplate = {
@@ -58,7 +59,8 @@ let settings: SettingsTemplate = {
     viewingGhosts: true,
     advancedProfanityFilter: true,
     gameName: "",
-    gameAccounts: []
+    gameAccounts: [],
+    developer: false
 };
 ipcRenderer.on("settings", (_event: Event, s: SettingsTemplate) => {
     settings = s;
@@ -182,6 +184,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
             const graphicsPane = document.querySelector("#pane-0 > .el-form");
             const chatPane = document.querySelector("#pane-1 > .el-form");
+            const generalPane = document.querySelector("#pane-2 > .el-form");
 
             // Graphics Settings
 
@@ -408,6 +411,31 @@ window.addEventListener("DOMContentLoaded", () => {
                 saveSettings();
             });
             chatPane!.appendChild(advancedProfanityFilterSetting);
+
+            // General Settings
+
+            // Developer Mode
+            const developerModeSetting = graphicsPane!.childNodes[2].cloneNode(true) as HTMLDivElement;
+            const developerModeName = developerModeSetting.querySelector(".el-form-item__label") as HTMLDivElement;
+            const developerModeCheckbox = developerModeSetting.querySelector(".el-checkbox__input > input") as HTMLInputElement;
+            developerModeName!.setAttribute("id", "developerModeName");
+            developerModeName!.innerText = "Developer";
+            if (settings.developer) {
+                developerModeSetting.querySelector(".el-checkbox__input")!.classList.add("is-checked");
+            } else {
+                developerModeSetting.querySelector(".el-checkbox__input")!.classList.remove("is-checked");
+            }
+            developerModeCheckbox.addEventListener("click", () => {
+                if (settings.developer) {
+                    settings.developer = false;
+                    developerModeSetting.querySelector(".el-checkbox__input")!.classList.remove("is-checked");
+                } else {
+                    settings.developer = true;
+                    developerModeSetting.querySelector(".el-checkbox__input")!.classList.add("is-checked");
+                };
+                saveSettings();
+            });
+            generalPane!.appendChild(developerModeSetting);
         }
     });
     observer.observe(document.querySelector(".modals-container")!, {
