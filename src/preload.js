@@ -1731,7 +1731,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 }
                 ;
                 new Notification("Plugin installed!", {
-                    body: `The ${filteredPluginList.list[i].type} ${filteredPluginList.list[i].name} has been installed.`
+                    body: `The ${filteredPluginList.list[i].type} ${filteredPluginList.list[i].name} has been installed. Please restart the client for your changes to take effect.`
                 });
                 saveSettings();
                 searchPluginsModalContainer.classList.toggle("drc-modal-hidden");
