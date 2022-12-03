@@ -19,7 +19,7 @@ const development = true;
 // Auto update
 let newUpdate = false;
 let instUrl = "";
-const versionId = "v0.8.0-beta";
+const versionId = "v0.9.0-beta";
 let currentVersionId = "";
 
 // Store!
@@ -162,7 +162,20 @@ const createWindow = () => {
         width: 960,
         height: 540,
     });
-    loadingWindow.loadFile("src/loading.html");
+    loadingWindow.loadURL(`
+    data:text/html;
+    charset=utf-8,
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Loading...</title>
+    </head>
+    <body style="background-image:url(https://deeeep-reef-client.netlify.app/assets/drc_banner.png)">
+    </body>
+    </html>
+    `);
+
     loadingWindow.removeMenu();
     window.webContents.once('did-finish-load', () => {
         loadingWindow.close();
