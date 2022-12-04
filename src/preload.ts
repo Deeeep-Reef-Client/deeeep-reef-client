@@ -417,9 +417,11 @@ window.addEventListener("DOMContentLoaded", () => {
             // Developer Mode
             const developerModeSetting = graphicsPane!.childNodes[2].cloneNode(true) as HTMLDivElement;
             const developerModeName = developerModeSetting.querySelector(".el-form-item__label") as HTMLDivElement;
+            const developerModeDesc = developerModeSetting.querySelector(".notes") as HTMLSpanElement;
             const developerModeCheckbox = developerModeSetting.querySelector(".el-checkbox__input > input") as HTMLInputElement;
             developerModeName!.setAttribute("id", "developerModeName");
             developerModeName!.innerText = "Developer";
+            developerModeDesc!.innerText = "Toggles Developer Mode";
             if (settings.developer) {
                 developerModeSetting.querySelector(".el-checkbox__input")!.classList.add("is-checked");
             } else {
