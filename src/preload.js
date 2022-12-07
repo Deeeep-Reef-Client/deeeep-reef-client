@@ -1323,6 +1323,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 break;
         }
         bgColour += alpha;
+        let bgOpacity = (10 - Number(themeMakerOptionsModalTransparency.value)) / 10;
         return `
         div.modal-content {
             background-color: ${bgColour} !important;
@@ -1338,6 +1339,21 @@ window.addEventListener("DOMContentLoaded", () => {
         }
         div.drc-modal-modal-content {
             background-color: ${bgColour} !important;
+        }
+        .animals-container .animals .animal {
+            --tw-bg-opacity: ${bgOpacity} !important
+        }
+        .dark .forum-page {
+            --tw-bg-opacity: ${bgOpacity} !important
+        }
+        .dark .forum-page .inner .forum-posts .post-summary .forum-post-summary {
+            --tw-border-opacity: ${bgOpacity} !important
+        }
+        .dark .forum-page .inner .forum-posts .post-summary .forum-post-summary:hover {
+            --tw-border-opacity: ${bgOpacity} !important
+        }
+        .dark .forum-post-page .inner {
+            --tw-bg-opacity: ${bgOpacity} !important
         }
         ${homeBg}
         ${loadingBg}
