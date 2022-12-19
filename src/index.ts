@@ -177,6 +177,11 @@ const createWindow = () => {
     `);
 
     loadingWindow.removeMenu();
+
+    loadingWindow.on("close", () => {
+        window.close();
+    });
+
     window.webContents.once('did-finish-load', () => {
         loadingWindow.close();
         window.show();
