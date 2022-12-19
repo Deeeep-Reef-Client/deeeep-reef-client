@@ -158,6 +158,8 @@ const createWindow = () => {
 
     window.hide();
 
+    let finishedLoad = false;
+
     const loadingWindow = new BrowserWindow({
         width: 960,
         height: 540,
@@ -179,10 +181,11 @@ const createWindow = () => {
     loadingWindow.removeMenu();
 
     loadingWindow.on("close", () => {
-        window.close();
+        if (!finishedLoad) window.close();
     });
 
     window.webContents.once('did-finish-load', () => {
+        finishedLoad = true;
         loadingWindow.close();
         window.show();
     });
