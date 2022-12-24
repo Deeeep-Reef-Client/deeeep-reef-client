@@ -284,44 +284,59 @@ const createWindow = () => {
         adBlockerOn = true;
     };
 
-    if (docassetsOn) {
-        window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/docassets").then(() => {
-            if (adBlockerOn) {
-                window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/ublock").then(() => {
-                    // loads DRC modified js
-                    window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/drc-assetswapper").then(() => {
-                        window.loadURL("https://deeeep.io");
-                        window.hide();
-                    });
-                });
-            } else {
-                // loads DRC modified js
-                window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/drc-assetswapper").then(() => {
-                    window.loadURL("https://deeeep.io");
-                    window.hide();
-                });
-            }
-        });
-    } else {
-        window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/drc-as-copy").then(() => {
-            if (adBlockerOn) {
-                window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/ublock").then(() => {
-                    // loads DRC modified js
-                    window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/drc-assetswapper").then(() => {
-                        window.loadURL("https://deeeep.io");
-                        window.hide();
-                    });
-                });
-            } else {
-                // loads DRC modified js
-                window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/drc-assetswapper").then(() => {
-                    window.loadURL("https://deeeep.io");
-                    window.hide();
-                });
-            }
-        });
-    };
+    (async () => {
+        if (docassetsOn) await window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/docassets");
+        else await window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/drc-as-copy")
 
+        if (adBlockerOn) await window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/ublock");
+        else await window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/drc-assetswapper")
+
+        await window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/drc-assetswapper");
+
+
+        window.loadURL("https://deeeep.io");
+        window.hide();
+
+        /*
+        if (docassetsOn) {
+            window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/docassets").then(() => {
+                if (adBlockerOn) {
+                    window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/ublock").then(() => {
+                        // loads DRC modified js
+                        window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/drc-assetswapper").then(() => {
+                            window.loadURL("https://deeeep.io");
+                            window.hide();
+                        });
+                    });
+                } else {
+                    // loads DRC modified js
+                    window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/drc-assetswapper").then(() => {
+                        window.loadURL("https://deeeep.io");
+                        window.hide();
+                    });
+                }
+            });
+        } else {
+            window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/drc-as-copy").then(() => {
+                if (adBlockerOn) {
+                    window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/ublock").then(() => {
+                        // loads DRC modified js
+                        window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/drc-assetswapper").then(() => {
+                            window.loadURL("https://deeeep.io");
+                            window.hide();
+                        });
+                    });
+                } else {
+                    // loads DRC modified js
+                    window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/drc-assetswapper").then(() => {
+                        window.loadURL("https://deeeep.io");
+                        window.hide();
+                    });
+                }
+            });
+        };
+        */
+    })();
 
     // Opens URLs in browser
     window.webContents.setWindowOpenHandler((details: any) => {
