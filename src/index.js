@@ -142,19 +142,7 @@ const createWindow = () => {
         width: 960,
         height: 540,
     });
-    loadingWindow.loadURL(`
-    data:text/html;
-    charset=utf-8,
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Loading...</title>
-    </head>
-    <body style="background-image:url(https://deeeep-reef-client.netlify.app/assets/drc_banner.png)">
-    </body>
-    </html>
-    `);
+    loadingWindow.loadFile("src/loading.html");
     loadingWindow.removeMenu();
     loadingWindow.on("close", () => {
         if (!finishedLoad)
