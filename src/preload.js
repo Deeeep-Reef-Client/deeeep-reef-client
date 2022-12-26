@@ -590,9 +590,25 @@ window.addEventListener("DOMContentLoaded", () => {
             subtree: true
         });
     }
+    const userWidgetObserver = new MutationObserver((mutations) => {
+        if (!document.contains(userWidget.querySelector("button.el-button.btn.nice-button.blue.has-icon")))
+            return;
+        userWidget.querySelector("button.el-button.btn.nice-button.blue.has-icon").addEventListener("click", accountOnLogin);
+    });
+    userWidgetObserver.observe(userWidget, {
+        attributes: false,
+        childList: true,
+        characterData: false,
+        subtree: true
+    });
+    if (document.contains(userWidget.querySelector("button.el-button.btn.nice-button.blue.has-icon"))) {
+        userWidget.querySelector("button.el-button.btn.nice-button.blue.has-icon").addEventListener("click", accountOnLogin);
+    }
+    /*
     setInterval(() => {
-        userWidget === null || userWidget === void 0 ? void 0 : userWidget.querySelector("button.el-button.btn.nice-button.blue.has-icon").addEventListener("click", accountOnLogin);
+        userWidget?.querySelector("button.el-button.btn.nice-button.blue.has-icon")!.addEventListener("click", accountOnLogin);
     }, 300);
+    */
     // Evolution tree button
     const sidePaneTop = document.querySelector("div.p-2.sidebar.right.space-y-2 > .container > div.el-row.justify-center");
     const treeButtonContainer = sidePaneTop.querySelector("div").cloneNode(true);

@@ -587,6 +587,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
     // Account swapper
     const userWidget = document.querySelector("div.user-widget");
+
     function accountOnLogin() {
         const loginObserver = new MutationObserver((mutations: MutationRecord[]) => {
 
@@ -632,9 +633,28 @@ window.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    const userWidgetObserver = new MutationObserver((mutations: MutationRecord[]) => {
+        if (!document.contains(userWidget!.querySelector("button.el-button.btn.nice-button.blue.has-icon"))) return;
+
+        userWidget!.querySelector("button.el-button.btn.nice-button.blue.has-icon")!.addEventListener("click", accountOnLogin);
+    });
+
+    userWidgetObserver.observe(userWidget!, {
+        attributes: false,
+        childList: true,
+        characterData: false,
+        subtree: true
+    })
+
+    if (document.contains(userWidget!.querySelector("button.el-button.btn.nice-button.blue.has-icon"))) {
+        userWidget!.querySelector("button.el-button.btn.nice-button.blue.has-icon")!.addEventListener("click", accountOnLogin);
+    }
+
+    /*
     setInterval(() => {
         userWidget?.querySelector("button.el-button.btn.nice-button.blue.has-icon")!.addEventListener("click", accountOnLogin);
     }, 300);
+    */
 
 
     // Evolution tree button
