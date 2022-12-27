@@ -10,7 +10,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "electron-forge start",
-    "build": "tsc && npx electron-builder build --publish never",
+    "build": "tsc && npm exec electron-builder build",
     "lint": "echo \"No linting configured\""
   },
   "keywords": [
