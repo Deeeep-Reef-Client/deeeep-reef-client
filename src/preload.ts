@@ -1423,6 +1423,9 @@ window.addEventListener("DOMContentLoaded", () => {
         div.drc-modal-modal-content {
             background-color: ${bgColour} !important;
         }
+        body .el-input__wrapper, body .el-textarea__wrapper {
+            background-color: ${bgColour} !important;
+        }
         .animals-container .animals .animal {
             --tw-bg-opacity: ${bgOpacity} !important
         }
@@ -1430,13 +1433,13 @@ window.addEventListener("DOMContentLoaded", () => {
             --tw-bg-opacity: ${bgOpacity} !important
         }
         .dark .forum-page .inner .forum-posts .post-summary .forum-post-summary {
-            --tw-border-opacity: ${bgOpacity} !important
+            background-color: ${bgColour} !important
         }
         .dark .forum-page .inner .forum-posts .post-summary .forum-post-summary:hover {
-            --tw-border-opacity: ${bgOpacity} !important
+            background-color: ${bgColour} !important
         }
         .dark .forum-post-page .inner {
-            --tw-bg-opacity: ${bgOpacity} !important
+            background-color: ${bgColour} !important
         }
         ${homeBg}
         ${loadingBg}
