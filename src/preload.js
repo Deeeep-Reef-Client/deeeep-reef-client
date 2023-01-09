@@ -61,7 +61,7 @@ window.addEventListener("DOMContentLoaded", () => {
     // DRC
     const clientVersion = document.querySelector(".client-version");
     /// @REMIND Update client version
-    clientVersion.innerText = clientVersion.innerText + ", DRC v0.9.0b";
+    clientVersion.innerText = clientVersion.innerText + ", DRC v0.9.1b";
     // devtools
     window.addEventListener("keydown", (key) => {
         if (key.code == "F12") {

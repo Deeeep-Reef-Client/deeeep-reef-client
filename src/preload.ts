@@ -90,7 +90,7 @@ window.addEventListener("DOMContentLoaded", () => {
     // DRC
     const clientVersion = document.querySelector(".client-version") as HTMLSpanElement;
     /// @REMIND Update client version
-    clientVersion.innerText = clientVersion.innerText + ", DRC v0.9.0b";
+    clientVersion.innerText = clientVersion.innerText + ", DRC v0.9.1b";
 
     // devtools
     window.addEventListener("keydown", (key: KeyboardEvent) => {
