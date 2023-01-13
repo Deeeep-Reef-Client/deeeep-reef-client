@@ -114,7 +114,25 @@ const schema = {
 const store = new Store({ schema });
 
 // Fetch settings
-let settings: SettingsTemplate = store.get("settings");
+let settings: SettingsTemplate = {
+    customTheme: true,
+    docassets: false,
+    v3ui: true,
+    assetSwapper: true,
+    assetSwapperConfig: [],
+    lightTheme: false,
+    userTheme: true,
+    userThemeData: [],
+    pluginsData: [],
+    adBlocker: true,
+    viewingGhosts: true,
+    advancedProfanityFilter: true,
+    gameName: "",
+    gameAccounts: [],
+    developer: false
+};
+Object.assign(settings, store.get("settings") ?? {});
+
 if (settings === undefined) {
     settings = {
         customTheme: true,

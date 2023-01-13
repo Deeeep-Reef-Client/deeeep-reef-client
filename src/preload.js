@@ -42,7 +42,7 @@ let settings = {
     developer: false
 };
 ipcRenderer.on("settings", (_event, s) => {
-    settings = s;
+    Object.assign(settings, s);
 });
 function saveSettings() {
     console.log(settings);

@@ -8,6 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 const { app, BrowserWindow, Menu, ipcMain, shell, session, globalShortcut, Notification } = require('electron');
 const log = require('electron-log');
@@ -98,7 +99,24 @@ const schema = {
 };
 const store = new Store({ schema });
 // Fetch settings
-let settings = store.get("settings");
+let settings = {
+    customTheme: true,
+    docassets: false,
+    v3ui: true,
+    assetSwapper: true,
+    assetSwapperConfig: [],
+    lightTheme: false,
+    userTheme: true,
+    userThemeData: [],
+    pluginsData: [],
+    adBlocker: true,
+    viewingGhosts: true,
+    advancedProfanityFilter: true,
+    gameName: "",
+    gameAccounts: [],
+    developer: false
+};
+Object.assign(settings, (_a = store.get("settings")) !== null && _a !== void 0 ? _a : {});
 if (settings === undefined) {
     settings = {
         customTheme: true,

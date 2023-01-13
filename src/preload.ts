@@ -63,7 +63,7 @@ let settings: SettingsTemplate = {
     developer: false
 };
 ipcRenderer.on("settings", (_event: Event, s: SettingsTemplate) => {
-    settings = s;
+    Object.assign(settings, s);
 })
 
 function saveSettings() {
