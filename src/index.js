@@ -18,7 +18,7 @@ const Store = require('electron-store');
 const { ElectronChromeExtensions } = require('electron-chrome-extensions');
 const https = require('https');
 const electronDl = require('electron-dl');
-const spawnSync = require('child_process').spawnSync;
+const spawn = require('child_process').spawn;
 const fs = require('fs');
 log.info('DRC starting...');
 // stuff
@@ -475,7 +475,7 @@ app.on('window-all-closed', () => {
                     quitApp();
                     return;
                 }
-                spawnSync(file.path, { detached: true });
+                spawn(file.path, { detached: true });
                 quitApp();
             }
         });
