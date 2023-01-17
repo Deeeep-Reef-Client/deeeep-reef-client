@@ -1240,6 +1240,18 @@ window.addEventListener("DOMContentLoaded", () => {
             spacer1.classList.add("spacer");
             mainElem.appendChild(spacer1);
 
+            // Edit button
+            const editElem = document.createElement("button");
+            editElem.classList.add("assetswapper-new-button");
+            editElem.innerText = "Edit";
+            editElem.addEventListener("click", () => {
+                console.log("DO SOMETHING");
+                saveSettings();
+                updateThemeList();
+                reloadCustomTheme();
+            });
+            mainElem.appendChild(editElem);
+
             // Delete button
             const deleteElem = document.createElement("button");
             deleteElem.classList.add("assetswapper-new-button");
@@ -1251,6 +1263,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 reloadCustomTheme();
             });
             mainElem.appendChild(deleteElem);
+
             themeMakerThemeList!.appendChild(mainElem);
         }
     }

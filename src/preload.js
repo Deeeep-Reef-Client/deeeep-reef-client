@@ -1182,6 +1182,17 @@ window.addEventListener("DOMContentLoaded", () => {
             const spacer1 = document.createElement("div");
             spacer1.classList.add("spacer");
             mainElem.appendChild(spacer1);
+            // Edit button
+            const editElem = document.createElement("button");
+            editElem.classList.add("assetswapper-new-button");
+            editElem.innerText = "Edit";
+            editElem.addEventListener("click", () => {
+                console.log("DO SOMETHING");
+                saveSettings();
+                updateThemeList();
+                reloadCustomTheme();
+            });
+            mainElem.appendChild(editElem);
             // Delete button
             const deleteElem = document.createElement("button");
             deleteElem.classList.add("assetswapper-new-button");
