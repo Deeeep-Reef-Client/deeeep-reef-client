@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const { ipcRenderer, app, contextBridge } = require('electron');
 const Filter = require('bad-words');
+const cssjs = require('jotform-css.js');
 const fs = require('fs');
 // Maintain compatibility when update
 let API_URL = "";
@@ -1091,6 +1092,7 @@ window.addEventListener("DOMContentLoaded", () => {
         assetSwapperModalContainer.classList.toggle("drc-modal-hidden");
     });
     // Custom theme
+    let themeMakerEditTheme = false;
     // Custom theme button
     const customThemeButtonWrapper = settingsButtonWrapper.cloneNode(true);
     const customThemeButton = customThemeButtonWrapper.firstElementChild;
@@ -1137,86 +1139,6 @@ window.addEventListener("DOMContentLoaded", () => {
     const themeMakerThemeList = document.getElementById("themeMakerThemeList");
     const themeMakerImportExportButton = document.getElementById("themeMakerImportExportButton");
     const clearSelectedUserTheme = document.getElementById("clearUserThemes");
-    clearSelectedUserTheme === null || clearSelectedUserTheme === void 0 ? void 0 : clearSelectedUserTheme.addEventListener("click", () => {
-        const elems = document.querySelectorAll("input[name=userThemeList]");
-        for (let e in elems) {
-            if (typeof (elems[e]) != "object")
-                continue;
-            elems[e].checked = false;
-        }
-        for (let j in settings.userThemeData) {
-            settings.userThemeData[j].active = false;
-        }
-        saveSettings();
-        reloadCustomTheme();
-    });
-    function updateThemeList() {
-        themeMakerThemeList.innerHTML = "";
-        for (let i in settings.userThemeData) {
-            const mainElem = document.createElement("div");
-            mainElem.setAttribute("id", settings.userThemeData[i].name);
-            mainElem.classList.add("assetswapper-list-rule");
-            const selectElem = document.createElement("input");
-            selectElem.type = "radio";
-            selectElem.name = "userThemeList";
-            selectElem.addEventListener("click", () => {
-                // clear active
-                for (let j in settings.userThemeData) {
-                    settings.userThemeData[j].active = false;
-                }
-                settings.userThemeData[i].active = true;
-                saveSettings();
-                reloadCustomTheme();
-            });
-            mainElem.appendChild(selectElem);
-            if (settings.userThemeData[i].active) {
-                selectElem.checked = true;
-            }
-            const spacer0 = document.createElement("div");
-            spacer0.classList.add("spacer");
-            mainElem.appendChild(spacer0);
-            // theme name
-            const nameElem = document.createElement("p");
-            nameElem.innerText = settings.userThemeData[i].name;
-            mainElem.appendChild(nameElem);
-            const spacer1 = document.createElement("div");
-            spacer1.classList.add("spacer");
-            mainElem.appendChild(spacer1);
-            // Edit button
-            const editElem = document.createElement("button");
-            editElem.classList.add("assetswapper-new-button");
-            editElem.innerText = "Edit";
-            editElem.addEventListener("click", () => {
-                console.log("DO SOMETHING");
-                saveSettings();
-                updateThemeList();
-                reloadCustomTheme();
-            });
-            mainElem.appendChild(editElem);
-            // Delete button
-            const deleteElem = document.createElement("button");
-            deleteElem.classList.add("assetswapper-new-button");
-            deleteElem.innerText = "Delete";
-            deleteElem.addEventListener("click", () => {
-                settings.userThemeData = settings.userThemeData.filter(item => item != settings.userThemeData[i]);
-                saveSettings();
-                updateThemeList();
-                reloadCustomTheme();
-            });
-            mainElem.appendChild(deleteElem);
-            themeMakerThemeList.appendChild(mainElem);
-        }
-    }
-    const customThemeModalContainer = document.getElementById("customThemeModalContainer");
-    const customThemeCloseButton = document.getElementById("customThemeCloseButton");
-    // Custom Theme button onclick
-    customThemeButton.addEventListener("click", () => {
-        customThemeModalContainer.classList.toggle("drc-modal-hidden");
-        updateThemeList();
-    });
-    customThemeCloseButton.addEventListener("click", () => {
-        customThemeModalContainer.classList.toggle("drc-modal-hidden");
-    });
     // Theme maker modal
     // create new swap rule
     const themeMakerDiv = document.createElement("div");
@@ -1292,6 +1214,7 @@ window.addEventListener("DOMContentLoaded", () => {
     // Moved to here bc vars must be initialised
     const themeMakerButton = document.getElementById("themeMakerButton");
     themeMakerButton.addEventListener("click", () => {
+        themeMakerEditTheme = false;
         // changes depending on amount of themes :)
         themeMakerOptionsName.value = "Theme " + settings.userThemeData.length;
         themeMakerModalContainer.classList.toggle("drc-modal-hidden");
@@ -1413,13 +1336,132 @@ window.addEventListener("DOMContentLoaded", () => {
     });
     const themeMakerCloseButton = document.getElementById("themeMakerCloseButton");
     themeMakerCloseButton.addEventListener("click", () => {
+        themeMakerEditTheme = false;
         // reset all values
         themeMakerOptionsName.value = "";
         themeMakerOptionsBgImage.value = "";
         themeMakerOptionsLoadingBgImage.value = "";
         themeMakerOptionsModalBgColour.value = "#FFFFFF";
         themeMakerOptionsModalTextColour.value = "#000000";
+        themeMakerOptionsModalTransparency.value = "0";
         themeMakerModalContainer.classList.toggle("drc-modal-hidden");
+    });
+    clearSelectedUserTheme === null || clearSelectedUserTheme === void 0 ? void 0 : clearSelectedUserTheme.addEventListener("click", () => {
+        const elems = document.querySelectorAll("input[name=userThemeList]");
+        for (let e in elems) {
+            if (typeof (elems[e]) != "object")
+                continue;
+            elems[e].checked = false;
+        }
+        for (let j in settings.userThemeData) {
+            settings.userThemeData[j].active = false;
+        }
+        saveSettings();
+        reloadCustomTheme();
+    });
+    function updateThemeList() {
+        themeMakerThemeList.innerHTML = "";
+        for (let i in settings.userThemeData) {
+            const mainElem = document.createElement("div");
+            mainElem.setAttribute("id", settings.userThemeData[i].name);
+            mainElem.classList.add("assetswapper-list-rule");
+            const selectElem = document.createElement("input");
+            selectElem.type = "radio";
+            selectElem.name = "userThemeList";
+            selectElem.addEventListener("click", () => {
+                // clear active
+                for (let j in settings.userThemeData) {
+                    settings.userThemeData[j].active = false;
+                }
+                settings.userThemeData[i].active = true;
+                saveSettings();
+                reloadCustomTheme();
+            });
+            mainElem.appendChild(selectElem);
+            if (settings.userThemeData[i].active) {
+                selectElem.checked = true;
+            }
+            const spacer0 = document.createElement("div");
+            spacer0.classList.add("spacer");
+            mainElem.appendChild(spacer0);
+            // theme name
+            const nameElem = document.createElement("p");
+            nameElem.innerText = settings.userThemeData[i].name;
+            mainElem.appendChild(nameElem);
+            const spacer1 = document.createElement("div");
+            spacer1.classList.add("spacer");
+            mainElem.appendChild(spacer1);
+            // Edit button
+            const editElem = document.createElement("button");
+            editElem.classList.add("assetswapper-new-button");
+            editElem.innerText = "Edit";
+            editElem.addEventListener("click", () => {
+                themeMakerEditTheme = true;
+                const cssParser = new cssjs.cssjs();
+                const parsed = cssParser.parseCSS(settings.userThemeData[i].src);
+                let bgImageRule = parsed.filter((r) => r.selector === ".home-page .home-bg");
+                let loadingBgImageRule = parsed.filter((r) => r.selector === ".loading-container");
+                let modalBgRule = parsed.filter((r) => r.selector === "div.modal-content");
+                let modalTextRule = parsed.filter((r) => r.selector === "span.modal__title");
+                let modalTransparencyRule = parsed.filter((r) => r.selector === "div.modal-content");
+                themeMakerOptionsName.value = settings.userThemeData[i].name;
+                themeMakerOptionsBgImage.value = bgImageRule.length ?
+                    bgImageRule[0].rules.filter((r) => r.directive === "background-image")[0].value
+                        .replace("!important", "")
+                        .replace("url(", "")
+                        .replace(")", "")
+                        .trim() :
+                    "";
+                themeMakerOptionsLoadingBgImage.value = loadingBgImageRule.length ?
+                    loadingBgImageRule[0].rules.filter((r) => r.directive === "background-image")[0].value
+                        .replace("!important", "")
+                        .replace("url(", "")
+                        .replace(")", "")
+                        .trim() :
+                    "";
+                themeMakerOptionsModalBgColour.value = modalBgRule.length ?
+                    modalBgRule[0].rules.filter((r) => r.directive === "background-color")[0].value
+                        .replace("!important", "")
+                        .trim()
+                        .slice(0, -2) :
+                    "";
+                themeMakerOptionsModalTextColour.value = modalTextRule.length ?
+                    modalTextRule[0].rules.filter((r) => r.directive === "color")[0].value
+                        .replace("!important", "")
+                        .trim() :
+                    "";
+                themeMakerOptionsModalTransparency.value = modalTransparencyRule.length ?
+                    modalTransparencyRule[0].rules.filter((r) => r.directive === "background-color")[0].value
+                        .replace("!important", "")
+                        .trim()
+                        .slice(-2) :
+                    "";
+                themeMakerModalContainer.classList.toggle("drc-modal-hidden");
+            });
+            mainElem.appendChild(editElem);
+            // Delete button
+            const deleteElem = document.createElement("button");
+            deleteElem.classList.add("assetswapper-new-button");
+            deleteElem.innerText = "Delete";
+            deleteElem.addEventListener("click", () => {
+                settings.userThemeData = settings.userThemeData.filter(item => item != settings.userThemeData[i]);
+                saveSettings();
+                updateThemeList();
+                reloadCustomTheme();
+            });
+            mainElem.appendChild(deleteElem);
+            themeMakerThemeList.appendChild(mainElem);
+        }
+    }
+    const customThemeModalContainer = document.getElementById("customThemeModalContainer");
+    const customThemeCloseButton = document.getElementById("customThemeCloseButton");
+    // Custom Theme button onclick
+    customThemeButton.addEventListener("click", () => {
+        customThemeModalContainer.classList.toggle("drc-modal-hidden");
+        updateThemeList();
+    });
+    customThemeCloseButton.addEventListener("click", () => {
+        customThemeModalContainer.classList.toggle("drc-modal-hidden");
     });
     // Import/export theme
     const themeMakerImportExportDiv = document.createElement("div");
