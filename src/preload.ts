@@ -100,6 +100,22 @@ window.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    // warn if code updated
+    const indexScriptTag = document.querySelector("script[src^=\\/assets\\/index\\.]");
+    fetch(
+        "https://deeeep-reef-client.github.io/modded-assets/misc/" +
+        (indexScriptTag?.getAttribute("src") ?? "/assets/index.js").replace("/assets/", "")
+    )
+        .then(response => {
+            if (!response.ok) throw new Error();
+            else console.log("Index.js OK");
+        })
+        .catch(e => {
+            new Notification("Some features temporarily not available", {
+                body: "Due to Deeeep.io's code being updated (which is outside our control), some features may not work until the Client is updated to reflect these changes."
+            });
+        });
+
     // Custom stylesheet
     const customTheme = document.createElement("link");
     customTheme.rel = "stylesheet";
@@ -1508,8 +1524,8 @@ window.addEventListener("DOMContentLoaded", () => {
                 themeMakerOptionsModalTransparency.value = modalTransparencyRule.length ?
                     modalTransparencyRule[0].rules.filter((r: any) => r.directive === "background-color")[0].value
                         .replace("!important", "")
-                        .trim() 
-                        .slice(-2):
+                        .trim()
+                        .slice(-2) :
                     "";
 
                 themeMakerModalContainer!.classList.toggle("drc-modal-hidden");

@@ -59,6 +59,7 @@ profanityFilter.addWords("test");
 // IDK what happened but this is to prevent a bug from happening
 let reloadCustomTheme = () => { };
 window.addEventListener("DOMContentLoaded", () => {
+    var _a;
     // DRC
     const clientVersion = document.querySelector(".client-version");
     /// @REMIND Update client version
@@ -68,6 +69,21 @@ window.addEventListener("DOMContentLoaded", () => {
         if (key.code == "F12") {
             ipcRenderer.send("openDevTools");
         }
+    });
+    // warn if code updated
+    const indexScriptTag = document.querySelector("script[src^=\\/assets\\/index\\.]");
+    fetch("https://deeeep-reef-client.github.io/modded-assets/misc/e" +
+        ((_a = indexScriptTag === null || indexScriptTag === void 0 ? void 0 : indexScriptTag.getAttribute("src")) !== null && _a !== void 0 ? _a : "/assets/index.js").replace("/assets/", ""))
+        .then(response => {
+        if (!response.ok)
+            throw new Error();
+        else
+            console.log("Index.js OK");
+    })
+        .catch(e => {
+        new Notification("Some features temporarily not available", {
+            body: "Due to Deeeep.io's code being updated (which is outside our control), some features may not work until the Client is updated to reflect these changes."
+        });
     });
     // Custom stylesheet
     const customTheme = document.createElement("link");
