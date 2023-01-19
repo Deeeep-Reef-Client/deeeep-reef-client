@@ -673,6 +673,23 @@ window.addEventListener("DOMContentLoaded", () => {
     }, 300);
     */
 
+    // Forum Notifications
+    let forumNotificationCount = 0;
+    async function checkForumNotifications() {
+        const forumNotifications = await fetch("https://apibeta.deeeep.io/forumNotifications/count")
+            .then(response => response.json()) 
+
+        if (forumNotifications.statusCode !== undefined && forumNotifications.statusCode === 403) return;
+        
+        if (forumNotifications.count !== forumNotificationCount) {
+            new Notification("New forum notification", {
+                body: "You received a new Forum notification."
+            });
+        }
+        forumNotificationCount = forumNotifications.count;
+    }
+    checkForumNotifications();
+    setInterval(checkForumNotifications, 60000);
 
     // Evolution tree button
     const sidePaneTop = document.querySelector("div.p-2.sidebar.right.space-y-2 > .container > div.el-row.justify-center") as HTMLDivElement;

@@ -72,7 +72,7 @@ window.addEventListener("DOMContentLoaded", () => {
     });
     // warn if code updated
     const indexScriptTag = document.querySelector("script[src^=\\/assets\\/index\\.]");
-    fetch("https://deeeep-reef-client.github.io/modded-assets/misc/e" +
+    fetch("https://deeeep-reef-client.github.io/modded-assets/misc/" +
         ((_a = indexScriptTag === null || indexScriptTag === void 0 ? void 0 : indexScriptTag.getAttribute("src")) !== null && _a !== void 0 ? _a : "/assets/index.js").replace("/assets/", ""))
         .then(response => {
         if (!response.ok)
@@ -626,6 +626,24 @@ window.addEventListener("DOMContentLoaded", () => {
         userWidget?.querySelector("button.el-button.btn.nice-button.blue.has-icon")!.addEventListener("click", accountOnLogin);
     }, 300);
     */
+    // Forum Notifications
+    let forumNotificationCount = 0;
+    function checkForumNotifications() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const forumNotifications = yield fetch("https://apibeta.deeeep.io/forumNotifications/count")
+                .then(response => response.json());
+            if (forumNotifications.statusCode !== undefined && forumNotifications.statusCode === 403)
+                return;
+            if (forumNotifications.count !== forumNotificationCount) {
+                new Notification("New forum notification", {
+                    body: "You received a new Forum notification."
+                });
+            }
+            forumNotificationCount = forumNotifications.count;
+        });
+    }
+    checkForumNotifications();
+    setInterval(checkForumNotifications, 60000);
     // Evolution tree button
     const sidePaneTop = document.querySelector("div.p-2.sidebar.right.space-y-2 > .container > div.el-row.justify-center");
     const treeButtonContainer = sidePaneTop.querySelector("div").cloneNode(true);
