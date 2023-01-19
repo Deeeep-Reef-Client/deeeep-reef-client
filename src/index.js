@@ -385,6 +385,10 @@ const createWindow = () => {
     ipcMain.on("openDevTools", () => {
         window.webContents.openDevTools();
     });
+    // forum notification badge
+    ipcMain.on("setBadge", (_event, count) => {
+        app.setBadgeCount([count]);
+    });
 };
 app.on('ready', () => {
     // Check for updates
