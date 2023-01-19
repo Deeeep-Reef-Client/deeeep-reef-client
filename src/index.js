@@ -155,6 +155,7 @@ const createWindow = () => {
         }
     });
     window.hide();
+    window.webContents.setBackgroundThrottling(false);
     let finishedLoad = false;
     const loadingWindow = new BrowserWindow({
         width: 960,
