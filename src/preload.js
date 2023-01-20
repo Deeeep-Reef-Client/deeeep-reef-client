@@ -652,7 +652,7 @@ window.addEventListener("DOMContentLoaded", () => {
         });
     }
     checkForumNotifications();
-    setInterval(checkForumNotifications, 60000);
+    setInterval(checkForumNotifications, 30000);
     // Friend requests
     function checkFriendRequests() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -676,7 +676,7 @@ window.addEventListener("DOMContentLoaded", () => {
         });
     }
     checkFriendRequests();
-    setInterval(checkFriendRequests, 60000);
+    setInterval(checkFriendRequests, 30000);
     // Evolution tree button
     const sidePaneTop = document.querySelector("div.p-2.sidebar.right.space-y-2 > .container > div.el-row.justify-center");
     const treeButtonContainer = sidePaneTop.querySelector("div").cloneNode(true);

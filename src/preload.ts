@@ -702,7 +702,7 @@ window.addEventListener("DOMContentLoaded", () => {
         xhr.send();
     }
     checkForumNotifications();
-    setInterval(checkForumNotifications, 60000);
+    setInterval(checkForumNotifications, 30000);
 
     // Friend requests
     async function checkFriendRequests() {
@@ -728,7 +728,7 @@ window.addEventListener("DOMContentLoaded", () => {
         xhr.send();
     }
     checkFriendRequests();
-    setInterval(checkFriendRequests, 60000);
+    setInterval(checkFriendRequests, 30000);
 
 
     // Evolution tree button
