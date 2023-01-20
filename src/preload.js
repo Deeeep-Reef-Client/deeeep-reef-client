@@ -639,7 +639,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 const forumNotifications = JSON.parse(xhr.response);
                 if (forumNotifications.statusCode !== undefined && forumNotifications.statusCode === 403)
                     return;
-                if (forumNotifications.count !== forumNotificationCount) {
+                if (forumNotifications.count > forumNotificationCount) {
                     new Notification("New forum notification", {
                         body: "You received a new Forum notification."
                     });
@@ -663,7 +663,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 const friendRequests = JSON.parse(xhr.response);
                 if (friendRequests.statusCode !== undefined && friendRequests.statusCode === 403)
                     return;
-                if (friendRequests.count !== friendRequestCount) {
+                if (friendRequests.count > friendRequestCount) {
                     new Notification("New friend request", {
                         body: "You received a new friend request."
                     });

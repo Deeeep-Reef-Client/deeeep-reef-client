@@ -175,7 +175,9 @@ const createWindow = () => {
         }
     });
 
-    const badgeOptions = {};
+    const badgeOptions = {
+        font: '20px arial'
+    };
     new Badge(window, badgeOptions);
 
     window.hide();
