@@ -11,6 +11,9 @@
   "scripts": {
     "start": "electron-forge start",
     "build": "tsc && npm exec electron-builder build",
+    "build-win": "tsc && npm exec electron-builder build --win",
+    "build-mac": "tsc && npm exec electron-builder build --mac",
+    "build-linux": "tsc && npm exec electron-builder build --linux",
     "lint": "echo \"No linting configured\""
   },
   "keywords": [
