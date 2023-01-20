@@ -688,7 +688,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
             if (forumNotifications.statusCode !== undefined && forumNotifications.statusCode === 403) return;
 
-            if (forumNotifications.count !== forumNotificationCount) {
+            if (forumNotifications.count > forumNotificationCount) {
                 new Notification("New forum notification", {
                     body: "You received a new Forum notification."
                 });
@@ -697,7 +697,7 @@ window.addEventListener("DOMContentLoaded", () => {
             forumNotificationCount = forumNotifications.count;
             badgeCount = friendRequestCount + forumNotificationCount;
 
-            ipcRenderer.send("setBadge", badgeCount || null);
+            ipcRenderer.send("update-badge", badgeCount || null);
         });
         xhr.send();
     }
@@ -714,7 +714,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
             if (friendRequests.statusCode !== undefined && friendRequests.statusCode === 403) return;
 
-            if (friendRequests.count !== friendRequestCount) {
+            if (friendRequests.count > friendRequestCount) {
                 new Notification("New friend request", {
                     body: "You received a new friend request."
                 });
@@ -723,7 +723,7 @@ window.addEventListener("DOMContentLoaded", () => {
             friendRequestCount = friendRequests.count;
             badgeCount = friendRequestCount + forumNotificationCount;
 
-            ipcRenderer.send("setBadge", badgeCount || null);
+            ipcRenderer.send("update-badge", badgeCount || null);
         });
         xhr.send();
     }

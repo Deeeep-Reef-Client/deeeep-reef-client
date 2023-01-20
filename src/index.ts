@@ -10,6 +10,7 @@ const https = require('https');
 const electronDl = require('electron-dl');
 const spawn = require('child_process').spawn;
 const fs = require('fs');
+const Badge = require('electron-windows-badge');
 
 log.info('DRC starting...');
 
@@ -173,6 +174,9 @@ const createWindow = () => {
             sandbox: false
         }
     });
+
+    const badgeOptions = {};
+    new Badge(window, badgeOptions);
 
     window.hide();
 

@@ -646,7 +646,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 }
                 forumNotificationCount = forumNotifications.count;
                 badgeCount = friendRequestCount + forumNotificationCount;
-                ipcRenderer.send("setBadge", badgeCount || null);
+                ipcRenderer.send("update-badge", badgeCount || null);
             });
             xhr.send();
         });
@@ -670,7 +670,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 }
                 friendRequestCount = friendRequests.count;
                 badgeCount = friendRequestCount + forumNotificationCount;
-                ipcRenderer.send("setBadge", badgeCount || null);
+                ipcRenderer.send("update-badge", badgeCount || null);
             });
             xhr.send();
         });
