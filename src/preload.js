@@ -626,54 +626,57 @@ window.addEventListener("DOMContentLoaded", () => {
         userWidget?.querySelector("button.el-button.btn.nice-button.blue.has-icon")!.addEventListener("click", accountOnLogin);
     }, 300);
     */
-    /*
     // Forum Notifications
     let badgeCount = 0;
-
     let forumNotificationCount = 0;
     let friendRequestCount = 0;
-
-    async function checkForumNotifications() {
-        const forumNotifications = await fetch("https://apibeta.deeeep.io/forumNotifications/count")
-            .then(response => response.json())
-
-        if (forumNotifications.statusCode !== undefined && forumNotifications.statusCode === 403) return;
-        
-        if (forumNotifications.count !== forumNotificationCount) {
-            new Notification("New forum notification", {
-                body: "You received a new Forum notification."
+    function checkForumNotifications() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', "https://apibeta.deeeep.io/forumNotifications/count");
+            xhr.withCredentials = true;
+            xhr.addEventListener("load", (_event) => {
+                const forumNotifications = JSON.parse(xhr.response);
+                if (forumNotifications.statusCode !== undefined && forumNotifications.statusCode === 403)
+                    return;
+                if (forumNotifications.count !== forumNotificationCount) {
+                    new Notification("New forum notification", {
+                        body: "You received a new Forum notification."
+                    });
+                }
+                forumNotificationCount = forumNotifications.count;
+                badgeCount = friendRequestCount + forumNotificationCount;
+                ipcRenderer.send("setBadge", badgeCount || null);
             });
-        }
-
-        forumNotificationCount = forumNotifications.count;
-        badgeCount = friendRequestCount + forumNotificationCount;
-
-        ipcRenderer.send("setBadge", badgeCount);
+            xhr.send();
+        });
     }
     checkForumNotifications();
     setInterval(checkForumNotifications, 60000);
-
     // Friend requests
-    async function checkFriendRequests() {
-        const friendRequests = await fetch("https://apibeta.deeeep.io/friendRequests/count")
-            .then(response => response.json())
-
-        if (friendRequests.statusCode !== undefined && friendRequests.statusCode === 403) return;
-        
-        if (friendRequests.count !== friendRequestCount) {
-            new Notification("New friend request", {
-                body: "You received a new friend request."
+    function checkFriendRequests() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', "https://apibeta.deeeep.io/friendRequests/count");
+            xhr.withCredentials = true;
+            xhr.addEventListener("load", (_event) => {
+                const friendRequests = JSON.parse(xhr.response);
+                if (friendRequests.statusCode !== undefined && friendRequests.statusCode === 403)
+                    return;
+                if (friendRequests.count !== friendRequestCount) {
+                    new Notification("New friend request", {
+                        body: "You received a new friend request."
+                    });
+                }
+                friendRequestCount = friendRequests.count;
+                badgeCount = friendRequestCount + forumNotificationCount;
+                ipcRenderer.send("setBadge", badgeCount || null);
             });
-        }
-
-        friendRequestCount = friendRequests.count;
-        badgeCount = friendRequestCount + forumNotificationCount;
-
-        ipcRenderer.send("setBadge", badgeCount);
+            xhr.send();
+        });
     }
     checkFriendRequests();
     setInterval(checkFriendRequests, 60000);
-    */
     // Evolution tree button
     const sidePaneTop = document.querySelector("div.p-2.sidebar.right.space-y-2 > .container > div.el-row.justify-center");
     const treeButtonContainer = sidePaneTop.querySelector("div").cloneNode(true);

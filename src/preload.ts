@@ -673,7 +673,6 @@ window.addEventListener("DOMContentLoaded", () => {
     }, 300);
     */
 
-    /*
     // Forum Notifications
     let badgeCount = 0;
 
@@ -681,46 +680,56 @@ window.addEventListener("DOMContentLoaded", () => {
     let friendRequestCount = 0;
 
     async function checkForumNotifications() {
-        const forumNotifications = await fetch("https://apibeta.deeeep.io/forumNotifications/count")
-            .then(response => response.json()) 
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', "https://apibeta.deeeep.io/forumNotifications/count");
+        xhr.withCredentials = true;
+        xhr.addEventListener("load", (_event) => {
+            const forumNotifications = JSON.parse(xhr.response);
 
-        if (forumNotifications.statusCode !== undefined && forumNotifications.statusCode === 403) return;
-        
-        if (forumNotifications.count !== forumNotificationCount) {
-            new Notification("New forum notification", {
-                body: "You received a new Forum notification."
-            });
-        }
+            if (forumNotifications.statusCode !== undefined && forumNotifications.statusCode === 403) return;
 
-        forumNotificationCount = forumNotifications.count;
-        badgeCount = friendRequestCount + forumNotificationCount;
+            if (forumNotifications.count !== forumNotificationCount) {
+                new Notification("New forum notification", {
+                    body: "You received a new Forum notification."
+                });
+            }
 
-        ipcRenderer.send("setBadge", badgeCount);
+            forumNotificationCount = forumNotifications.count;
+            badgeCount = friendRequestCount + forumNotificationCount;
+
+            ipcRenderer.send("setBadge", badgeCount || null);
+        });
+        xhr.send();
     }
     checkForumNotifications();
     setInterval(checkForumNotifications, 60000);
 
     // Friend requests
     async function checkFriendRequests() {
-        const friendRequests = await fetch("https://apibeta.deeeep.io/friendRequests/count")
-            .then(response => response.json()) 
+                const xhr = new XMLHttpRequest();
+        xhr.open('GET', "https://apibeta.deeeep.io/friendRequests/count");
+        xhr.withCredentials = true;
+        xhr.addEventListener("load", (_event) => {
+            const friendRequests = JSON.parse(xhr.response);
 
-        if (friendRequests.statusCode !== undefined && friendRequests.statusCode === 403) return;
-        
-        if (friendRequests.count !== friendRequestCount) {
-            new Notification("New friend request", {
-                body: "You received a new friend request."
-            });
-        }
+            if (friendRequests.statusCode !== undefined && friendRequests.statusCode === 403) return;
 
-        friendRequestCount = friendRequests.count;
-        badgeCount = friendRequestCount + forumNotificationCount;
+            if (friendRequests.count !== friendRequestCount) {
+                new Notification("New friend request", {
+                    body: "You received a new friend request."
+                });
+            }
 
-        ipcRenderer.send("setBadge", badgeCount);
+            friendRequestCount = friendRequests.count;
+            badgeCount = friendRequestCount + forumNotificationCount;
+
+            ipcRenderer.send("setBadge", badgeCount || null);
+        });
+        xhr.send();
     }
     checkFriendRequests();
     setInterval(checkFriendRequests, 60000);
-    */
+
 
     // Evolution tree button
     const sidePaneTop = document.querySelector("div.p-2.sidebar.right.space-y-2 > .container > div.el-row.justify-center") as HTMLDivElement;
@@ -896,6 +905,8 @@ window.addEventListener("DOMContentLoaded", () => {
     </div>
 </div>
 `;
+
+
     const treeModalContainer = document.getElementById("treeModalContainer");
     const treeCloseButton = document.getElementById("treeCloseButton");
     // Tree button onclick
