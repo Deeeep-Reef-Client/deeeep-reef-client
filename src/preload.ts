@@ -709,7 +709,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
     // Friend requests
     async function checkFriendRequests() {
-                const xhr = new XMLHttpRequest();
+        const xhr = new XMLHttpRequest();
         xhr.open('GET', "https://apibeta.deeeep.io/friendRequests/count");
         xhr.withCredentials = true;
         xhr.addEventListener("load", (_event) => {
@@ -735,6 +735,960 @@ window.addEventListener("DOMContentLoaded", () => {
 
 
     // Evolution tree button
+    // 31, 15
+    // 30px2 * 41pxh
+    const treeAnimalRelations = [
+        // Tier 1
+        [
+            {
+                stringId: "piranha",
+                evolvesTo: [
+                    "piranha",
+                    "lamprey"
+                ]
+            },
+            {
+                stringId: "worm",
+                evolvesTo: [
+                    "crayfish",
+                    "lamprey"
+                ]
+            },
+            {
+                stringId: "blindcavefish",
+                evolvesTo: [
+                    "climbingcavefish",
+                    "crayfish"
+                ]
+            },
+            {
+                stringId: "blobfish",
+                evolvesTo: [
+                    "kingcrab"
+                ]
+            },
+            {
+                stringId: "icefish",
+                evolvesTo: [
+                    "kingcrab"
+                ]
+            },
+            {
+                stringId: "fish",
+                evolvesTo: [
+                    "crab"
+                ]
+            },
+
+        ],
+        // Tier 2
+        [
+            {
+                stringId: "piranha",
+                evolvesTo: [
+                    "piranha",
+                    "frog",
+                    "olm",
+                    "horseshoecrab",
+                    "flyingfish",
+                    "jellyfish"
+                ]
+            },
+            {
+                stringId: "lamprey",
+                evolvesTo: [
+                    "frog",
+                    "olm",
+                    "horseshoecrab",
+                    "flyingfish",
+                    "jellyfish"
+                ]
+            },
+            {
+                stringId: "crayfish",
+                evolvesTo: [
+                    "frog",
+                    "olm",
+                    "horseshoecrab",
+                    "flyingfish",
+                    "jellyfish"
+                ]
+            },
+            {
+                stringId: "climbingcavefish",
+                evolvesTo: [
+                    "frog",
+                    "olm",
+                    "horseshoecrab",
+                    "flyingfish",
+                    "jellyfish"
+                ]
+            },
+            {
+                stringId: "kingcrab",
+                evolvesTo: [
+                    "frog",
+                    "olm",
+                    "horseshoecrab",
+                    "flyingfish",
+                    "jellyfish"
+                ]
+            },
+            {
+                stringId: "crab",
+                evolvesTo: [
+                    "frog",
+                    "olm",
+                    "horseshoecrab",
+                    "flyingfish",
+                    "jellyfish"
+                ]
+            },
+        ],
+        // Tier 3
+        [
+            {
+                stringId: "piranha",
+                evolvesTo: [
+                    "piranha",
+                    "catfish",
+                    "axolotl",
+                    "giantisopod",
+                    "squid",
+                    "littleauk",
+                    "hermitcrab"
+                ]
+            },
+            {
+                stringId: "frog",
+                evolvesTo: [
+                    "catfish",
+                    "axolotl",
+                    "giantisopod",
+                    "squid",
+                    "littleauk",
+                    "hermitcrab"
+                ]
+            },
+            {
+                stringId: "olm",
+                evolvesTo: [
+                    "catfish",
+                    "axolotl",
+                    "giantisopod",
+                    "squid",
+                    "littleauk",
+                    "hermitcrab"
+                ]
+            },
+            {
+                stringId: "horseshoecrab",
+                evolvesTo: [
+                    "catfish",
+                    "axolotl",
+                    "giantisopod",
+                    "squid",
+                    "littleauk",
+                    "hermitcrab"
+                ]
+            },
+            {
+                stringId: "flyingfish",
+                evolvesTo: [
+                    "catfish",
+                    "axolotl",
+                    "giantisopod",
+                    "squid",
+                    "littleauk",
+                    "hermitcrab"
+                ]
+            },
+            {
+                stringId: "jellyfish",
+                evolvesTo: [
+                    "catfish",
+                    "axolotl",
+                    "giantisopod",
+                    "squid",
+                    "littleauk",
+                    "hermitcrab"
+                ]
+            },
+        ],
+        // Tier 4
+        [
+            {
+                stringId: "piranha",
+                evolvesTo: [
+                    "piranha",
+                    "duck",
+                    "bat",
+                    "barreleye",
+                    "vampiresquid",
+                    "parrotfish",
+                    "seal",
+                    "seagull"
+                ]
+            },
+            {
+                stringId: "catfish",
+                evolvesTo: [
+                    "duck",
+                    "bat",
+                    "barreleye",
+                    "vampiresquid",
+                    "parrotfish",
+                    "seal",
+                    "seagull"
+                ]
+            },
+            {
+                stringId: "axolotl",
+                evolvesTo: [
+                    "duck",
+                    "bat",
+                    "barreleye",
+                    "vampiresquid",
+                    "parrotfish",
+                    "seal",
+                    "seagull"
+                ]
+            },
+            {
+                stringId: "giantisopod",
+                evolvesTo: [
+                    "duck",
+                    "bat",
+                    "barreleye",
+                    "vampiresquid",
+                    "parrotfish",
+                    "seal",
+                    "seagull"
+                ]
+            },
+            {
+                stringId: "squid",
+                evolvesTo: [
+                    "duck",
+                    "bat",
+                    "barreleye",
+                    "vampiresquid",
+                    "parrotfish",
+                    "seal",
+                    "seagull"
+                ]
+            },
+            {
+                stringId: "littleauk",
+                evolvesTo: [
+                    "duck",
+                    "bat",
+                    "barreleye",
+                    "vampiresquid",
+                    "parrotfish",
+                    "seal",
+                    "seagull"
+                ]
+            },
+            {
+                stringId: "hermitcrab",
+                evolvesTo: [
+                    "duck",
+                    "bat",
+                    "barreleye",
+                    "vampiresquid",
+                    "parrotfish",
+                    "seal",
+                    "seagull"
+                ]
+            },
+        ],
+        // Tier 5
+        [
+            {
+                stringId: "piranha",
+                evolvesTo: [
+                    "piranha",
+                    "goliathbullfrog",
+                    "archerfish",
+                    "bobbitworm",
+                    "cookiecuttershark",
+                    "pufferfish",
+                    "sarcasticfringehead",
+                    "ray",
+                    "pelican",
+                    "lobster"
+                ]
+            },
+            {
+                stringId: "duck",
+                evolvesTo: [
+                    "goliathbullfrog",
+                    "archerfish",
+                    "bobbitworm",
+                    "cookiecuttershark",
+                    "pufferfish",
+                    "sarcasticfringehead",
+                    "ray",
+                    "pelican",
+                    "lobster"
+                ]
+            },
+            {
+                stringId: "bat",
+                evolvesTo: [
+                    "goliathbullfrog",
+                    "archerfish",
+                    "bobbitworm",
+                    "cookiecuttershark",
+                    "pufferfish",
+                    "sarcasticfringehead",
+                    "ray",
+                    "pelican",
+                    "lobster"
+                ]
+            },
+            {
+                stringId: "barreleye",
+                evolvesTo: [
+                    "goliathbullfrog",
+                    "archerfish",
+                    "bobbitworm",
+                    "cookiecuttershark",
+                    "pufferfish",
+                    "sarcasticfringehead",
+                    "ray",
+                    "pelican",
+                    "lobster"
+                ]
+            },
+            {
+                stringId: "vampiresquid",
+                evolvesTo: [
+                    "goliathbullfrog",
+                    "archerfish",
+                    "bobbitworm",
+                    "cookiecuttershark",
+                    "pufferfish",
+                    "sarcasticfringehead",
+                    "ray",
+                    "pelican",
+                    "lobster"
+                ]
+            },
+            {
+                stringId: "parrotfish",
+                evolvesTo: [
+                    "goliathbullfrog",
+                    "archerfish",
+                    "bobbitworm",
+                    "cookiecuttershark",
+                    "pufferfish",
+                    "sarcasticfringehead",
+                    "ray",
+                    "pelican",
+                    "lobster"
+                ]
+            },
+            {
+                stringId: "seal",
+                evolvesTo: [
+                    "goliathbullfrog",
+                    "archerfish",
+                    "bobbitworm",
+                    "cookiecuttershark",
+                    "pufferfish",
+                    "sarcasticfringehead",
+                    "ray",
+                    "pelican",
+                    "lobster"
+                ]
+            },
+            {
+                stringId: "seagull",
+                evolvesTo: [
+                    "goliathbullfrog",
+                    "archerfish",
+                    "bobbitworm",
+                    "cookiecuttershark",
+                    "pufferfish",
+                    "sarcasticfringehead",
+                    "ray",
+                    "pelican",
+                    "lobster"
+                ]
+            },
+        ],
+        // Tier 6
+        [
+            {
+                stringId: "piranha",
+                evolvesTo: [
+                    "piranha",
+                    "snake",
+                    "beaver",
+                    "anglerfish",
+                    "otter",
+                    "gulpereel",
+                    "penguin",
+                    "frogfish"
+                ]
+            },
+            {
+                stringId: "goliathbullfrog",
+                evolvesTo: [
+                    "snake",
+                    "beaver",
+                    "anglerfish",
+                    "otter",
+                    "gulpereel",
+                    "penguin",
+                    "frogfish"
+                ]
+            },
+            {
+                stringId: "archerfish",
+                evolvesTo: [
+                    "snake",
+                    "beaver",
+                    "anglerfish",
+                    "otter",
+                    "gulpereel",
+                    "penguin",
+                    "frogfish"
+                ]
+            },
+            {
+                stringId: "bobbitworm",
+                evolvesTo: [
+                    "snake",
+                    "beaver",
+                    "anglerfish",
+                    "otter",
+                    "gulpereel",
+                    "penguin",
+                    "frogfish"
+                ]
+            },
+            {
+                stringId: "cookiecuttershark",
+                evolvesTo: [
+                    "snake",
+                    "beaver",
+                    "anglerfish",
+                    "otter",
+                    "gulpereel",
+                    "penguin",
+                    "frogfish"
+                ]
+            },
+            {
+                stringId: "pufferfish",
+                evolvesTo: [
+                    "snake",
+                    "beaver",
+                    "anglerfish",
+                    "otter",
+                    "gulpereel",
+                    "penguin",
+                    "frogfish"
+                ]
+            },
+            {
+                stringId: "sarcasticfringehead",
+                evolvesTo: [
+                    "snake",
+                    "beaver",
+                    "anglerfish",
+                    "otter",
+                    "gulpereel",
+                    "penguin",
+                    "frogfish"
+                ]
+            },
+            {
+                stringId: "ray",
+                evolvesTo: [
+                    "snake",
+                    "beaver",
+                    "anglerfish",
+                    "otter",
+                    "gulpereel",
+                    "penguin",
+                    "frogfish"
+                ]
+            },
+            {
+                stringId: "pelican",
+                evolvesTo: [
+                    "snake",
+                    "beaver",
+                    "anglerfish",
+                    "otter",
+                    "gulpereel",
+                    "penguin",
+                    "frogfish"
+                ]
+            },
+            {
+                stringId: "lobster",
+                evolvesTo: [
+                    "snake",
+                    "beaver",
+                    "anglerfish",
+                    "otter",
+                    "gulpereel",
+                    "penguin",
+                    "frogfish"
+                ]
+            },
+        ],
+        // Tier 7
+        [
+            {
+                stringId: "piranha",
+                evolvesTo: [
+                    "piranha",
+                    "snappingturtle",
+                    "dragonfish",
+                    "barracuda",
+                    "octopus",
+                    "mahimahi",
+                    "seal"
+                ]
+            },
+            {
+                stringId: "snake",
+                evolvesTo: [
+                    "snappingturtle",
+                    "dragonfish",
+                    "barracuda",
+                    "octopus",
+                    "mahimahi",
+                    "seal"
+                ]
+            },
+            {
+                stringId: "beaver",
+                evolvesTo: [
+                    "snappingturtle",
+                    "dragonfish",
+                    "barracuda",
+                    "octopus",
+                    "mahimahi",
+                    "seal"
+                ]
+            },
+            {
+                stringId: "anglerfish",
+                evolvesTo: [
+                    "snappingturtle",
+                    "dragonfish",
+                    "barracuda",
+                    "octopus",
+                    "mahimahi",
+                    "seal"
+                ]
+            },
+            {
+                stringId: "seaotter",
+                evolvesTo: [
+                    "snappingturtle",
+                    "dragonfish",
+                    "barracuda",
+                    "octopus",
+                    "mahimahi",
+                    "seal"
+                ]
+            },
+            {
+                stringId: "gulpereel",
+                evolvesTo: [
+                    "snappingturtle",
+                    "dragonfish",
+                    "barracuda",
+                    "octopus",
+                    "mahimahi",
+                    "seal"
+                ]
+            },
+            {
+                stringId: "penguin",
+                evolvesTo: [
+                    "snappingturtle",
+                    "dragonfish",
+                    "barracuda",
+                    "octopus",
+                    "mahimahi",
+                    "seal"
+                ]
+            },
+            {
+                stringId: "frogfish",
+                evolvesTo: [
+                    "snappingturtle",
+                    "dragonfish",
+                    "barracuda",
+                    "octopus",
+                    "mahimahi",
+                    "seal"
+                ]
+            },
+        ],
+        // Tier 8
+        [
+            {
+                stringId: "piranha",
+                evolvesTo: [
+                    "piranha",
+                    "manatee"
+                ]
+            },
+            {
+                stringId: "snappingturtle",
+                evolvesTo: [
+                    "manatee",
+                    "giantsalamander",
+                    "electriceel"
+                ]
+            },
+            {
+                stringId: "dragonfish",
+                evolvesTo: [
+                    "frilledshark",
+                    "oarfish",
+                    "wolfeel"
+                ]
+            },
+            {
+                stringId: "barracuda",
+                evolvesTo: [
+                    "lionfish",
+                    "tshark",
+                    "wobbegongshark"
+                ]
+            },
+            {
+                stringId: "octopus",
+                evolvesTo: [
+                    "humboldtsquid",
+                    "mantisshrimp"
+                ]
+            },
+            {
+                stringId: "mahimahi",
+                evolvesTo: [
+                    "dolphin",
+                    "seaturtle"
+                ]
+            },
+            {
+                stringId: "seal",
+                evolvesTo: [
+                    "narwhal",
+                    "leopardseal",
+                    "beluga"
+                ]
+            }
+        ],
+        // Tier 9
+        [
+            {
+                stringId: "piranha",
+                evolvesTo: [
+                    "piranha"
+                ]
+            },
+            {
+                stringId: "manatee",
+                evolvesTo: [
+                    "hippo",
+                    "crocodile",
+                    "eagle"
+                ]
+            },
+            {
+                stringId: "giantsalamander",
+                evolvesTo: [
+                    "giantsoftshellturtle",
+                    "alligatorsnappingturtle",
+                    "anaconda"
+                ]
+            },
+            {
+                stringId: "electriceel",
+                evolvesTo: [
+                    "sawfish",
+                    "alligatorgar"
+                ]
+            },
+            {
+                stringId: "frilledshark",
+                evolvesTo: [
+                    "megamouthshark",
+                    "sleepershark",
+                    "goblinshark"
+                ]
+            },
+            {
+                stringId: "oarfish",
+                evolvesTo: [
+                    "sunfish",
+                    "mantaray"
+                ]
+            },
+            {
+                stringId: "wolfeel",
+                evolvesTo: [
+                    "coelacanth",
+                    "halibut"
+                ]
+            },
+            {
+                stringId: "lionfish",
+                evolvesTo: [
+                    "atlantictorpedo",
+                    "stonefish",
+                    "morayeel"
+                ]
+            },
+            {
+                stringId: "tshark",
+                evolvesTo: [
+                    "bullshark",
+                    "threshershark",
+                    "shark"
+                ]
+            },
+            {
+                stringId: "wobbegongshark",
+                evolvesTo: [
+                    "tigershark",
+                    "baskingshark",
+                    "whaleshark"
+                ]
+            },
+            {
+                stringId: "humboldtsquid",
+                evolvesTo: [
+                    "giantpacificoctopus",
+                    "colossalsquid",
+                    "giantsquid",
+                ]
+            },
+            {
+                stringId: "mantisshrimp",
+                evolvesTo: [
+                    "japanesespidercrab",
+                    "coconutcrab"
+                ]
+            },
+            {
+                stringId: "dolphin",
+                evolvesTo: [
+                    "killerwhale",
+                    "marlin"
+                ]
+            },
+            {
+                stringId: "seaturtle",
+                evolvesTo: [
+                    "leatherbackturtle",
+                    "napoleonwrasse"
+                ]
+            },
+            {
+                stringId: "narwhal",
+                evolvesTo: [
+                    "beakedwhale",
+                    "cachalot"
+                ]
+            },
+            {
+                stringId: "leopardseal",
+                evolvesTo: [
+                    "polarbear",
+                    "elephantseal",
+                    "walrus"
+                ]
+            },
+            {
+                stringId: "beluga",
+                evolvesTo: [
+                    "humpbackwhale",
+                    "whale",
+                    "bowheadwhale"
+                ]
+            }
+        ],
+        // Tier 10
+        [
+            {
+                stringId: "hippo",
+                evolvesTo: []
+            },
+            {
+                stringId: "crocodile",
+                evolvesTo: []
+            },
+            {
+                stringId: "eagle",
+                evolvesTo: []
+            },
+            {
+                stringId: "giantsoftshellturtle",
+                evolvesTo: []
+            },
+            {
+                stringId: "alligatorsnappingturtle",
+                evolvesTo: []
+            },
+            {
+                stringId: "anaconda",
+                evolvesTo: []
+            },
+            {
+                stringId: "sawfish",
+                evolvesTo: []
+            },
+            {
+                stringId: "alligatorgar",
+                evolvesTo: []
+            },
+            {
+                stringId: "megamouthshark",
+                evolvesTo: []
+            },
+            {
+                stringId: "sleepershark",
+                evolvesTo: []
+            },
+            {
+                stringId: "goblinshark",
+                evolvesTo: []
+            },
+            {
+                stringId: "sunfish",
+                evolvesTo: []
+            },
+            {
+                stringId: "mantaray",
+                evolvesTo: []
+            },
+            {
+                stringId: "coelacanth",
+                evolvesTo: []
+            },
+            {
+                stringId: "halibut",
+                evolvesTo: []
+            },
+            {
+                stringId: "atlantictorpedo",
+                evolvesTo: []
+            },
+            {
+                stringId: "stonefish",
+                evolvesTo: []
+            },
+            {
+                stringId: "morayeel",
+                evolvesTo: []
+            },
+            {
+                stringId: "bullshark",
+                evolvesTo: []
+            },
+            {
+                stringId: "threshershark",
+                evolvesTo: []
+            },
+            {
+                stringId: "shark",
+                evolvesTo: []
+            },
+            {
+                stringId: "tigershark",
+                evolvesTo: []
+            },
+            {
+                stringId: "baskingshark",
+                evolvesTo: []
+            },
+            {
+                stringId: "whaleshark",
+                evolvesTo: []
+            },
+            {
+                stringId: "giantpacificoctopus",
+                evolvesTo: []
+            },
+            {
+                stringId: "colossalsquid",
+                evolvesTo: []
+            },
+            {
+                stringId: "giantsquid",
+                evolvesTo: []
+            },
+            {
+                stringId: "japanesespidercrab",
+                evolvesTo: []
+            },
+            {
+                stringId: "coconutcrab",
+                evolvesTo: []
+            },
+            {
+                stringId: "killerwhale",
+                evolvesTo: []
+            },
+            {
+                stringId: "marlin",
+                evolvesTo: []
+            },
+            {
+                stringId: "leatherbackturtle",
+                evolvesTo: []
+            },
+            {
+                stringId: "napoleonwrasse",
+                evolvesTo: []
+            },
+            {
+                stringId: "beakedwhale",
+                evolvesTo: []
+            },
+            {
+                stringId: "cachalot",
+                evolvesTo: []
+            },
+            {
+                stringId: "polarbear",
+                evolvesTo: []
+            },
+            {
+                stringId: "elephantseal",
+                evolvesTo: []
+            },
+            {
+                stringId: "walrus",
+                evolvesTo: []
+            },
+            {
+                stringId: "humpbackwhale",
+                evolvesTo: []
+            },
+            {
+                stringId: "whale",
+                evolvesTo: []
+            },
+            {
+                stringId: "bowheadwhale",
+                evolvesTo: []
+            },
+        ]
+    ];
     const sidePaneTop = document.querySelector("div.p-2.sidebar.right.space-y-2 > .container > div.el-row.justify-center") as HTMLDivElement;
     const treeButtonContainer = sidePaneTop!.querySelector("div")!.cloneNode(true) as HTMLDivElement;
     const treeButton = treeButtonContainer.firstElementChild as HTMLButtonElement;
@@ -880,6 +1834,83 @@ window.addEventListener("DOMContentLoaded", () => {
         background-color: rgba(0, 0, 0, 0.3);
     }
     
+    .drc-tree-choice {
+        --drc-bg-opacity: 0.1;
+        background-color: rgba(255, 255, 255, var(--drc-bg-opacity));
+        border-radius: 0.75rem;
+        overflow: hidden;
+        cursor: pointer;
+        text-align: center;
+        width: 5rem;
+        height: 5rem;
+        line-height: 5rem;
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
+    }
+    
+    .drc-tree-choice:hover {
+        --drc-bg-opacity: 0.3
+    }
+    
+    .drc-tree-image {
+        position: relative;
+        display: inline-block;
+        overflow: hidden;
+        vertical-align: middle;
+        width: 80%;
+        height: 80%;
+        pointer-events: none;
+    }
+    
+    .drc-tree-image-inner {
+        object-fit: contain;
+        vertical-align: top;
+        width: 100%;
+        height: 100%;
+    }
+    
+    .drc-tree-row {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center;
+        justify-content: center;
+        max-height: 100%;
+        overflow: auto;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+    
+    .drc-tree-tier {
+        font-size: 3rem;
+    }
+    
+    .drc-tree-void {
+        margin: 0.5rem;
+        overflow: hidden;
+        width: 5rem;
+        height: 5rem;
+        line-height: 5rem;
+    }
+    
+    .drc-tree-vertical-line-wrapper {
+        overflow: hidden;
+        width: 5rem;
+        height: 0.75rem;
+        line-height: 5rem;
+        display: flex;
+        justify-content: center;
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
+    }
+    .drc-tree-vertical-line {
+        background-color: white;
+        height: 0.75rem;
+        width: 0.4rem;
+    }
+    .drc-tree-horizontal-void {
+    
+    }
     `;
     document.head.appendChild(treeStyle);
     const treeDiv = document.createElement("div");
@@ -895,8 +1926,10 @@ window.addEventListener("DOMContentLoaded", () => {
                 <div></div>
             </span>
             <div class="drc-modal-content tree-modal-content">
-                <img src="https://deeeep-reef-client.netlify.app/assets/evolution_tree.png"
-                    alt="Deeeep.io v4 beta evolution tree">
+                <div id="treeModalMain"></div>
+
+                <!--<img src="https://deeeep-reef-client.netlify.app/assets/evolution_tree.png"
+                    alt="Deeeep.io v4 beta evolution tree">-->
             </div>
             <button id="treeCloseButton" class="drc-modal-close"><svg width="1.125em" height="1.125em" viewBox="0 0 24 24"
                     class="svg-icon" color="gray" style="--sx:1; --sy:1; --r:0deg;">
@@ -908,7 +1941,43 @@ window.addEventListener("DOMContentLoaded", () => {
     </div>
 </div>
 `;
+    const treeModalMain = document.getElementById("treeModalMain");
+    const treeAnimalRelationsLongest = treeAnimalRelations.reduce(
+        function (a, b) {
+            return a.length > b.length ? a : b;
+        }
+    ).length;
+    for (let i in treeAnimalRelations) {
+        const row = document.createElement("div");
+        row.classList.add("drc-tree-row");
 
+
+        for (let j = 0; j < treeAnimalRelationsLongest; j++) {
+            if (j >= treeAnimalRelations[i].length) {
+                const animalElem = document.createElement("div");
+                animalElem.classList.add("drc-tree-void");
+                row.appendChild(animalElem);
+                continue;
+            }
+
+            const animalElem = document.createElement("div");
+            animalElem.classList.add("drc-tree-choice");
+
+            const imageWrapperElem = document.createElement("div");
+            imageWrapperElem.classList.add("drc-tree-image");
+
+            const imageElem = document.createElement("img");
+            imageElem.classList.add("drc-tree-image-inner");
+            imageElem.setAttribute("src", "https://beta.deeeep.io/assets/characters/" + treeAnimalRelations[i][j].stringId + ".png");
+
+            imageWrapperElem.appendChild(imageElem);
+            animalElem.appendChild(imageWrapperElem);
+            row.appendChild(animalElem);
+        }
+
+
+        treeModalMain?.appendChild(row);
+    }
 
     const treeModalContainer = document.getElementById("treeModalContainer");
     const treeCloseButton = document.getElementById("treeCloseButton");
