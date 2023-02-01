@@ -3182,7 +3182,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 <img src="https://beta.deeeep.io/img/stats/speed.png" class="drc-animal-image-inner"
                     style="object-fit: contain;">
                 </div>
-                <span class="drc-animal-value drc-text-cyan">${animalStat.speedMultiplier * 100}</span>
+                <span class="drc-animal-value drc-text-cyan">${Math.ceil(animalStat.speedMultiplier * 100)}</span>
         </div>
         <div class="drc-animal-stat">
             <div class="drc-animal-image-icon">
