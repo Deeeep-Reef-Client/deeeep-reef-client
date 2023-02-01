@@ -1,14 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 const { app, BrowserWindow, Menu, ipcMain, shell, session, globalShortcut, Notification } = require('electron');
 const log = require('electron-log');
@@ -117,7 +107,7 @@ let settings = {
     gameAccounts: [],
     developer: false
 };
-Object.assign(settings, (_a = store.get("settings")) !== null && _a !== void 0 ? _a : {});
+Object.assign(settings, store.get("settings") ?? {});
 if (settings === undefined) {
     settings = {
         customTheme: true,
@@ -268,16 +258,16 @@ const createWindow = () => {
         adBlockerOn = true;
     }
     ;
-    (() => __awaiter(void 0, void 0, void 0, function* () {
+    (async () => {
         if (docassetsOn)
-            yield window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/docassets");
+            await window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/docassets");
         else
-            yield window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/drc-as-copy");
+            await window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/drc-as-copy");
         if (adBlockerOn)
-            yield window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/ublock");
+            await window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/ublock");
         else
-            yield window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/drc-assetswapper");
-        yield window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/drc-assetswapper");
+            await window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/drc-assetswapper");
+        await window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/drc-assetswapper");
         window.loadURL("https://deeeep.io");
         window.hide();
         /*
@@ -319,7 +309,7 @@ const createWindow = () => {
             });
         };
         */
-    }))();
+    })();
     // Opens URLs in browser
     window.webContents.setWindowOpenHandler((details) => {
         shell.openExternal(details.url);
@@ -384,9 +374,9 @@ const createWindow = () => {
     });
     // window.show();
     // listen for app path requests
-    ipcMain.handle("getPath", (_event, path) => __awaiter(void 0, void 0, void 0, function* () {
+    ipcMain.handle("getPath", async (_event, path) => {
         return app.getPath(path);
-    }));
+    });
     // toggle DevTools on request
     ipcMain.on("openDevTools", () => {
         window.webContents.openDevTools();

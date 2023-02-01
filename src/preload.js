@@ -1,18 +1,13 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const { ipcRenderer, app, contextBridge } = require('electron');
 const Filter = require('bad-words');
 const cssjs = require('jotform-css.js');
 const fs = require('fs');
+const tippy_js_1 = __importDefault(require("tippy.js"));
 // Maintain compatibility when update
 let API_URL = "";
 if (window.location.hostname.startsWith("beta")) {
@@ -61,7 +56,6 @@ const animalStatData = JSON.parse(`[{"name":"fish","size":{"x":48,"y":68},"mass"
 // IDK what happened but this is to prevent a bug from happening
 let reloadCustomTheme = () => { };
 window.addEventListener("DOMContentLoaded", () => {
-    var _a;
     // DRC
     const clientVersion = document.querySelector(".client-version");
     /// @REMIND Update client version
@@ -75,7 +69,7 @@ window.addEventListener("DOMContentLoaded", () => {
     // warn if code updated
     const indexScriptTag = document.querySelector("script[src^=\\/assets\\/index\\.]");
     fetch("https://deeeep-reef-client.github.io/modded-assets/misc/" +
-        ((_a = indexScriptTag === null || indexScriptTag === void 0 ? void 0 : indexScriptTag.getAttribute("src")) !== null && _a !== void 0 ? _a : "/assets/index.js").replace("/assets/", ""))
+        (indexScriptTag?.getAttribute("src") ?? "/assets/index.js").replace("/assets/", ""))
         .then(response => {
         if (!response.ok)
             throw new Error();
@@ -632,50 +626,46 @@ window.addEventListener("DOMContentLoaded", () => {
     let badgeCount = 0;
     let forumNotificationCount = 0;
     let friendRequestCount = 0;
-    function checkForumNotifications() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const xhr = new XMLHttpRequest();
-            xhr.open('GET', "https://apibeta.deeeep.io/forumNotifications/count");
-            xhr.withCredentials = true;
-            xhr.addEventListener("load", (_event) => {
-                const forumNotifications = JSON.parse(xhr.response);
-                if (forumNotifications.statusCode !== undefined && forumNotifications.statusCode === 403)
-                    return;
-                if (forumNotifications.count > forumNotificationCount) {
-                    new Notification("New forum notification", {
-                        body: "You received a new Forum notification."
-                    });
-                }
-                forumNotificationCount = forumNotifications.count;
-                badgeCount = friendRequestCount + forumNotificationCount;
-                ipcRenderer.send("update-badge", badgeCount || null);
-            });
-            xhr.send();
+    async function checkForumNotifications() {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', "https://apibeta.deeeep.io/forumNotifications/count");
+        xhr.withCredentials = true;
+        xhr.addEventListener("load", (_event) => {
+            const forumNotifications = JSON.parse(xhr.response);
+            if (forumNotifications.statusCode !== undefined && forumNotifications.statusCode === 403)
+                return;
+            if (forumNotifications.count > forumNotificationCount) {
+                new Notification("New forum notification", {
+                    body: "You received a new Forum notification."
+                });
+            }
+            forumNotificationCount = forumNotifications.count;
+            badgeCount = friendRequestCount + forumNotificationCount;
+            ipcRenderer.send("update-badge", badgeCount || null);
         });
+        xhr.send();
     }
     checkForumNotifications();
     setInterval(checkForumNotifications, 30000);
     // Friend requests
-    function checkFriendRequests() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const xhr = new XMLHttpRequest();
-            xhr.open('GET', "https://apibeta.deeeep.io/friendRequests/count");
-            xhr.withCredentials = true;
-            xhr.addEventListener("load", (_event) => {
-                const friendRequests = JSON.parse(xhr.response);
-                if (friendRequests.statusCode !== undefined && friendRequests.statusCode === 403)
-                    return;
-                if (friendRequests.count > friendRequestCount) {
-                    new Notification("New friend request", {
-                        body: "You received a new friend request."
-                    });
-                }
-                friendRequestCount = friendRequests.count;
-                badgeCount = friendRequestCount + forumNotificationCount;
-                ipcRenderer.send("update-badge", badgeCount || null);
-            });
-            xhr.send();
+    async function checkFriendRequests() {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', "https://apibeta.deeeep.io/friendRequests/count");
+        xhr.withCredentials = true;
+        xhr.addEventListener("load", (_event) => {
+            const friendRequests = JSON.parse(xhr.response);
+            if (friendRequests.statusCode !== undefined && friendRequests.statusCode === 403)
+                return;
+            if (friendRequests.count > friendRequestCount) {
+                new Notification("New friend request", {
+                    body: "You received a new friend request."
+                });
+            }
+            friendRequestCount = friendRequests.count;
+            badgeCount = friendRequestCount + forumNotificationCount;
+            ipcRenderer.send("update-badge", badgeCount || null);
         });
+        xhr.send();
     }
     checkFriendRequests();
     setInterval(checkFriendRequests, 30000);
@@ -2490,7 +2480,7 @@ window.addEventListener("DOMContentLoaded", () => {
         // Tier 10 2
         [
             {
-                stringId: "baldeagle",
+                stringId: "void",
                 evolvesTo: []
             },
             {
@@ -2855,6 +2845,97 @@ window.addEventListener("DOMContentLoaded", () => {
     .drc-tree-horizontal-void {
     
     }
+    .drc-animal-info {
+        background-color: rgba(0, 0, 0, var(--tw-bg-opacity));
+        --tw-bg-opacity: 0.4;
+        border-radius: 0.5rem;
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+        pointer-events: none;
+        position: absolute;
+        line-height: 1.3em;
+        width: max-content;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    
+    .drc-animal-title {
+        text-transform: capitalize;
+    }
+    
+    .drc-animal-stats {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        margin-left: -0.25rem;
+        margin-right: -0.25rem;
+    }
+    
+    .drc-animal-stat {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-left: 0.25rem;
+        margin-right: 0.25rem;
+        font-size: 0.9em;
+    }
+    
+    .drc-animal-image-icon {
+        overflow: hidden;
+        width: 1em;
+        margin-right: 0.25rem;
+        height: 1em;
+        position: relative;
+        display: inline-block;
+    }
+    
+    .drc-animal-image-inner {
+        vertical-align: top;
+    }
+    
+    .drc-animal-value {
+        font-weight: 300;
+        margin-right: 0.25rem;
+    }
+    
+    .drc-text-green {
+        --tw-text-opacity: 1;
+        color: rgba(110, 231, 183, var(--tw-text-opacity));
+    }
+    
+    .drc-text-red {
+        --tw-text-opacity: 1;
+        color: rgba(252, 165, 165, var(--tw-text-opacity));
+    }
+    
+    .drc-text-cyan {
+        --tw-text-opacity: 1;
+        color: rgba(103, 232, 249, var(--tw-text-opacity));
+    }
+    
+    .drc-animal-font-normal {
+        margin-top: 0.25rem;
+        font-weight: 400;
+    }
+    
+    .drc-animal-habitat {
+        font-size: 0.9em;
+        display: block;
+        font-weight: 300;
+        white-space: nowrap;
+    }
+    
+    .drc-animal-summary {
+        display: block;
+        font-weight: 300;
+        font-style: italic;
+        white-space: nowrap;
+        font-size: 0.9rem;
+    }
     `;
     document.head.appendChild(treeStyle);
     const treeDiv = document.createElement("div");
@@ -2888,44 +2969,153 @@ window.addEventListener("DOMContentLoaded", () => {
 </div>
 `;
     const treeModalMain = document.getElementById("treeModalMain");
+    const treeAnimalTooltipContainer = document.getElementById("treeAnimalTooltipContainer");
     const treeAnimalRelationsLongest = treeAnimalRelationsProcessed.reduce(function (a, b) {
         return a.length > b.length ? a : b;
     }).length;
-    for (let i in treeAnimalRelationsProcessed) {
-        const row = document.createElement("div");
-        row.classList.add("drc-tree-row");
-        const placeholder = document.createElement("div");
-        row.appendChild(placeholder);
-        for (let j = 0; j < treeAnimalRelationsLongest; j++) {
-            if (j >= treeAnimalRelationsProcessed[i].length) {
-                const animalElem = document.createElement("div");
-                animalElem.classList.add("drc-tree-void");
-                row.insertBefore(animalElem, row.firstElementChild);
-                //row.appendChild(animalElem);
-                continue;
+    (async () => {
+        class Habitat {
+            constructor(num) {
+                this.NAMES = ['Cold', 'Warm', 'Shallow', 'Deep', 'Fresh', 'Salt', 'Reef'];
+                this.MAX = Math.pow(2, this.NAMES.length) - 1;
+                this.habitatNum = num;
             }
-            if (treeAnimalRelationsProcessed[i][j].stringId === "void") {
-                const animalElem = document.createElement("div");
-                animalElem.classList.add("drc-tree-void");
-                row.insertBefore(animalElem, row.firstElementChild);
-                //row.appendChild(animalElem);
-                continue;
+            convertToBase(num, base) {
+                let conversion = [];
+                let power, quotient, remainder = 0;
+                if (num === 0) {
+                    conversion = [0];
+                }
+                else {
+                    power = Math.floor(Math.log(num) / Math.log(base));
+                    while (power >= 0) {
+                        quotient = Math.floor(num / Math.pow(base, power));
+                        remainder = num % Math.pow(base, power);
+                        conversion.unshift(quotient);
+                        num = remainder;
+                        power--;
+                    }
+                }
+                return conversion;
             }
-            const animalElem = document.createElement("div");
-            animalElem.classList.add("drc-tree-choice");
-            const imageWrapperElem = document.createElement("div");
-            imageWrapperElem.classList.add("drc-tree-image");
-            const imageElem = document.createElement("img");
-            imageElem.classList.add("drc-tree-image-inner");
-            imageElem.setAttribute("src", "https://beta.deeeep.io/assets/characters/" + treeAnimalRelationsProcessed[i][j].stringId + ".png");
-            imageWrapperElem.appendChild(imageElem);
-            animalElem.appendChild(imageWrapperElem);
-            row.insertBefore(animalElem, row.firstElementChild);
-            //row.appendChild(animalElem);
+            convertToList() {
+                const conversion = this.convertToBase(Math.floor(this.habitatNum), 2);
+                const length = conversion.length;
+                let partialDisplay = [];
+                for (let index = 0; index < length; index += 2) {
+                    let str = "";
+                    let nextFlag = false;
+                    let nextName = "";
+                    let nextIndex = index + 1;
+                    let currentFlag = conversion[index];
+                    let currentName = currentFlag ? this.NAMES[index] : false;
+                    if (nextIndex >= length) {
+                        nextFlag = false;
+                    }
+                    else
+                        nextFlag = conversion[nextIndex];
+                    nextName = nextFlag ? this.NAMES[nextIndex] : false;
+                    if (currentName && nextName) {
+                        str = `${currentName}/${nextName}`;
+                    }
+                    else
+                        str = currentName || nextName;
+                    if (str) {
+                        partialDisplay.push(str);
+                    }
+                }
+                return partialDisplay;
+            }
+            hasReef() {
+                return this.habitatNum >= Math.pow(2, this.NAMES.length - 1);
+            }
         }
-        treeModalMain === null || treeModalMain === void 0 ? void 0 : treeModalMain.insertBefore(row, treeModalMain.firstElementChild);
-        //treeModalMain?.appendChild(row);
-    }
+        const translations = await fetch("https://api.crowdl.io/deeeep/cdn/en.json")
+            .then(res => res.json());
+        for (let i in treeAnimalRelationsProcessed) {
+            const row = document.createElement("div");
+            row.classList.add("drc-tree-row");
+            const placeholder = document.createElement("div");
+            row.appendChild(placeholder);
+            for (let j = 0; j < treeAnimalRelationsLongest; j++) {
+                if (j >= treeAnimalRelationsProcessed[i].length) {
+                    const animalElem = document.createElement("div");
+                    animalElem.classList.add("drc-tree-void");
+                    row.insertBefore(animalElem, row.firstElementChild);
+                    //row.appendChild(animalElem);
+                    continue;
+                }
+                if (treeAnimalRelationsProcessed[i][j].stringId === "void") {
+                    const animalElem = document.createElement("div");
+                    animalElem.classList.add("drc-tree-void");
+                    row.insertBefore(animalElem, row.firstElementChild);
+                    //row.appendChild(animalElem);
+                    continue;
+                }
+                const animalId = treeAnimalRelationsProcessed[i][j].stringId;
+                const animalStat = animalStatData.filter((stat) => stat.name === animalId)[0];
+                const animalHabitat = new Habitat(animalStat.habitat);
+                const animalElem = document.createElement("div");
+                animalElem.classList.add("drc-tree-choice");
+                const imageWrapperElem = document.createElement("div");
+                imageWrapperElem.classList.add("drc-tree-image");
+                const imageElem = document.createElement("img");
+                imageElem.classList.add("drc-tree-image-inner");
+                imageElem.setAttribute("src", "https://beta.deeeep.io/assets/characters/" + animalId + ".png");
+                imageWrapperElem.appendChild(imageElem);
+                animalElem.appendChild(imageWrapperElem);
+                row.insertBefore(animalElem, row.firstElementChild);
+                //row.appendChild(animalElem);
+                const tooltip = `
+    <div class="drc-animal-info">
+    <h4 class="drc-animal-title" style="margin: 0;">${translations[animalId + "-name"]}</h4>
+    <div class="drc-animal-stats">
+        <div class="drc-animal-stat">
+            <div class="drc-animal-image-icon">
+                <img src="https://beta.deeeep.io/img/stats/health.png" class="drc-animal-image-inner"
+                    style="object-fit: contain;">
+                </div>
+                <span class="drc-animal-value drc-text-green">${animalStat.healthMultiplier * 100}</span>
+        </div>
+        <div class="drc-animal-stat">
+            <div class="drc-animal-image-icon">
+                <img src="https://beta.deeeep.io/img/stats/damage.png" class="drc-animal-image-inner"
+                    style="object-fit: contain;">
+                </div>
+                <span class="drc-animal-value drc-text-red">${animalStat.damageMultiplier * 20}</span>
+        </div>
+        <div class="drc-animal-stat">
+            <div class="drc-animal-image-icon">
+                <img src="https://beta.deeeep.io/img/stats/speed.png" class="drc-animal-image-inner"
+                    style="object-fit: contain;">
+                </div>
+                <span class="drc-animal-value drc-text-cyan">${animalStat.speedMultiplier * 100}</span>
+        </div>
+        <div class="drc-animal-stat">
+            <div class="drc-animal-image-icon">
+                <img src="https://beta.deeeep.io/img/stats/shieldstat.png" class="drc-animal-image-inner"
+                    style="object-fit: contain;">
+                </div>
+                <span class="drc-animal-value">${animalStat.damageBlock * 100}</span>
+        </div>
+    </div>
+    <div class="drc-animal-font-normal">Habitat</div>
+    <span class="drc-animal-habitat">${animalHabitat.convertToList().toString().replaceAll(',', ", ")}</span>
+    <div class="drc-animal-font-normal">Summary</div>
+    <span class="drc-animal-summary">"Coming soon"</span>
+</div>
+    `;
+                (0, tippy_js_1.default)(animalElem, {
+                    content: tooltip,
+                    allowHTML: true,
+                    zIndex: 99999,
+                    duration: [0, 0]
+                });
+            }
+            treeModalMain?.insertBefore(row, treeModalMain.firstElementChild);
+            //treeModalMain?.appendChild(row);
+        }
+    })();
     const treeModalContainer = document.getElementById("treeModalContainer");
     const treeCloseButton = document.getElementById("treeCloseButton");
     // Tree button onclick
@@ -3124,78 +3314,75 @@ window.addEventListener("DOMContentLoaded", () => {
         });
     }
     ;
-    function updateAssetSwapperList() {
-        return __awaiter(this, void 0, void 0, function* () {
-            let assetSwapperRuleSkins = [];
-            let assetSwapperRuleAnimalName = "";
-            let assetSwapperRuleSkinName = "";
-            assetSwapperRuleList.innerHTML = "";
-            for (let i in settings.assetSwapperConfig) {
-                for (let j in animalList) {
-                    if (animalList[j].id == settings.assetSwapperConfig[i].animal) {
-                        assetSwapperRuleAnimalName = animalList[j].name;
+    async function updateAssetSwapperList() {
+        let assetSwapperRuleSkins = [];
+        let assetSwapperRuleAnimalName = "";
+        let assetSwapperRuleSkinName = "";
+        assetSwapperRuleList.innerHTML = "";
+        for (let i in settings.assetSwapperConfig) {
+            for (let j in animalList) {
+                if (animalList[j].id == settings.assetSwapperConfig[i].animal) {
+                    assetSwapperRuleAnimalName = animalList[j].name;
+                    break;
+                }
+            }
+            await fetch(API_URL + "/skins?animalId=" + settings.assetSwapperConfig[i].animal)
+                .then(res => res.json())
+                .then(data => assetSwapperRuleSkins = data)
+                .then(() => {
+                for (let j in assetSwapperRuleSkins) {
+                    if (assetSwapperRuleSkins[j].id == settings.assetSwapperConfig[i].skin) {
+                        assetSwapperRuleSkinName = assetSwapperRuleSkins[j].name;
                         break;
                     }
                 }
-                yield fetch(API_URL + "/skins?animalId=" + settings.assetSwapperConfig[i].animal)
-                    .then(res => res.json())
-                    .then(data => assetSwapperRuleSkins = data)
-                    .then(() => {
-                    for (let j in assetSwapperRuleSkins) {
-                        if (assetSwapperRuleSkins[j].id == settings.assetSwapperConfig[i].skin) {
-                            assetSwapperRuleSkinName = assetSwapperRuleSkins[j].name;
-                            break;
-                        }
-                    }
-                });
-                const mainElem = document.createElement("div");
-                mainElem.classList.add("assetswapper-list-rule");
-                // animal name
-                const animalElem = document.createElement("p");
-                animalElem.innerText = assetSwapperRuleAnimalName;
-                mainElem.appendChild(animalElem);
-                const spacer1 = document.createElement("div");
-                spacer1.classList.add("spacer");
-                mainElem.appendChild(spacer1);
-                // => icon
-                const iconElem = document.createElement("div");
-                mainElem.appendChild(iconElem);
-                iconElem.outerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+            });
+            const mainElem = document.createElement("div");
+            mainElem.classList.add("assetswapper-list-rule");
+            // animal name
+            const animalElem = document.createElement("p");
+            animalElem.innerText = assetSwapperRuleAnimalName;
+            mainElem.appendChild(animalElem);
+            const spacer1 = document.createElement("div");
+            spacer1.classList.add("spacer");
+            mainElem.appendChild(spacer1);
+            // => icon
+            const iconElem = document.createElement("div");
+            mainElem.appendChild(iconElem);
+            iconElem.outerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
             class="bi bi-arrow-right" viewBox="0 0 16 16">
             <path fill-rule="evenodd"
                 d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />
         </svg>`;
-                const spacer2 = document.createElement("div");
-                spacer2.classList.add("spacer");
-                mainElem.appendChild(spacer2);
-                // Skin name
-                const skinElem = document.createElement("p");
-                skinElem.innerText = assetSwapperRuleSkinName;
-                mainElem.appendChild(skinElem);
-                const spacer3 = document.createElement("div");
-                spacer3.classList.add("spacer");
-                mainElem.appendChild(spacer3);
-                // Delete button
-                const deleteElem = document.createElement("button");
-                deleteElem.classList.add("assetswapper-new-button");
-                deleteElem.innerText = "Delete";
-                deleteElem.addEventListener("click", () => {
-                    settings.assetSwapperConfig = settings.assetSwapperConfig.filter(item => item != settings.assetSwapperConfig[i]);
-                    saveSettings();
-                    updateAssetSwapperList();
-                });
-                mainElem.appendChild(deleteElem);
-                assetSwapperRuleList.appendChild(mainElem);
-            }
-        });
+            const spacer2 = document.createElement("div");
+            spacer2.classList.add("spacer");
+            mainElem.appendChild(spacer2);
+            // Skin name
+            const skinElem = document.createElement("p");
+            skinElem.innerText = assetSwapperRuleSkinName;
+            mainElem.appendChild(skinElem);
+            const spacer3 = document.createElement("div");
+            spacer3.classList.add("spacer");
+            mainElem.appendChild(spacer3);
+            // Delete button
+            const deleteElem = document.createElement("button");
+            deleteElem.classList.add("assetswapper-new-button");
+            deleteElem.innerText = "Delete";
+            deleteElem.addEventListener("click", () => {
+                settings.assetSwapperConfig = settings.assetSwapperConfig.filter(item => item != settings.assetSwapperConfig[i]);
+                saveSettings();
+                updateAssetSwapperList();
+            });
+            mainElem.appendChild(deleteElem);
+            assetSwapperRuleList.appendChild(mainElem);
+        }
     }
     fetch("https://api.crowdl.io/deeeep/cdn/en.json")
         .then(res => res.json())
         .then(data => translations = data).then(() => {
-        var _a;
         for (let i in animals) {
             animalList.push({
-                name: (_a = translations[animals[i].name + "-name"]) !== null && _a !== void 0 ? _a : animals[i].name,
+                name: translations[animals[i].name + "-name"] ?? animals[i].name,
                 stringId: animals[i].name,
                 id: animals[i].id
             });
@@ -3489,7 +3676,7 @@ window.addEventListener("DOMContentLoaded", () => {
         themeMakerOptionsModalTransparency.value = "0";
         themeMakerModalContainer.classList.toggle("drc-modal-hidden");
     });
-    clearSelectedUserTheme === null || clearSelectedUserTheme === void 0 ? void 0 : clearSelectedUserTheme.addEventListener("click", () => {
+    clearSelectedUserTheme?.addEventListener("click", () => {
         const elems = document.querySelectorAll("input[name=userThemeList]");
         for (let e in elems) {
             if (typeof (elems[e]) != "object")
@@ -3668,14 +3855,14 @@ window.addEventListener("DOMContentLoaded", () => {
         themeMakerImportExportModalContainer.classList.toggle("drc-modal-hidden");
     });
     // export
-    themeMakerExportButton.addEventListener("click", () => __awaiter(void 0, void 0, void 0, function* () {
+    themeMakerExportButton.addEventListener("click", async () => {
         const exportedTheme = JSON.parse(exportThemeDropdown.value);
         themeMakerImportExportModalContainer.classList.toggle("drc-modal-hidden");
         const content = JSON.stringify({
             name: exportedTheme.name,
             src: exportedTheme.src
         });
-        const path = yield ipcRenderer.invoke("getPath", "downloads");
+        const path = await ipcRenderer.invoke("getPath", "downloads");
         try {
             fs.writeFileSync(path + `/${exportedTheme.name.replace(/[^a-zA-Z0-9]/g, '')}.drctheme.json`, content);
             new Notification("Theme exported!", {
@@ -3689,7 +3876,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 body: `An error occurred while exporting your theme.`
             });
         }
-    }));
+    });
     // import
     themeMakerImportButton.addEventListener("click", () => {
         // @ts-ignore I KNOW BETTER
@@ -3884,7 +4071,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const searchPluginsList = document.getElementById("searchPluginsList");
     const pluginsSearchQuery = document.getElementById("pluginsSearchQuery");
     const pluginsSearchButton = document.getElementById("pluginsSearchButton");
-    pluginsSearchButton === null || pluginsSearchButton === void 0 ? void 0 : pluginsSearchButton.addEventListener("click", () => {
+    pluginsSearchButton?.addEventListener("click", () => {
         updateFilteredPlugins();
     });
     function updateSearchPluginsList() {
@@ -3943,7 +4130,7 @@ window.addEventListener("DOMContentLoaded", () => {
             const installElem = document.createElement("button");
             installElem.classList.add("assetswapper-new-button");
             installElem.innerText = "Install";
-            installElem.addEventListener("click", () => __awaiter(this, void 0, void 0, function* () {
+            installElem.addEventListener("click", async () => {
                 /*
                 for (const i in settings.pluginsData) {
                     if (settings.pluginsData[i].id == filteredPluginList.list[i].id) {
@@ -3955,7 +4142,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 }*/
                 // fetch plugin src from plugin.json
                 let errorDownloading = false;
-                const pluginSrc = yield fetch(`https://deeeep-reef-client.github.io/plugins-api/plugins/${filteredPluginList.list[i].id}/plugin.json`)
+                const pluginSrc = await fetch(`https://deeeep-reef-client.github.io/plugins-api/plugins/${filteredPluginList.list[i].id}/plugin.json`)
                     .then(res => res.json())
                     .catch((err) => {
                     new Notification("Something went wrong", {
@@ -3997,34 +4184,32 @@ window.addEventListener("DOMContentLoaded", () => {
                 saveSettings();
                 searchPluginsModalContainer.classList.toggle("drc-modal-hidden");
                 window.removeEventListener("keydown", searchPluginsEnterListener);
-            }));
+            });
             mainElem.appendChild(installElem);
             searchPluginsList.appendChild(mainElem);
         }
     }
     ;
-    function updateFilteredPlugins() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const search = pluginsSearchQuery.value.split(new RegExp(" "));
-            yield fetch("https://deeeep-reef-client.github.io/plugins-api/registry.json")
-                .then(res => res.json())
-                .then(data => {
-                pluginList = data;
-                filteredPluginList = data;
-            });
-            filteredPluginList.list = filteredPluginList.list.filter((p) => {
-                let result = false;
-                for (const i in search) {
-                    if (p.name.toLowerCase().includes(search[i].toLowerCase()) ||
-                        p.description.toLowerCase().includes(search[i].toLowerCase())) {
-                        result = true;
-                        break;
-                    }
-                }
-                return result;
-            });
-            updateSearchPluginsList();
+    async function updateFilteredPlugins() {
+        const search = pluginsSearchQuery.value.split(new RegExp(" "));
+        await fetch("https://deeeep-reef-client.github.io/plugins-api/registry.json")
+            .then(res => res.json())
+            .then(data => {
+            pluginList = data;
+            filteredPluginList = data;
         });
+        filteredPluginList.list = filteredPluginList.list.filter((p) => {
+            let result = false;
+            for (const i in search) {
+                if (p.name.toLowerCase().includes(search[i].toLowerCase()) ||
+                    p.description.toLowerCase().includes(search[i].toLowerCase())) {
+                    result = true;
+                    break;
+                }
+            }
+            return result;
+        });
+        updateSearchPluginsList();
     }
     ;
     // Plugins button onclick
@@ -4033,10 +4218,10 @@ window.addEventListener("DOMContentLoaded", () => {
             updateFilteredPlugins();
     }
     ;
-    searchPluginsButton.addEventListener("click", () => __awaiter(void 0, void 0, void 0, function* () {
+    searchPluginsButton.addEventListener("click", async () => {
         searchPluginsModalContainer.classList.toggle("drc-modal-hidden");
         pluginsSearchQuery.value = "";
-        yield fetch("https://deeeep-reef-client.github.io/plugins-api/registry.json")
+        await fetch("https://deeeep-reef-client.github.io/plugins-api/registry.json")
             .then(res => res.json())
             .then(data => {
             pluginList = data;
@@ -4044,7 +4229,7 @@ window.addEventListener("DOMContentLoaded", () => {
         });
         updateSearchPluginsList();
         window.addEventListener("keydown", searchPluginsEnterListener);
-    }));
+    });
     searchPluginsCloseButton.addEventListener("click", () => {
         searchPluginsModalContainer.classList.toggle("drc-modal-hidden");
         window.removeEventListener("keydown", searchPluginsEnterListener);
