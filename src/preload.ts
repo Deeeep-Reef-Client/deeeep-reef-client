@@ -783,7 +783,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     "crab"
                 ]
             },
-
+    
         ],
         // Tier 2
         [
@@ -1269,7 +1269,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     "barracuda",
                     "octopus",
                     "mahimahi",
-                    "seal"
+                    "sealion"
                 ]
             },
             {
@@ -1280,7 +1280,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     "barracuda",
                     "octopus",
                     "mahimahi",
-                    "seal"
+                    "sealion"
                 ]
             },
             {
@@ -1291,7 +1291,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     "barracuda",
                     "octopus",
                     "mahimahi",
-                    "seal"
+                    "sealion"
                 ]
             },
             {
@@ -1302,7 +1302,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     "barracuda",
                     "octopus",
                     "mahimahi",
-                    "seal"
+                    "sealion"
                 ]
             },
             {
@@ -1313,7 +1313,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     "barracuda",
                     "octopus",
                     "mahimahi",
-                    "seal"
+                    "sealion"
                 ]
             },
             {
@@ -1324,7 +1324,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     "barracuda",
                     "octopus",
                     "mahimahi",
-                    "seal"
+                    "sealion"
                 ]
             },
             {
@@ -1335,7 +1335,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     "barracuda",
                     "octopus",
                     "mahimahi",
-                    "seal"
+                    "sealion"
                 ]
             },
         ],
@@ -1387,7 +1387,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 ]
             },
             {
-                stringId: "seal",
+                stringId: "sealion",
                 evolvesTo: [
                     "narwhal",
                     "leopardseal",
@@ -1517,7 +1517,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 ]
             },
             {
-                stringId: "beluga",
+                stringId: "belugawhale",
                 evolvesTo: [
                     "humpbackwhale",
                     "whale",
@@ -1527,6 +1527,10 @@ window.addEventListener("DOMContentLoaded", () => {
         ],
         // Tier 10
         [
+            {
+                stringId: "piranha",
+                evolvesTo: []
+            },
             {
                 stringId: "hippo",
                 evolvesTo: []
@@ -1693,6 +1697,7 @@ window.addEventListener("DOMContentLoaded", () => {
             },
         ]
     ];
+    
     const treeAnimalRelationsProcessed = [
         // Tier 1
         [
@@ -1702,6 +1707,10 @@ window.addEventListener("DOMContentLoaded", () => {
                     "piranha",
                     "lamprey"
                 ]
+            },
+            {
+                stringId: "void",
+                evolvesTo: []
             },
             {
                 stringId: "worm",
@@ -1735,7 +1744,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     "crab"
                 ]
             },
-
+    
         ],
         // Tier 2
         [
@@ -1791,6 +1800,10 @@ window.addEventListener("DOMContentLoaded", () => {
                 ]
             },
             {
+                stringId: "void",
+                evolvesTo: []
+            },
+            {
                 stringId: "crab",
                 evolvesTo: [
                     "frog",
@@ -1814,6 +1827,10 @@ window.addEventListener("DOMContentLoaded", () => {
                     "littleauk",
                     "hermitcrab"
                 ]
+            },
+            {
+                stringId: "void",
+                evolvesTo: []
             },
             {
                 stringId: "frog",
@@ -1885,6 +1902,10 @@ window.addEventListener("DOMContentLoaded", () => {
                     "seal",
                     "seagull"
                 ]
+            },
+            {
+                stringId: "void",
+                evolvesTo: []
             },
             {
                 stringId: "catfish",
@@ -1975,6 +1996,10 @@ window.addEventListener("DOMContentLoaded", () => {
                     "pelican",
                     "lobster"
                 ]
+            },
+            {
+                stringId: "void",
+                evolvesTo: []
             },
             {
                 stringId: "duck",
@@ -2089,6 +2114,10 @@ window.addEventListener("DOMContentLoaded", () => {
                     "penguin",
                     "frogfish"
                 ]
+            },
+            {
+                stringId: "void",
+                evolvesTo: []
             },
             {
                 stringId: "goliathbullfrog",
@@ -2210,8 +2239,12 @@ window.addEventListener("DOMContentLoaded", () => {
                     "barracuda",
                     "octopus",
                     "mahimahi",
-                    "seal"
+                    "sealion"
                 ]
+            },
+            {
+                stringId: "void",
+                evolvesTo: []
             },
             {
                 stringId: "snake",
@@ -2221,7 +2254,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     "barracuda",
                     "octopus",
                     "mahimahi",
-                    "seal"
+                    "sealion"
                 ]
             },
             {
@@ -2232,7 +2265,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     "barracuda",
                     "octopus",
                     "mahimahi",
-                    "seal"
+                    "sealion"
                 ]
             },
             {
@@ -2243,7 +2276,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     "barracuda",
                     "octopus",
                     "mahimahi",
-                    "seal"
+                    "sealion"
                 ]
             },
             {
@@ -2254,7 +2287,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     "barracuda",
                     "octopus",
                     "mahimahi",
-                    "seal"
+                    "sealion"
                 ]
             },
             {
@@ -2265,7 +2298,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     "barracuda",
                     "octopus",
                     "mahimahi",
-                    "seal"
+                    "sealion"
                 ]
             },
             {
@@ -2276,7 +2309,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     "barracuda",
                     "octopus",
                     "mahimahi",
-                    "seal"
+                    "sealion"
                 ]
             },
             {
@@ -2287,7 +2320,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     "barracuda",
                     "octopus",
                     "mahimahi",
-                    "seal"
+                    "sealion"
                 ]
             },
         ],
@@ -2299,6 +2332,10 @@ window.addEventListener("DOMContentLoaded", () => {
                     "piranha",
                     "manatee"
                 ]
+            },
+            {
+                stringId: "void",
+                evolvesTo: []
             },
             {
                 stringId: "snappingturtle",
@@ -2339,7 +2376,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 ]
             },
             {
-                stringId: "seal",
+                stringId: "sealion",
                 evolvesTo: [
                     "narwhal",
                     "leopardseal",
@@ -2551,7 +2588,7 @@ window.addEventListener("DOMContentLoaded", () => {
         // Tier 10 2
         [
             {
-                stringId: "void",
+                stringId: "baldeagle",
                 evolvesTo: []
             },
             {
@@ -2691,6 +2728,259 @@ window.addEventListener("DOMContentLoaded", () => {
             },
         ],
     ];
+    
+    const treeAnimalLines = [
+        // Tier 1
+        [
+            [
+                "hcw-left-right",
+                "hcwfm-top",
+                "hcwfm-left-top",
+                "hcw-left",
+                "hcwfm-left-top",
+                "hcw-left",
+                "left",
+                "left-top",
+                "left"
+            ],
+            [
+                "left-right",
+                "left",
+                "left",
+                "left",
+                "void",
+                "left"
+            ],
+        ],
+    
+        // Tier 2
+        [
+            [
+                "hcw-left-right",
+                "hcwfm-left-top",
+                "left-top",
+                "left-top",
+                "left-top",
+                "top",
+                "left-top"
+            ],
+            [
+                "right",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left"
+            ],
+        ],
+    
+        // Tier 3
+        [
+            [
+                "hcw-left-right",
+                "hcwfm-top",
+                "left-top",
+                "left-top",
+                "left-top",
+                "left-top",
+                "left-top",
+                "top"
+            ],
+            [
+                "right",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left"
+            ],
+        ],
+    
+        // Tier 4
+        [
+            [
+                "hcw-left-right",
+                "hcwfm-top",
+                "left-top",
+                "left-top",
+                "left-top",
+                "left-top",
+                "left-top",
+                "left-top",
+                "top"
+            ],
+            [
+                "right",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left"
+            ],
+        ],
+    
+        // Tier 5
+        [
+            [
+                "hcw-left-right",
+                "hcwfm-top",
+                "left-top",
+                "left-top",
+                "left-top",
+                "left-top",
+                "left-top",
+                "left-top",
+                "left-top",
+                "left-top",
+                "top"
+            ],
+            [
+                "right",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left"
+            ],
+        ],
+    
+        // Tier 6
+        [
+            [
+                "hcw-left-right",
+                "hcwfm-top",
+                "left-top",
+                "left-top",
+                "left-top",
+                "left-top",
+                "left-top",
+                "left-top",
+                "top"
+            ],
+            [
+                "right",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left"
+            ],
+        ],
+    
+        // Tier 7
+        [
+            [
+                "hcw-left-right",
+                "hcwfm-top",
+                "left-top",
+                "left-top",
+                "left-top",
+                "left-top",
+                "left-top",
+                "top"
+            ],
+            [
+                "right",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left"
+            ],
+        ],
+    
+        // Tier 8
+        [
+            [
+                "hcw-left-right",
+                "hcwfm-top",
+                "left-top",
+                "left-top",
+                "left-top",
+                "left-top",
+                "left-top",
+                "left-top",
+                "top",
+                "top",
+                "top",
+                "top",
+                "top",
+                "top",
+                "top",
+                "top",
+                "top"
+            ],
+            [
+                "left-right",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left"
+            ],
+        ],
+    
+        // Tier 9
+        [
+            [
+                "left-right",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left"
+            ],
+            [
+                "left-right",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left",
+                "left"
+            ],
+        ],
+    ];
+
     const sidePaneTop = document.querySelector("div.p-2.sidebar.right.space-y-2 > .container > div.el-row.justify-center") as HTMLDivElement;
     const treeButtonContainer = sidePaneTop!.querySelector("div")!.cloneNode(true) as HTMLDivElement;
     const treeButton = treeButtonContainer.firstElementChild as HTMLButtonElement;
@@ -2855,6 +3145,10 @@ window.addEventListener("DOMContentLoaded", () => {
     .drc-tree-choice:hover {
         --drc-bg-opacity: 0.3
     }
+
+    .drc-tree-choice-t10 {
+        margin-top: 0.75rem;
+    }
     
     .drc-tree-image {
         position: relative;
@@ -2890,13 +3184,12 @@ window.addEventListener("DOMContentLoaded", () => {
     }
     
     .drc-tree-void {
-        margin: 0.5rem;
         overflow: hidden;
-        /*width: 5rem;
-        height: 5rem;*/
         width: 30px;
         height: 41px;
         line-height: 5rem;
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
     }
     
     .drc-tree-vertical-line-wrapper {
@@ -3008,6 +3301,96 @@ window.addEventListener("DOMContentLoaded", () => {
         white-space: nowrap;
         font-size: 0.9rem;
     }
+
+    .drc-tree-line-begin {
+        overflow: hidden;
+        height: 0.75rem;
+        line-height: 5rem;
+        display: flex;
+        justify-content: center;
+        width: calc(15px + 0.5rem);
+    }
+
+    .drc-tree-line {
+        overflow: hidden;
+        height: 0.75rem;
+        line-height: 5rem;
+        display: flex;
+        justify-content: center;
+        width: calc(30px + 1rem);
+        border: 3px solid lightblue;
+    }
+
+    .drc-tree-line-left {
+        border-bottom: none !important;
+        border-right: none !important;
+        border-top: none !important;
+    }
+
+    .drc-tree-line-right {
+        border-bottom: none !important;
+        border-left: none !important;
+        border-top: none !important;
+    }
+
+    .drc-tree-line-top {
+        border-bottom: none !important;
+        border-right: none !important;
+        border-left: none !important;
+    }
+
+    .drc-tree-line-left-right {
+        border-bottom: none !important;
+        border-top: none !important;
+    }
+
+    .drc-tree-line-left-top {
+        border-bottom: none !important;
+        border-right: none !important;
+    }
+
+    .drc-tree-line-left-top-right {
+        border-bottom: none !important;
+    }
+
+    .drc-tree-line-void {
+        border-bottom: none !important;
+        border-right: none !important;
+        border-top: none !important;
+        border-left: none !important;
+    }
+
+    .drc-tree-line-hcw-left {
+        width: 15px !important;
+        border-bottom: none !important;
+        border-right: none !important;
+        border-top: none !important;
+    }
+
+    .drc-tree-line-hcw-left-right {
+        width: 15px !important;
+        border-bottom: none !important;
+        border-top: none !important;
+    }
+
+    .drc-tree-line-hcwfm-top {
+        width: calc(15px + 1rem) !important;
+        border-bottom: none !important;
+        border-right: none !important;
+        border-left: none !important;
+    }
+
+    .drc-tree-line-hcwfm-left-top {
+        width: calc(15px + 1rem) !important;
+        border-bottom: none !important;
+        border-right: none !important;
+    }
+
+    .drc-tree-line-hcwfm-top-right {
+        width: calc(15px + 1rem) !important;
+        border-bottom: none !important;
+        border-left: none !important;
+    }
     `;
     document.head.appendChild(treeStyle);
     const treeDiv = document.createElement("div");
@@ -3088,11 +3471,11 @@ window.addEventListener("DOMContentLoaded", () => {
                     let nextIndex = index + 1;
                     let currentFlag = conversion[index];
                     let currentName = currentFlag ? this.NAMES[index] : false;
-                    
+
                     if (nextIndex >= length) {
                         nextFlag = false
                     } else nextFlag = conversion[nextIndex];
-                    
+
                     nextName = nextFlag ? this.NAMES[nextIndex] : false;
 
                     if (currentName && nextName) {
@@ -3145,6 +3528,10 @@ window.addEventListener("DOMContentLoaded", () => {
 
                 const animalElem = document.createElement("div");
                 animalElem.classList.add("drc-tree-choice");
+
+                if (Number(i) > 8) {
+                    animalElem.classList.add("drc-tree-choice-t10");
+                }
 
                 const imageWrapperElem = document.createElement("div");
                 imageWrapperElem.classList.add("drc-tree-image");
@@ -3207,6 +3594,30 @@ window.addEventListener("DOMContentLoaded", () => {
             }
 
             treeModalMain?.insertBefore(row, treeModalMain.firstElementChild);
+
+            if (Number(i) > treeAnimalLines.length - 1) continue;
+            for (let j in treeAnimalLines[i]) {
+                const lineRow = document.createElement("div");
+                lineRow.classList.add("drc-tree-row");
+
+                const linePlaceholder = document.createElement("div");
+                lineRow.appendChild(linePlaceholder);
+
+                const beginLineElem = document.createElement("div");
+                beginLineElem.classList.add("drc-tree-line-begin");
+                lineRow.insertBefore(beginLineElem, lineRow.firstElementChild);
+
+                for (let x in treeAnimalLines[i][j]) {
+                    const lineElem = document.createElement("div");
+                    lineElem.classList.add("drc-tree-line");
+                    lineElem.classList.add("drc-tree-line-" + treeAnimalLines[i][j][x]);
+
+                    lineRow.insertBefore(lineElem, lineRow.firstElementChild);
+                }
+
+                treeModalMain?.insertBefore(lineRow, treeModalMain.firstElementChild);
+            }
+
             //treeModalMain?.appendChild(row);
         }
     })();
