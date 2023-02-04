@@ -1321,7 +1321,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 evolvesTo: [
                     "narwhal",
                     "leopardseal",
-                    "beluga"
+                    "belugawhale"
                 ]
             }
         ],
@@ -1338,7 +1338,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 evolvesTo: [
                     "hippo",
                     "crocodile",
-                    "eagle"
+                    "baldeagle"
                 ]
             },
             {
@@ -2274,12 +2274,28 @@ window.addEventListener("DOMContentLoaded", () => {
                 ]
             },
             {
+                stringId: "void",
+                evolvesTo: []
+            },
+            {
+                stringId: "void",
+                evolvesTo: []
+            },
+            {
                 stringId: "dragonfish",
                 evolvesTo: [
                     "frilledshark",
                     "oarfish",
                     "wolfeel"
                 ]
+            },
+            {
+                stringId: "void",
+                evolvesTo: []
+            },
+            {
+                stringId: "void",
+                evolvesTo: []
             },
             {
                 stringId: "barracuda",
@@ -2290,11 +2306,19 @@ window.addEventListener("DOMContentLoaded", () => {
                 ]
             },
             {
+                stringId: "void",
+                evolvesTo: []
+            },
+            {
                 stringId: "octopus",
                 evolvesTo: [
                     "humboldtsquid",
                     "mantisshrimp"
                 ]
+            },
+            {
+                stringId: "void",
+                evolvesTo: []
             },
             {
                 stringId: "mahimahi",
@@ -2304,13 +2328,25 @@ window.addEventListener("DOMContentLoaded", () => {
                 ]
             },
             {
+                stringId: "void",
+                evolvesTo: []
+            },
+            {
+                stringId: "void",
+                evolvesTo: []
+            },
+            {
                 stringId: "sealion",
                 evolvesTo: [
                     "narwhal",
                     "leopardseal",
                     "beluga"
                 ]
-            }
+            },
+            {
+                stringId: "void",
+                evolvesTo: []
+            },
         ],
         // Tier 9
         [
@@ -2516,7 +2552,7 @@ window.addEventListener("DOMContentLoaded", () => {
         // Tier 10 2
         [
             {
-                stringId: "baldeagle",
+                stringId: "void",
                 evolvesTo: []
             },
             {
@@ -2757,7 +2793,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 "left-top",
                 "left-top",
                 "left-top",
-                "left-top",
+                "top",
                 "top"
             ],
             [
@@ -2784,7 +2820,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 "left-top",
                 "left-top",
                 "left-top",
-                "top"
+                "left-top"
             ],
             [
                 "right",
@@ -2807,15 +2843,31 @@ window.addEventListener("DOMContentLoaded", () => {
                 "left-top",
                 "left-top",
                 "left-top",
-                "top"
+                "left-top",
+                "left-top",
+                "top",
+                "top",
+                "top",
+                "top",
+                "top",
+                "top",
+                "top",
             ],
             [
                 "right",
                 "left",
+                "void",
+                "void",
                 "left",
+                "void",
+                "void",
                 "left",
+                "void",
                 "left",
+                "void",
                 "left",
+                "void",
+                "void",
                 "left"
             ],
         ],
@@ -2825,19 +2877,19 @@ window.addEventListener("DOMContentLoaded", () => {
                 "hcw-left-right",
                 "hcwfm-top",
                 "left-top",
-                "left-top",
-                "left-top",
-                "left-top",
-                "left-top",
+                "top",
+                "void",
                 "left-top",
                 "top",
+                "void",
+                "left-top",
                 "top",
+                "left",
                 "top",
+                "left",
                 "top",
-                "top",
-                "top",
-                "top",
-                "top",
+                "void",
+                "left-top",
                 "top"
             ],
             [
@@ -3063,6 +3115,10 @@ window.addEventListener("DOMContentLoaded", () => {
         --drc-bg-opacity: 0.3
     }
 
+    .drc-tree-choice-semiselected {
+        --drc-bg-opacity: 0.2
+    }
+
     .drc-tree-choice-t10 {
         margin-top: 0.75rem;
     }
@@ -3235,7 +3291,7 @@ window.addEventListener("DOMContentLoaded", () => {
         display: flex;
         justify-content: center;
         width: calc(30px + 1rem);
-        border: 3px solid lightblue;
+        border: 3px solid azure;
     }
 
     .drc-tree-line-left {
@@ -3308,6 +3364,15 @@ window.addEventListener("DOMContentLoaded", () => {
         border-bottom: none !important;
         border-left: none !important;
     }
+
+    .drc-tree-tier {
+        text-align: center;
+        width: 30px;
+        height: 44px;
+        margin-right: 0.5rem;
+        margin-left: 0.5rem;
+        margin-top: 1.25rem;
+    }
     `;
     document.head.appendChild(treeStyle);
     const treeDiv = document.createElement("div");
@@ -3323,8 +3388,23 @@ window.addEventListener("DOMContentLoaded", () => {
                 <div></div>
             </span>
             <div class="drc-modal-content tree-modal-content">
-                <div id="treeModalMain">
-                <div></div>
+                <div style="display:flex">
+                    <div id="treeModalMain">
+                        <div></div>
+                    </div>
+                    <div style="font-size: 3em;">
+                        <div style="height: calc(58px + 3.5rem)"></div>
+                        <h1 class="drc-tree-tier">X</h1>
+                        <h1 class="drc-tree-tier">IX</h1>
+                        <h1 class="drc-tree-tier">VIII</h1>
+                        <h1 class="drc-tree-tier">VII</h1>
+                        <h1 class="drc-tree-tier">VI</h1>
+                        <h1 class="drc-tree-tier">V</h1>
+                        <h1 class="drc-tree-tier">IV</h1>
+                        <h1 class="drc-tree-tier">III</h1>
+                        <h1 class="drc-tree-tier">II</h1>
+                        <h1 class="drc-tree-tier">I</h1>
+                    </div>
                 </div>
 
                 <!--<img src="https://deeeep-reef-client.netlify.app/assets/evolution_tree.png"
@@ -3429,6 +3509,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 const animalHabitat = new Habitat(animalStat.habitat);
                 const animalElem = document.createElement("div");
                 animalElem.classList.add("drc-tree-choice");
+                animalElem.setAttribute("data-drc-tree", "drc-tree-animal-" + animalId);
                 if (Number(i) > 8) {
                     animalElem.classList.add("drc-tree-choice-t10");
                 }
@@ -3441,6 +3522,69 @@ window.addEventListener("DOMContentLoaded", () => {
                 animalElem.appendChild(imageWrapperElem);
                 row.insertBefore(animalElem, row.firstElementChild);
                 //row.appendChild(animalElem);
+                if (Number(i) > 6) {
+                    let evolvesTo = [];
+                    // Evolves to 
+                    if (Number(i) < 9) {
+                        let nextTier = [];
+                        treeAnimalRelationsProcessed[i][j].evolvesTo.forEach(str => {
+                            const a = treeAnimalRelations[Number(i) + 1]
+                                .filter((animal) => {
+                                return animal.stringId === str;
+                            });
+                            evolvesTo.push(a[0] ?? treeAnimalRelations[0][0]);
+                            nextTier.push(a[0] ?? treeAnimalRelations[0][0]);
+                        });
+                        if (Number(i) === 7) {
+                            for (let y in nextTier) {
+                                nextTier[y].evolvesTo.forEach((str) => {
+                                    const a = treeAnimalRelations[Number(i) + 2]
+                                        .filter((animal) => {
+                                        return animal.stringId === str;
+                                    });
+                                    evolvesTo.push(a[0] ?? treeAnimalRelations[0][0]);
+                                    nextTier.push(a[0] ?? treeAnimalRelations[0][0]);
+                                });
+                            }
+                        }
+                    }
+                    // Evolves into
+                    if (Number(i) > 7) {
+                        let nextTier = [];
+                        treeAnimalRelations[Number(i) > 8 ? 8 : 7].forEach(animal => {
+                            if (!animal.evolvesTo.includes(animalId))
+                                return;
+                            evolvesTo.push(animal);
+                            nextTier.push(animal.stringId);
+                        });
+                        if (Number(i) > 8) {
+                            for (let y in nextTier) {
+                                treeAnimalRelations[7].forEach((animal) => {
+                                    if (!animal.evolvesTo.includes(nextTier[y]))
+                                        return;
+                                    evolvesTo.push(animal);
+                                    nextTier.push(animal);
+                                });
+                            }
+                        }
+                    }
+                    animalElem.addEventListener("mouseover", () => {
+                        for (let x in evolvesTo) {
+                            document.querySelectorAll("div[data-drc-tree=" + "drc-tree-animal-" + evolvesTo[x].stringId + "]")
+                                .forEach(elem => {
+                                elem?.classList.add("drc-tree-choice-semiselected");
+                            });
+                        }
+                    });
+                    animalElem.addEventListener("mouseleave", () => {
+                        for (let x in evolvesTo) {
+                            document.querySelectorAll("div[data-drc-tree=" + "drc-tree-animal-" + evolvesTo[x].stringId + "]")
+                                .forEach(elem => {
+                                elem?.classList.remove("drc-tree-choice-semiselected");
+                            });
+                        }
+                    });
+                }
                 const tooltip = `
     <div class="drc-animal-info">
     <h4 class="drc-animal-title" style="margin: 0;">${translations[animalId + "-name"]}</h4>
@@ -3484,7 +3628,8 @@ window.addEventListener("DOMContentLoaded", () => {
                     content: tooltip,
                     allowHTML: true,
                     zIndex: 99999,
-                    duration: [0, 0]
+                    duration: [0, 0],
+                    offset: [0, 15]
                 });
             }
             treeModalMain?.insertBefore(row, treeModalMain.firstElementChild);
