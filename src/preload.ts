@@ -8,6 +8,100 @@ const fs = require('fs');
 
 import tippy from 'tippy.js';
 
+// The DRC API
+const DRC = {
+    // Utility functions
+    Utils: {
+        HabitatToArray: function (num: number): string[] {
+            class Habitat {
+                habitatNum: number;
+
+                NAMES = ['Cold', 'Warm', 'Shallow', 'Deep', 'Fresh', 'Salt', 'Reef'];
+                MAX = Math.pow(2, this.NAMES.length) - 1;
+
+                constructor(num: number) {
+                    this.habitatNum = num;
+                }
+
+                convertToBase(num: number, base: number): number[] {
+                    let conversion = [];
+                    let power, quotient, remainder = 0;
+                    if (num === 0) {
+                        conversion = [0];
+                    } else {
+                        power = Math.floor(Math.log(num) / Math.log(base));
+                        while (power >= 0) {
+                            quotient = Math.floor(num / Math.pow(base, power));
+                            remainder = num % Math.pow(base, power);
+                            conversion.unshift(quotient);
+                            num = remainder;
+                            power--;
+                        }
+                    }
+                    return conversion;
+                }
+
+                convertToList() {
+                    const conversion = this.convertToBase(Math.floor(this.habitatNum), 2);
+                    const length = conversion.length;
+                    let partialDisplay = [];
+                    for (let index = 0; index < length; index += 2) {
+                        let str: string | boolean = "";
+                        let nextFlag: number | boolean = false;
+                        let nextName: string | boolean = "";
+                        let nextIndex = index + 1;
+                        let currentFlag = conversion[index];
+                        let currentName = currentFlag ? this.NAMES[index] : false;
+
+                        if (nextIndex >= length) {
+                            nextFlag = false
+                        } else nextFlag = conversion[nextIndex];
+
+                        nextName = nextFlag ? this.NAMES[nextIndex] : false;
+
+                        if (currentName && nextName) {
+                            str = `${currentName}/${nextName}`;
+                        } else str = currentName || nextName;
+
+                        if (str) {
+                            partialDisplay.push(str);
+                        }
+                    }
+                    return partialDisplay;
+                }
+
+                hasReef() {
+                    return this.habitatNum >= Math.pow(2, this.NAMES.length - 1)
+                }
+            }
+            return (new Habitat(num)).convertToList();
+        }
+    },
+    // Events
+    EventObject: document.createElement("div"),
+    Events: {
+        DomContentLoaded: "DRC.DomContentLoaded",
+        DocumentLoaded: "DRC.DocumentLoaded",
+        GameStarted: "DRC.GameStarted",
+        GameEnded: "DRC.GameEnded",
+        GameEvolved: "DRC.GameEvolved",
+        SettingsOpened: "DRC.SettingsOpened",
+        EventList: {
+            DomContentLoaded: new Event("DRC.DomContentLoaded"),
+            DocumentLoaded: new Event("DRC.DocumentLoaded"),
+            GameStarted: new Event("DRC.GameStarted"),
+            GameEnded: new Event("DRC.GameEnded"),
+            GameEvolved: new Event("DRC.GameEvolved"),
+            SettingsOpened: new Event("DRC.SettingsOpened"),
+        }
+    },
+};
+Object.freeze(DRC); // Don't touch my api
+// Expose my API
+contextBridge.exposeInMainWorld('DRC_API', {
+    DRC
+})
+
 
 // Maintain compatibility when update
 let API_URL: string = "";
@@ -21,7 +115,6 @@ if (window.location.hostname.startsWith("beta")) {
 contextBridge.exposeInMainWorld('electronAPI', {
     ipcRenderer
 })
-
 
 interface ConsoleMessageEvent {
     level: Number;
@@ -94,9 +187,13 @@ const animalStatData = JSON.parse(`[{"name":"fish","size":{"x":48,"y":68},"mass"
 let reloadCustomTheme = () => { };
 
 window.addEventListener("DOMContentLoaded", () => {
+    // DRC
+    document.body.appendChild(DRC.EventObject);
+    DRC.EventObject.dispatchEvent(DRC.Events.EventList.DomContentLoaded);
 
     // DRC
     const clientVersion = document.querySelector(".client-version") as HTMLSpanElement;
+
     /// @REMIND Update client version
     clientVersion.innerText = clientVersion.innerText + ", DRC v0.9.1b";
 
@@ -205,6 +302,8 @@ window.addEventListener("DOMContentLoaded", () => {
     const observer = new MutationObserver((mutations: MutationRecord[]) => {
         if (document.contains(document.getElementById("customThemeName"))) return;
         if (document.contains(document.querySelector(".vfm__content, .modal-content"))) {
+            // DRC API
+            DRC.EventObject.dispatchEvent(DRC.Events.EventList.SettingsOpened);
 
             const graphicsPane = document.querySelector("#pane-0 > .el-form");
             const chatPane = document.querySelector("#pane-1 > .el-form");
@@ -4972,6 +5071,10 @@ window.addEventListener("DOMContentLoaded", () => {
             if (document.contains(document.querySelector(".playing"))) {
                 gameStarted = true;
                 openObserver.disconnect();
+
+                // DRC API
+                DRC.EventObject.dispatchEvent(DRC.Events.EventList.GameStarted);
+
                 gamemode = (document.querySelector('.block, .modes')!.querySelector('.selected')!.querySelector('.name') as HTMLElement)!.innerText;
                 ipcRenderer.send("gameInfo", {
                     gamemode,
@@ -5078,6 +5181,9 @@ window.addEventListener("DOMContentLoaded", () => {
 
                 // watch for game start
                 const evolveObserver = new MutationObserver((mutations) => {
+                    // DRC API
+                    DRC.EventObject.dispatchEvent(DRC.Events.EventList.GameEvolved);
+
                     for (let i in settings.assetSwapperConfig) {
                         ipcRenderer.send("evalInBrowserContext", `
                         if (${settings.assetSwapperConfig[i].animal} == game.currentScene.myAnimal.visibleFishLevel) {
@@ -5088,6 +5194,9 @@ window.addEventListener("DOMContentLoaded", () => {
                 });
                 const startObserver = new MutationObserver((mutations: MutationRecord[]) => {
                     if (document.contains(document.querySelector("div.stats > div.animal-data > div.detailed-info > h4.name"))) {
+                        // DRC API
+                        DRC.EventObject.dispatchEvent(DRC.Events.EventList.GameEvolved);
+
                         // Asset swapper (do stuff on evolve)
                         const animalNameElement = document.querySelector("div.stats > div.animal-data > div.detailed-info > h4.name") as HTMLHeadingElement;
                         evolveObserver.observe(animalNameElement!, { childList: true });
@@ -5113,6 +5222,10 @@ window.addEventListener("DOMContentLoaded", () => {
                     gameStarted = false;
                     closeObserver.disconnect();
                     evolveObserver.disconnect();
+
+                    // DRC API
+                    DRC.EventObject.dispatchEvent(DRC.Events.EventList.GameEnded);
+
                     ipcRenderer.send("gameInfo", {
                         gamemode: "Menu",
                         url: ''
@@ -5162,6 +5275,9 @@ window.addEventListener("DOMContentLoaded", () => {
 
 });
 window.addEventListener("load", () => {
+    // DRC API
+    DRC.EventObject.dispatchEvent(DRC.Events.EventList.DocumentLoaded);
+
     // reload custom theme when everything loaded to prevent bug
     reloadCustomTheme();
 });
