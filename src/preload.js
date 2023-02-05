@@ -3839,7 +3839,7 @@ window.addEventListener("DOMContentLoaded", () => {
         assetSwapperTarget = assetSwapperTargetDropdown.value;
         assetSwapperSkinDropdown.innerHTML = "";
         assetSwapperTargetSkins = [];
-        fetch(API_URL + "/skins?animalId=" + assetSwapperTarget)
+        fetch(API_URL + "/skins?cat=all&animalId=" + assetSwapperTarget)
             .then(res => res.json())
             .then(data => assetSwapperTargetSkins = data)
             .then(() => {
@@ -3864,7 +3864,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     break;
                 }
             }
-            await fetch(API_URL + "/skins?animalId=" + settings.assetSwapperConfig[i].animal)
+            await fetch(API_URL + "/skins?cat=all&animalId=" + settings.assetSwapperConfig[i].animal)
                 .then(res => res.json())
                 .then(data => assetSwapperRuleSkins = data)
                 .then(() => {
