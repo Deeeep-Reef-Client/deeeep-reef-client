@@ -513,9 +513,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     viewingGhostsSetting.querySelector(".el-checkbox__input")!.classList.add("is-checked");
                 };
                 if (gameStarted) {
-                    ipcRenderer.send("evalInBrowserContext", `
-                        game.currentScene.viewingGhosts = ${settings.viewingGhosts};
-                    `);
+                    DRC.Preload.EvalInBrowserContext(`game.currentScene.viewingGhosts = ${settings.viewingGhosts};`);
                 }
                 saveSettings();
             });
@@ -5094,7 +5092,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
                 function ghostSuicide(key: KeyboardEvent) {
                     if (key.code != "KeyX") return;
-                    ipcRenderer.send("evalInBrowserContext", `
+                    DRC.Preload.EvalInBrowserContext(`
                     if (game.currentScene.myAnimal._visibleFishLevel == 33) {
                         game.inputManager.handleGhostSuicide();
                     }
@@ -5103,8 +5101,8 @@ window.addEventListener("DOMContentLoaded", () => {
 
                 function cancelBoost(key: KeyboardEvent) {
                     if (key.code != "KeyC") return;
-                    ipcRenderer.send("evalInBrowserContext", `
-                    game.inputManager.pressElapsed = 0
+                    DRC.Preload.EvalInBrowserContext(`
+                    game.inputManager.pressElapsed = 0;
                     game.inputManager.pointerDown = false;
                     `);
                 };
@@ -5133,32 +5131,28 @@ window.addEventListener("DOMContentLoaded", () => {
 
                 // ghosts
                 if (settings.viewingGhosts) {
-                    ipcRenderer.send("evalInBrowserContext", `
-                        game.currentScene.viewingGhosts = true;
-                    `);
+                    DRC.Preload.EvalInBrowserContext(`game.currentScene.viewingGhosts = true;`);
                 } else {
-                    ipcRenderer.send("evalInBrowserContext", `
-                        game.currentScene.viewingGhosts = false;
-                    `);
+                    DRC.Preload.EvalInBrowserContext(`game.currentScene.viewingGhosts = false;`);
                 }
 
                 window.addEventListener("keydown", ghostSuicide);
                 window.addEventListener("keydown", cancelBoost);
 
                 let advancedProfanityFilter = setInterval(() => {
-                    ipcRenderer.send("evalInBrowserContext", `
-                        var data = [];
-                        for (let i in game.currentScene.chatMessages) {
-                            data.push({
-                                text: {
-                                    _text: game.currentScene.chatMessages[i].text._text
-                                }
-                            });
-                        }
-                        window.electronAPI.ipcRenderer.send("ipcProxy", {
-                            channel: "gameChatMessages",
-                            data
+                    DRC.Preload.EvalInBrowserContext(`
+                    var data = [];
+                    for (let i in game.currentScene.chatMessages) {
+                        data.push({
+                            text: {
+                                _text: game.currentScene.chatMessages[i].text._text
+                            }
                         });
+                    }
+                    window.electronAPI.ipcRenderer.send("ipcProxy", {
+                        channel: "gameChatMessages",
+                        data
+                    });
                     `);
 
                     ipcRenderer.once("gameChatMessages", (_event: Event, chatMessages: any) => {
@@ -5167,7 +5161,7 @@ window.addEventListener("DOMContentLoaded", () => {
                             if (profanityFilter.isProfane(message)) {
                                 const cleaned = profanityFilter.clean(message);
                                 console.log(cleaned);
-                                ipcRenderer.send("evalInBrowserContext", `
+                                DRC.Preload.EvalInBrowserContext(`
                                 console.log(game.currentScene.chatMessages[${i}])
                                 console.log(game.currentScene.chatMessages[${i}].setText)
                                 
@@ -5185,7 +5179,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     if (settings.pluginsData[i].src.length == 0) continue;
                     for (const j in settings.pluginsData[i].src) {
                         if (settings.pluginsData[i].src[j].type == "game") {
-                            ipcRenderer.send("evalInBrowserContext", settings.pluginsData[i].src[j].src);
+                            DRC.Preload.EvalInBrowserContext(settings.pluginsData[i].src[j].src);
                         }
                     }
                 }
@@ -5196,7 +5190,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     DRC.EventObject.dispatchEvent(DRC.Events.EventList.GameEvolved);
 
                     for (let i in settings.assetSwapperConfig) {
-                        ipcRenderer.send("evalInBrowserContext", `
+                        DRC.Preload.EvalInBrowserContext(`
                         if (${settings.assetSwapperConfig[i].animal} == game.currentScene.myAnimal.visibleFishLevel) {
                             game.currentScene.myAnimal.setSkin(${settings.assetSwapperConfig[i].skin});
                         };
@@ -5212,7 +5206,7 @@ window.addEventListener("DOMContentLoaded", () => {
                         const animalNameElement = document.querySelector("div.stats > div.animal-data > div.detailed-info > h4.name") as HTMLHeadingElement;
                         evolveObserver.observe(animalNameElement!, { childList: true });
                         for (let i in settings.assetSwapperConfig) {
-                            ipcRenderer.send("evalInBrowserContext", `
+                            DRC.Preload.EvalInBrowserContext(`
                             if (${settings.assetSwapperConfig[i].animal} == game.currentScene.myAnimal.visibleFishLevel) {
                                 game.currentScene.myAnimal.setSkin(${settings.assetSwapperConfig[i].skin});
                             };
