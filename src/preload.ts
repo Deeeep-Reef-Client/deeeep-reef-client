@@ -83,6 +83,38 @@ const DRC = {
             return (new Habitat(num)).convertToList();
         }
     },
+    Modal: {
+        BuildModal: function (id: string, title: string, content: string): HTMLDivElement {
+            const modalId = id.replaceAll(' ', "");
+            const modalDiv = document.createElement("div");
+            document.getElementById("app")!.appendChild(modalDiv);
+            modalDiv.outerHTML = `<div id="${modalId}ModalContainer" class="drc-modal-modal-container drc-modal-hidden">
+            <div id="${modalId}Container" class="drc-modal-container">
+                <div id="${modalId}Modal" class="modal-content drc-modal-modal-content">
+                    <span class="drc-modal-title">
+                        <div></div>
+                        <div class="justify-self-center">${title}</div>
+                        <div></div>
+                    </span>
+                    <div class="drc-modal-content">
+                        ${content}
+                    </div>
+                    <button id="${modalId}CloseButton" class="drc-modal-close"><svg width="1.125em" height="1.125em"
+                            viewBox="0 0 24 24" class="svg-icon" color="gray" style="--sx:1; --sy:1; --r:0deg;">
+                            <path
+                                d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z">
+                            </path>
+                        </svg></button>
+                </div>
+            </div>
+        </div>`;
+            const modal = document.getElementById(`${modalId}ModalContainer`);
+            document.getElementById(`${modalId}CloseButton`)?.addEventListener("click", () => {
+                modal?.classList.add("drc-modal-hidden");
+            });
+            return modal as HTMLDivElement;
+        }
+    },
     Preload: {
         EvalInBrowserContext: function (str: string) {
             ipcRenderer.send("evalInBrowserContext", str);
