@@ -78,6 +78,11 @@ const DRC = {
             return (new Habitat(num)).convertToList();
         }
     },
+    Preload: {
+        EvalInBrowserContext: function (str) {
+            ipcRenderer.send("evalInBrowserContext", str);
+        }
+    },
     // Events
     EventObject: document.createElement("div"),
     Events: {
