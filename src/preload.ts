@@ -12,9 +12,9 @@ import tippy from 'tippy.js';
 const DRC = {
     // Client info
     Client: {
-        name: "Deeeep.io Reef Client",
-        version: "0.9.1",
-        versionTag: "v0.9.1-beta"
+        Name: "Deeeep.io Reef Client",
+        Version: "0.9.1",
+        VersionTag: "v0.9.1-beta"
     },
     // Utility functions
     Utils: {
@@ -238,7 +238,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const clientVersion = document.querySelector(".client-version") as HTMLSpanElement;
 
     /// @REMIND Update client version
-    clientVersion.innerText = clientVersion.innerText + ", DRC " + DRC.Client.versionTag;
+    clientVersion.innerText = clientVersion.innerText + ", DRC " + DRC.Client.VersionTag;
 
     // devtools
     window.addEventListener("keydown", (key: KeyboardEvent) => {
