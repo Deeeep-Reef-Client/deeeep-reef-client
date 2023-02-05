@@ -10,6 +10,12 @@ import tippy from 'tippy.js';
 
 // The DRC API
 const DRC = {
+    // Client info
+    Client: {
+        name: "Deeeep.io Reef Client",
+        version: "0.9.1",
+        versionTag: "v0.9.1-beta"
+    },
     // Utility functions
     Utils: {
         HabitatToArray: function (num: number): string[] {
@@ -195,7 +201,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const clientVersion = document.querySelector(".client-version") as HTMLSpanElement;
 
     /// @REMIND Update client version
-    clientVersion.innerText = clientVersion.innerText + ", DRC v0.9.1b";
+    clientVersion.innerText = clientVersion.innerText + ", DRC " + DRC.Client.versionTag;
 
     // devtools
     window.addEventListener("keydown", (key: KeyboardEvent) => {
