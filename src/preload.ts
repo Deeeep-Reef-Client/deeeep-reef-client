@@ -3477,7 +3477,7 @@ window.addEventListener("DOMContentLoaded", () => {
                         <div></div>
                     </div>
                     <div style="font-size: 3em;">
-                        <div style="height: calc(58px + 3.5rem)"></div>
+                        <div style="height: calc(58px + 3.5rem);width: 2em;"></div>
                         <h1 class="drc-tree-tier">X</h1>
                         <h1 class="drc-tree-tier">IX</h1>
                         <h1 class="drc-tree-tier">VIII</h1>
