@@ -3507,6 +3507,110 @@ window.addEventListener("DOMContentLoaded", () => {
         margin-left: 0.5rem;
         margin-top: 1.25rem;
     }
+
+    .drc-tabs {
+        --el-tabs-header-height: 40px;
+    }
+
+    .drc-tabs-left {
+        overflow: hidden;
+    }
+
+    .drc-tabs-header.drc-is-left {
+        float: left;
+        margin-bottom: 0;
+        margin-right: 10px;
+    }
+
+    .drc-tabs-nav-wrap.drc-is-left {
+        margin-right: -1px;
+    }
+
+    .drc-tabs-nav-scroll {
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .drc-tabs-nav {
+        --el-transition-duration: 0.3s;
+        --el-index-normal: 1;
+        white-space: nowrap;
+        position: relative;
+        transition: transform var(--el-transition-duration);
+        float: left;
+        z-index: calc(var(--el-index-normal) + 1);
+    }
+
+    .drc-tabs-nav.drc-is-left {
+        float: none;
+    }
+
+    .drc-tabs-active-bar {
+        --el-color-primary: #409eff;
+        --el-transition-duration: 0.3s;
+        --el-transition-function-ease-in-out-bezier: cubic-bezier(0.645, 0.045, 0.355, 1);
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 2px;
+        background-color: var(--el-color-primary);
+        z-index: 1;
+        transition: width var(--el-transition-duration) var(--el-transition-function-ease-in-out-bezier),transform var(--el-transition-duration) var(--el-transition-function-ease-in-out-bezier);
+        list-style: none;
+    }
+
+    .drc-tabs-active-bar.drc-is-left {
+        right: 0;
+        left: auto;
+        top: 0;
+        bottom: auto;
+        width: 2px;
+        height: auto;
+    }
+
+    .dark body .drc-tabs-item {
+        --tw-text-opacity: 1;
+        color: rgba(156,163,175,var(--tw-text-opacity));
+    }
+
+    .drc-tabs-item {
+        --el-tabs-header-height: 40px;
+        --el-font-size-base: 14px;
+        --el-text-color-primary: #E5EAF3;
+
+        padding: 0 20px;
+        height: var(--el-tabs-header-height);
+        box-sizing: border-box;
+        line-height: var(--el-tabs-header-height);
+        display: inline-block;
+        list-style: none;
+        font-size: var(--el-font-size-base);
+        font-weight: 500;
+        color: var(--el-text-color-primary);
+        position: relative;
+    }
+
+    .drc-tabs-item.drc-is-left {
+        text-align: right;
+        display: block;
+        border-right: 2px solid #344850;
+    }
+
+    .drc-tabs-item.drc-is-active {
+        --tw-text-opacity: 1;
+        color: rgba(96,165,250,var(--tw-text-opacity));
+    }
+    .drc-tabs-content {
+        overflow: hidden;
+        position: relative;
+    }
+    .drc-pr-4 {
+        padding-right: 1rem;
+    }
+    
+    .drc-pl-2 {
+        padding-left: 0.5rem;
+    }
     `;
     document.head.appendChild(treeStyle);
     const treeDiv = document.createElement("div");
@@ -3555,7 +3659,6 @@ window.addEventListener("DOMContentLoaded", () => {
 </div>
 `;
     const treeModalMain = document.getElementById("treeModalMain");
-    const treeAnimalTooltipContainer = document.getElementById("treeAnimalTooltipContainer");
     const treeAnimalRelationsLongest = treeAnimalRelationsProcessed.reduce(function (a, b) {
         return a.length > b.length ? a : b;
     }).length;
@@ -4906,6 +5009,54 @@ window.addEventListener("DOMContentLoaded", () => {
         searchPluginsModalContainer.classList.toggle("drc-modal-hidden");
         window.removeEventListener("keydown", searchPluginsEnterListener);
     });
+    // DRC information
+    const aboutDrcButtonWrapper = settingsButtonWrapper.cloneNode(true);
+    const aboutDrcButton = aboutDrcButtonWrapper.firstElementChild;
+    aboutDrcButtonWrapper.setAttribute("id", "aboutDrcButtonWrapper");
+    aboutDrcButton.setAttribute("id", "aboutDrcButton");
+    aboutDrcButton.querySelector("span[class]").innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-question-lg" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M4.475 5.458c-.284 0-.514-.237-.47-.517C4.28 3.24 5.576 2 7.825 2c2.25 0 3.767 1.36 3.767 3.215 0 1.344-.665 2.288-1.79 2.973-1.1.659-1.414 1.118-1.414 2.01v.03a.5.5 0 0 1-.5.5h-.77a.5.5 0 0 1-.5-.495l-.003-.2c-.043-1.221.477-2.001 1.645-2.712 1.03-.632 1.397-1.135 1.397-2.028 0-.979-.758-1.698-1.926-1.698-1.009 0-1.71.529-1.938 1.402-.066.254-.278.461-.54.461h-.777ZM7.496 14c.622 0 1.095-.474 1.095-1.09 0-.618-.473-1.092-1.095-1.092-.606 0-1.087.474-1.087 1.091S6.89 14 7.496 14Z"/>
+  </svg>`;
+    topRightNav.insertBefore(aboutDrcButtonWrapper, settingsButtonWrapper);
+    const aboutDrcModalMain = DRC.Modal.BuildModal("aboutDrc", "About the Client", `
+    <div class="drc-tabs drc-tabs-left" style="min-height: 200px;">
+        <div class="drc-tabs-header drc-is-left">
+            <div class="drc-tabs-nav-wrap drc-is-left">
+                <div class="drc-tabs-nav-scroll">
+                    <div class="drc-tabs-nav drc-is-left" role="tablist" style="transform: translateY(0px);">
+                        <div class="drc-tabs-active-bar drc-is-left" style="transform: translateY(0px); height: 40px;" id="aboutDrcActiveBar"></div>
+                        <div class="drc-tabs-item drc-is-left drc-is-active" id="aboutDrcTab0">About</div>
+                        <div class="drc-tabs-item drc-is-left" id="aboutDrcTab1">Changelog</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="drc-tabs-content">
+            <div class="drc-pr-4 drc-pl-2" id="aboutDrcPane0">hello</div>
+            <div class="drc-pr-4 drc-pl-2 drc-modal-hidden" id="aboutDrcPane1">world!</div>
+        </div>
+    </div>
+    `);
+    const aboutDrcTab0 = document.getElementById("aboutDrcTab0");
+    const aboutDrcTab1 = document.getElementById("aboutDrcTab1");
+    const aboutDrcPane0 = document.getElementById("aboutDrcPane0");
+    const aboutDrcPane1 = document.getElementById("aboutDrcPane1");
+    const aboutDrcActiveBar = document.getElementById("aboutDrcActiveBar");
+    aboutDrcTab0.addEventListener("click", () => {
+        aboutDrcTab0.classList.add("drc-is-active");
+        aboutDrcTab1.classList.remove("drc-is-active");
+        aboutDrcActiveBar.setAttribute("style", "transform: translateY(0px); height: 40px;");
+        aboutDrcPane0.classList.remove("drc-modal-hidden");
+        aboutDrcPane1.classList.add("drc-modal-hidden");
+    });
+    aboutDrcTab1.addEventListener("click", () => {
+        aboutDrcTab1.classList.add("drc-is-active");
+        aboutDrcTab0.classList.remove("drc-is-active");
+        aboutDrcActiveBar.setAttribute("style", "transform: translateY(40px); height: 40px;");
+        aboutDrcPane1.classList.remove("drc-modal-hidden");
+        aboutDrcPane0.classList.add("drc-modal-hidden");
+    });
+    aboutDrcButton.addEventListener("click", () => aboutDrcModalMain.classList.toggle("drc-modal-hidden"));
     // Watch for match start
     const btn = document.querySelector(".play");
     btn.addEventListener("click", () => {
