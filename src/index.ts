@@ -444,6 +444,11 @@ const createWindow = () => {
     ipcMain.on("setBadge", (_event: Event, count: number) => {
         app.setBadgeCount([count])
     });
+
+    // current version tag
+    ipcMain.handle("getVersion", async () => {
+        return currentVersionId;
+    });
 };
 
 app.on('ready', () => {

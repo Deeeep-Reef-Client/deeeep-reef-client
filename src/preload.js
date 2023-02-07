@@ -88,7 +88,7 @@ const DRC = {
                 <div id="${modalId}Modal" class="modal-content drc-modal-modal-content">
                     <span class="drc-modal-title">
                         <div></div>
-                        <div class="justify-self-center">${title}</div>
+                        <div class="justify-self-center" id=${modalId}ModalTitle>${title}</div>
                         <div></div>
                     </span>
                     <div class="drc-modal-content">
@@ -5032,17 +5032,133 @@ window.addEventListener("DOMContentLoaded", () => {
             </div>
         </div>
         <div class="drc-tabs-content">
-            <div class="drc-pr-4 drc-pl-2" id="aboutDrcPane0">hello</div>
-            <div class="drc-pr-4 drc-pl-2 drc-modal-hidden" id="aboutDrcPane1">world!</div>
+            <div class="drc-pr-4 drc-pl-2" id="aboutDrcPane0">
+                <p>Deeeep.io Reef Client is a simple desktop client for Deeeep.io.</p>
+            </div>
+            <div class="drc-pr-4 drc-pl-2 drc-modal-hidden" id="aboutDrcPane1">
+                <p>
+                    You are running 
+                    <b id="aboutDrcVersionTag">Unknown</b>
+                    <span id="aboutDrcUpdateStatus">, unknown status.</span>
+                </p>
+                <div style="text-align:left;max-width:50vw;">
+                    <p><b>v0.9.1 (beta) The Prerelease Patch</b></p>
+                    <ul>
+                        <li>Theme maker works on the Forum</li>
+                        <li>Client does not crash when loading window is closed</li>
+                        <li>Loading window works offline</li>
+                        <li>More efficient account swapper</li>
+                        <li>lue evolution tree button</li>
+                    </ul>
+                    <br />
+                    <p><b>v0.9.0 (beta) The Prerelease Update</b></p>
+                    <ul>
+                        <li>Added a loading screen</li>
+                        <li>Added a "developer mode"</li>
+                        <li>Auto fill name</li>
+                        <li>Account save and swapper</li>
+                        <li>Fixed Client not working in PD and 1v1</li>
+                        <li>In-game button to open evolution tree</li>
+                        <li>Setting to view ghosts</li>
+                        <li>Press "X" while as ghost to end game</li>
+                        <li>Press "C" to cancel boost (for touchpad)</li>
+                    </ul>
+                    <br />
+                    <p><b>v0.8.0 (beta) The Adblocker Update</b></p>
+                    <ul>
+                        <li>A togglable Adblocker to block advertisements</li>
+                        <li>Hotkey "V" does not open evolution tree if not in game</li>
+                        <li>DRC modal overlays now have a blur</li>
+                    </ul>
+                    <br />
+                    <p><b>v0.7.0 (beta) The Plugins Update</b></p>
+                    <ul>
+                        <li>A plugins system! Find and install plugins and themes from the registry!</li>
+                    </ul>
+                    <br />
+                    <p><b>v0.6.1 (beta) The Misc Update</b></p>
+                    <ul>
+                        <li>Transparency slider is no longer an opacity slider (it goes left to right ascending
+                            transparency instead of right to left)</li>
+                        <li>Press "V" to toggle evolution tree</li>
+                        <li>Press "F12" to open DevTools</li>
+                    </ul>
+                    <br />
+                    <p><b>v0.6.0 (beta) The Theme Maker Update</b></p>
+                    <ul>
+                        <li>A theme maker! Create your own custom themes, use and share them!</li>
+                    </ul>
+                    <br />
+                    <p><b>v0.5.0 (beta) The Light Theme Update</b></p>
+                    <ul>
+                        <li>Light theme :D</li>
+                    </ul>
+                    <br />
+                    <p><b>v0.4.2 (beta) The Autoupdater Patch<b/></p>
+                    <ul>
+                        <li>The auto updater actually works now</li>
+                    </ul>
+                    <br />
+                    <p><b>v0.4.1 (beta) The QoL Update</b></p>
+                    <ul>
+                        <li>The icon now has rounded corners to avoid hurting your eyes</li>
+                        <li>Client shows DRC version too</li>
+                    </ul>
+                    <br />
+                    <p><b>v0.4.0 (beta) The Autoupdater Update</b></p>
+                    <ul>
+                        <li>An auto updater :)</li>
+                    </ul>
+                    <br />
+                    <p><b>v0.3.2 (beta) The Asset Swapper Patch 2</b></p>
+                    <ul>
+                        <li>Fixed asset swapper for non-docassets users</li>
+                    </ul>
+                    <br />
+                    <p><b>v0.3.1 (beta) The Asset Swapper Patch</b></p>
+                    <ul>
+                        <li>Installer is now patched and works with the new feature!</li>
+                    </ul>
+                    <br />
+                    <p><b>v0.3.0 (beta) The Asset Swapper Update</b></p>
+                    <ul>
+                        <li>An asset swapper to swap your skins!</li>
+                    </ul>
+                    <br />
+                    <p><b>v0.2.0 (alpha) The Evolution Update</b></p>
+                    <ul>
+                        <li>Evolution tree button</li>
+                        <li>V3 game UI (still buggy)</li>
+                        <li>New installer that actually works</li>
+                    </ul>
+                    <br />
+                    <p><b>v0.1.0 (alpha) The Settings Update</b></p>
+                    <ul>
+                        <li>Settings are now locally stored, and custom theme and docassets are now togglable</li>
+                        <li>Docassets now comes built in in the client</li>
+                    </ul>
+                    <br />
+                    <p><b>v0.0.0 (alpha) Initial Release</b></p>
+                    <ul>
+                        <li>Initial alpha release</li>
+                        <li>The journey begins.</li>
+                    </ul>
+                    <br />
+                </div>
+            </div>
         </div>
     </div>
     `);
+    const aboutDrcUpdateStatus = document.getElementById("aboutDrcUpdateStatus");
+    const aboutDrcVersionTag = document.getElementById("aboutDrcVersionTag");
+    const aboutDrcTitle = document.getElementById("aboutDrcModalTitle");
     const aboutDrcTab0 = document.getElementById("aboutDrcTab0");
     const aboutDrcTab1 = document.getElementById("aboutDrcTab1");
     const aboutDrcPane0 = document.getElementById("aboutDrcPane0");
     const aboutDrcPane1 = document.getElementById("aboutDrcPane1");
     const aboutDrcActiveBar = document.getElementById("aboutDrcActiveBar");
     aboutDrcTab0.addEventListener("click", () => {
+        aboutDrcTitle.innerText = "About the Client";
         aboutDrcTab0.classList.add("drc-is-active");
         aboutDrcTab1.classList.remove("drc-is-active");
         aboutDrcActiveBar.setAttribute("style", "transform: translateY(0px); height: 40px;");
@@ -5050,6 +5166,7 @@ window.addEventListener("DOMContentLoaded", () => {
         aboutDrcPane1.classList.add("drc-modal-hidden");
     });
     aboutDrcTab1.addEventListener("click", () => {
+        aboutDrcTitle.innerText = "Changelog";
         aboutDrcTab1.classList.add("drc-is-active");
         aboutDrcTab0.classList.remove("drc-is-active");
         aboutDrcActiveBar.setAttribute("style", "transform: translateY(40px); height: 40px;");
@@ -5057,6 +5174,14 @@ window.addEventListener("DOMContentLoaded", () => {
         aboutDrcPane0.classList.add("drc-modal-hidden");
     });
     aboutDrcButton.addEventListener("click", () => aboutDrcModalMain.classList.toggle("drc-modal-hidden"));
+    (async () => {
+        aboutDrcVersionTag.innerText = DRC.Client.VersionTag;
+        const latestVersion = await ipcRenderer.invoke("getVersion");
+        aboutDrcVersionTag.classList.add((DRC.Client.VersionTag === latestVersion) ? "drc-text-green" : "drc-text-red");
+        aboutDrcUpdateStatus.innerText = (DRC.Client.VersionTag === latestVersion) ?
+            ", the latest version." :
+            ". A new update <b class=\"drc-text-cyan\">" + latestVersion + "</b> has been detected.";
+    })();
     // Watch for match start
     const btn = document.querySelector(".play");
     btn.addEventListener("click", () => {
