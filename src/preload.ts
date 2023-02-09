@@ -113,6 +113,55 @@ const DRC = {
                 modal?.classList.add("drc-modal-hidden");
             });
             return modal as HTMLDivElement;
+        },
+        BuildTab: function (id: string, content: {
+            content: string,
+            name: string
+        }[], parent: HTMLElement): HTMLDivElement {
+            const modalId = id.replaceAll(' ', "");
+            let tabs = "";
+            let panes = "";
+            for (let i in content) {
+                tabs += `<div class="drc-tabs-item drc-is-left ${Number(i) === 0 ? "drc-is-active" : ""}" id="${modalId}Tab${i}">${content[i].name}</div>`;
+                panes += `<div class="drc-pr-4 drc-pl-2 ${Number(i) === 0 ? "" : "drc-modal-hidden"}" id="${modalId}Pane${i}">${content[i].content}</div>`;
+            }
+            const modal = document.createElement("div");
+            parent.appendChild(modal);
+            modal.outerHTML = `<div class="drc-tabs drc-tabs-left" style="min-height: 200px;" id="${modalId}TabsContainer">
+        <div class="drc-tabs-header drc-is-left">
+            <div class="drc-tabs-nav-wrap drc-is-left">
+                <div class="drc-tabs-nav-scroll">
+                    <div class="drc-tabs-nav drc-is-left" role="tablist" style="transform: translateY(0px);">
+                        <div class="drc-tabs-active-bar drc-is-left" style="transform: translateY(0px); height: 40px;" id="${modalId}ActiveBar"></div>
+                        ${tabs}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="drc-tabs-content">
+        ${panes}
+        </div>
+    </div>
+    `;
+
+            const activeBar = document.getElementById(modalId + "ActiveBar") as HTMLDivElement;
+
+            for (let i in content) {
+                const tab = document.getElementById(modalId + "Tab" + i);
+                const pane = document.getElementById(modalId + "Pane" + i);
+                tab?.addEventListener("click", () => {
+                    for (let j in content) {
+                        document.getElementById(modalId + "Tab" + j)!.classList.remove("drc-is-active");
+                        document.getElementById(modalId + "Pane" + j)!.classList.add("drc-modal-hidden");
+                    }
+                    tab.classList.add("drc-is-active");
+                    pane?.classList.remove("drc-modal-hidden");
+                    activeBar.setAttribute("style", "transform: translateY(" + Number(i) * 40 + "px); height: 40px;");
+                })
+            }
+
+            const modalContainer = document.getElementById(modalId + "TabsContainer") as HTMLDivElement;
+            return modalContainer;
         }
     },
     Preload: {
@@ -246,7 +295,7 @@ window.addEventListener("DOMContentLoaded", () => {
             ipcRenderer.send("openDevTools");
         }
     });
-
+    
     // warn if code updated
     const indexScriptTag = document.querySelector("script[src^=\\/assets\\/index\\.]");
     fetch(
@@ -5355,7 +5404,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const aboutDrcPane0 = document.getElementById("aboutDrcPane0") as HTMLDivElement;
     const aboutDrcPane1 = document.getElementById("aboutDrcPane1") as HTMLDivElement;
     const aboutDrcActiveBar = document.getElementById("aboutDrcActiveBar") as HTMLDivElement;
-    
+
     aboutDrcTab0.addEventListener("click", () => {
         aboutDrcTitle!.innerText = "About the Client";
 
