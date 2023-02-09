@@ -5289,7 +5289,7 @@ window.addEventListener("DOMContentLoaded", () => {
                         <li>Light theme :D</li>
                     </ul>
                     <br />
-                    <p><b>v0.4.2 (beta) The Autoupdater Patch<b/></p>
+                    <p><b>v0.4.2 (beta) The Autoupdater Patch</b></p>
                     <ul>
                         <li>The auto updater actually works now</li>
                     </ul>
@@ -5386,7 +5386,7 @@ window.addEventListener("DOMContentLoaded", () => {
         aboutDrcVersionTag!.innerText = DRC.Client.VersionTag;
         const latestVersion = await ipcRenderer.invoke("getVersion");
         aboutDrcVersionTag!.classList.add((DRC.Client.VersionTag === latestVersion) ? "drc-text-green" : "drc-text-red");
-        aboutDrcUpdateStatus!.innerText = (DRC.Client.VersionTag === latestVersion) ?
+        aboutDrcUpdateStatus!.innerHTML = (DRC.Client.VersionTag === latestVersion) ?
             ", the latest version." :
             ". A new update <b class=\"drc-text-cyan\">" + latestVersion + "</b> has been detected.";
     })();
