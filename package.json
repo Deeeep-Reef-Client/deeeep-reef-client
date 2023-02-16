@@ -65,9 +65,7 @@
       "src/**.js",
       "build/**",
       "src/loading.html",
-      "!src/tmp**"
-    ],
-    "extraResources": [
+      "!src/tmp**",
       "extensions/**"
     ],
     "directories": {

@@ -299,13 +299,14 @@ const createWindow = () => {
     };
 
     (async () => {
-        if (docassetsOn) await window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/docassets");
-        else await window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/drc-as-copy")
+        console.log(app.getAppPath());
+        if (docassetsOn) await window.webContents.session.loadExtension(app.getAppPath() + "/extensions/docassets");
+        else await window.webContents.session.loadExtension(app.getAppPath()+ "/extensions/drc-as-copy")
 
-        if (adBlockerOn) await window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/ublock");
-        else await window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/drc-assetswapper")
+        if (adBlockerOn) await window.webContents.session.loadExtension(app.getAppPath() + "/extensions/ublock");
+        else await window.webContents.session.loadExtension(app.getAppPath() + "/extensions/drc-assetswapper")
 
-        await window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/drc-assetswapper");
+        await window.webContents.session.loadExtension(app.getAppPath() + "/extensions/drc-assetswapper");
 
 
         window.loadURL("https://deeeep.io");
