@@ -661,7 +661,8 @@ window.addEventListener("DOMContentLoaded", () => {
     });
 
     // Save name
-    document.querySelector("div.name-input > div.el-input__wrapper > input.el-input__inner")!.addEventListener("change", (e: any) => {
+    const gameNameField = document.querySelector("div.name-input > div.el-input__wrapper > input.el-input__inner") as HTMLInputElement;
+    gameNameField!.addEventListener("change", (e: any) => {
         settings.gameName = e.target.value;
         saveSettings();
     });
@@ -669,7 +670,12 @@ window.addEventListener("DOMContentLoaded", () => {
         settings.gameName = "";
         saveSettings();
     }
-    (document.querySelector("div.name-input > div.el-input__wrapper > input.el-input__inner") as HTMLInputElement).value = settings.gameName;
+    gameNameField.value = settings.gameName;
+    gameNameField.value = settings.gameName.slice(0, -1);
+    gameNameField.focus();
+    window.addEventListener("load", () => {
+        ipcRenderer.send("sendKeyPress", settings.gameName.slice(-1));
+    }, {once: true});
 
 
     // misc styles
