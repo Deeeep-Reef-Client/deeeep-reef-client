@@ -5298,7 +5298,7 @@ window.addEventListener("DOMContentLoaded", () => {
                         <li>Client does not crash when loading window is closed</li>
                         <li>Loading window works offline</li>
                         <li>More efficient account swapper</li>
-                        <li>lue evolution tree button</li>
+                        <li>Blue evolution tree button</li>
                     </ul>
                     <br />
                     <p><b>v0.9.0 (beta) The Prerelease Update</b></p>
