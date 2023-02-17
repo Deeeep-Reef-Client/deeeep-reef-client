@@ -179,12 +179,12 @@ const DRC = {
         GameEvolved: "DRC.GameEvolved",
         SettingsOpened: "DRC.SettingsOpened",
         EventList: {
-            DomContentLoaded: new Event("DRC.DomContentLoaded"),
-            DocumentLoaded: new Event("DRC.DocumentLoaded"),
-            GameStarted: new Event("DRC.GameStarted"),
-            GameEnded: new Event("DRC.GameEnded"),
-            GameEvolved: new Event("DRC.GameEvolved"),
-            SettingsOpened: new Event("DRC.SettingsOpened"),
+            DomContentLoaded: new CustomEvent("DRC.DomContentLoaded"),
+            DocumentLoaded: new CustomEvent("DRC.DocumentLoaded"),
+            GameStarted: new CustomEvent("DRC.GameStarted"),
+            GameEnded: new CustomEvent("DRC.GameEnded"),
+            GameEvolved: new CustomEvent("DRC.GameEvolved"),
+            SettingsOpened: new CustomEvent("DRC.SettingsOpened"),
         }
     },
 };

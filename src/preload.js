@@ -168,12 +168,12 @@ const DRC = {
         GameEvolved: "DRC.GameEvolved",
         SettingsOpened: "DRC.SettingsOpened",
         EventList: {
-            DomContentLoaded: new Event("DRC.DomContentLoaded"),
-            DocumentLoaded: new Event("DRC.DocumentLoaded"),
-            GameStarted: new Event("DRC.GameStarted"),
-            GameEnded: new Event("DRC.GameEnded"),
-            GameEvolved: new Event("DRC.GameEvolved"),
-            SettingsOpened: new Event("DRC.SettingsOpened"),
+            DomContentLoaded: new CustomEvent("DRC.DomContentLoaded"),
+            DocumentLoaded: new CustomEvent("DRC.DocumentLoaded"),
+            GameStarted: new CustomEvent("DRC.GameStarted"),
+            GameEnded: new CustomEvent("DRC.GameEnded"),
+            GameEvolved: new CustomEvent("DRC.GameEvolved"),
+            SettingsOpened: new CustomEvent("DRC.SettingsOpened"),
         }
     },
 };
@@ -5098,7 +5098,7 @@ window.addEventListener("DOMContentLoaded", () => {
                         <li>Client does not crash when loading window is closed</li>
                         <li>Loading window works offline</li>
                         <li>More efficient account swapper</li>
-                        <li>lue evolution tree button</li>
+                        <li>Blue evolution tree button</li>
                     </ul>
                     <br />
                     <p><b>v0.9.0 (beta) The Prerelease Update</b></p>
