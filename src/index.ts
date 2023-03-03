@@ -35,6 +35,7 @@ interface SettingsTemplate {
     userTheme: boolean;
     userThemeData: Array<any>;
     pluginsData: Array<any>;
+    pluginUserData: any;
     adBlocker: boolean;
     viewingGhosts: boolean;
     advancedProfanityFilter: boolean;
@@ -83,6 +84,15 @@ const schema = {
                     type: "object"
                 }
             },
+            pluginsData: {
+                type: "array",
+                items: {
+                    type: "object"
+                }
+            },
+            pluginsUserData: {
+                type: "object"
+            },
             adBlocker: {
                 type: "boolean",
                 default: true
@@ -125,6 +135,7 @@ let settings: SettingsTemplate = {
     userTheme: true,
     userThemeData: [],
     pluginsData: [],
+    pluginUserData: {},
     adBlocker: true,
     viewingGhosts: true,
     advancedProfanityFilter: true,
@@ -145,6 +156,7 @@ if (settings === undefined) {
         userTheme: true,
         userThemeData: [],
         pluginsData: [],
+        pluginUserData: {},
         adBlocker: true,
         viewingGhosts: true,
         advancedProfanityFilter: true,

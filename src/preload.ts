@@ -226,6 +226,7 @@ interface SettingsTemplate {
     userTheme: boolean;
     userThemeData: Array<any>;
     pluginsData: Array<any>;
+    pluginUserData: any;
     adBlocker: boolean;
     viewingGhosts: boolean;
     advancedProfanityFilter: boolean;
@@ -244,6 +245,7 @@ let settings: SettingsTemplate = {
     userTheme: true,
     userThemeData: [],
     pluginsData: [],
+    pluginUserData: {},
     adBlocker: true,
     viewingGhosts: true,
     advancedProfanityFilter: true,

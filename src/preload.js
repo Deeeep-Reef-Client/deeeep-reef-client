@@ -204,6 +204,7 @@ let settings = {
     userTheme: true,
     userThemeData: [],
     pluginsData: [],
+    pluginUserData: {},
     adBlocker: true,
     viewingGhosts: true,
     advancedProfanityFilter: true,

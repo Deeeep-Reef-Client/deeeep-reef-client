@@ -59,6 +59,15 @@ const schema = {
                     type: "object"
                 }
             },
+            pluginsData: {
+                type: "array",
+                items: {
+                    type: "object"
+                }
+            },
+            pluginsUserData: {
+                type: "object"
+            },
             adBlocker: {
                 type: "boolean",
                 default: true
@@ -100,6 +109,7 @@ let settings = {
     userTheme: true,
     userThemeData: [],
     pluginsData: [],
+    pluginUserData: {},
     adBlocker: true,
     viewingGhosts: true,
     advancedProfanityFilter: true,
@@ -119,6 +129,7 @@ if (settings === undefined) {
         userTheme: true,
         userThemeData: [],
         pluginsData: [],
+        pluginUserData: {},
         adBlocker: true,
         viewingGhosts: true,
         advancedProfanityFilter: true,
