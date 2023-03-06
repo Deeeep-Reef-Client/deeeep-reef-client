@@ -59,7 +59,7 @@ const DRC = {
                     },
                     (details: any, callback: Function) => {
                         let cb = new Function();
-            
+
                         for (let i in DRC_DATA.Main.Session.OnBeforeRequestListeners) {
                             for (let j in DRC_DATA.Main.Session.OnBeforeRequestListeners[i].regex) {
                                 if (!details.url.match(
@@ -518,6 +518,17 @@ const createWindow = () => {
     ipcMain.handle("getVersion", async () => {
         return currentVersionId;
     });
+
+
+    // plugins
+    for (const i in settings.pluginsData) {
+        if (settings.pluginsData[i].src.length == 0) continue;
+        for (const j in settings.pluginsData[i].src) {
+            if (settings.pluginsData[i].src[j].type == "appstart") {
+                eval(settings.pluginsData[i].src[j].src);
+            }
+        }
+    }
 };
 
 app.on('ready', () => {
