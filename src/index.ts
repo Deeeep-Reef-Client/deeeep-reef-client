@@ -23,6 +23,62 @@ let instUrl = "";
 const versionId = "v0.9.1-beta";
 let currentVersionId = "";
 
+// The DRC API for main
+let DRC_DATA: {
+    Main: {
+        Session: {
+            OnBeforeRequestUrls: string[],
+            OnBeforeRequestListeners: {
+                regex: string[],
+                callback: Function
+            }[],
+        }
+    }
+} = {
+    Main: {
+        Session: {
+            OnBeforeRequestUrls: [],
+            OnBeforeRequestListeners: [],
+        }
+    }
+};
+
+const DRC = {
+    Main: {
+        Session: {
+            AddOnBeforeRequestListener(filter: { urls: string[], regex: string[] }, callback: Function) {
+                DRC_DATA.Main.Session.OnBeforeRequestUrls.concat(filter.urls);
+                DRC_DATA.Main.Session.OnBeforeRequestListeners.push({
+                    regex: filter.regex,
+                    callback
+                });
+
+                session.defaultSession.webRequest.onBeforeRequest(
+                    {
+                        urls: DRC_DATA.Main.Session.OnBeforeRequestUrls
+                    },
+                    (details: any, callback: Function) => {
+                        let cb = new Function();
+            
+                        for (let i in DRC_DATA.Main.Session.OnBeforeRequestListeners) {
+                            for (let j in DRC_DATA.Main.Session.OnBeforeRequestListeners[i].regex) {
+                                if (!details.url.match(
+                                    DRC_DATA.Main.Session.OnBeforeRequestListeners[i].regex[j]
+                                )) continue
+                                cb = DRC_DATA.Main.Session.OnBeforeRequestListeners[i].callback;
+                                break;
+                            }
+                        }
+                        cb(details, callback);
+                    }
+                )
+            }
+        }
+    }
+};
+
+Object.freeze(DRC); // Don't touch my API
+
 // Store!
 
 interface SettingsTemplate {
@@ -313,7 +369,7 @@ const createWindow = () => {
     (async () => {
         console.log(app.getAppPath());
         if (docassetsOn) await window.webContents.session.loadExtension(app.getAppPath() + "/extensions/docassets");
-        else await window.webContents.session.loadExtension(app.getAppPath()+ "/extensions/drc-as-copy")
+        else await window.webContents.session.loadExtension(app.getAppPath() + "/extensions/drc-as-copy")
 
         if (adBlockerOn) await window.webContents.session.loadExtension(app.getAppPath() + "/extensions/ublock");
         else await window.webContents.session.loadExtension(app.getAppPath() + "/extensions/drc-assetswapper")
