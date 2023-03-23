@@ -5367,7 +5367,7 @@ window.addEventListener("DOMContentLoaded", () => {
                         for (let i in settings.assetSwapperConfig) {
                             DRC.Preload.EvalInBrowserContext(`
                             if (${settings.assetSwapperConfig[i].animal} == game.currentScene.myAnimal.visibleFishLevel) {
-                                game.currentScene.myAnimal.setSkin(${settings.assetSwapperConfig[i].skin});
+                                game.currentScene.myAnimal.setSkin("${settings.assetSwapperConfig[i].skin}");
                             };
                             `);
                         }
