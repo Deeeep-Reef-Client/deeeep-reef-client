@@ -32,11 +32,22 @@ const DRC = {
     Main: {
         Session: {
             AddOnBeforeRequestListener(filter, callback) {
-                DRC_DATA.Main.Session.OnBeforeRequestUrls.concat(filter.urls);
+                DRC_DATA.Main.Session.OnBeforeRequestUrls = DRC_DATA.Main.Session.OnBeforeRequestUrls.concat(filter.urls);
                 DRC_DATA.Main.Session.OnBeforeRequestListeners.push({
                     regex: filter.regex,
                     callback
                 });
+                for (let i in DRC_DATA.Main.Session.OnBeforeRequestListeners) {
+                    console.log(DRC_DATA.Main.Session.OnBeforeRequestListeners[i].callback.toString());
+                }
+                // session.defaultSession.webRequest.onBeforeSendHeaders(
+                //     {
+                //         urls: ['https://*.github.com/*', '*://electron.github.io/*']
+                //     }, 
+                //     (details: any, callback: Function) => {
+                //     details.requestHeaders['User-Agent'] = 'MyAgent'
+                //     callback({ requestHeaders: details.requestHeaders })
+                // })
                 session.defaultSession.webRequest.onBeforeRequest({
                     urls: DRC_DATA.Main.Session.OnBeforeRequestUrls
                 }, (details, callback) => {
@@ -193,6 +204,7 @@ const createWindow = () => {
             sandbox: false
         }
     });
+    // enhanceWebRequest(session.defaultSession);
     const badgeOptions = {
         font: '20px arial'
     };
@@ -317,6 +329,7 @@ const createWindow = () => {
         else
             await window.webContents.session.loadExtension(app.getAppPath() + "/extensions/drc-assetswapper");
         await window.webContents.session.loadExtension(app.getAppPath() + "/extensions/drc-assetswapper");
+        await window.webContents.session.loadExtension(app.getAppPath() + "/extensions/drc-as-copy");
         window.loadURL("https://deeeep.io");
         window.hide();
         /*
@@ -438,6 +451,18 @@ const createWindow = () => {
     ipcMain.handle("getVersion", async () => {
         return currentVersionId;
     });
+    // DRC.Main.Session.AddOnBeforeRequestListener({
+    //     urls: ["*://electron.github.io/*"],
+    //     regex: [/https:\/\/electron\.github\.io\/?.*/]
+    // }, (details: any, callback: Function) => {
+    //     callback({ redirectURL: "https://example.com/ " });
+    // });
+    // session.defaultSession.webRequest.onBeforeRequest({
+    //     urls: ["*://electron.github.io/*"]
+    // }, (details: any, callback: Function) => {
+    //     console.log(details);
+    //     callback({ redirectURL: "https://example.com/ "});
+    // });
     // plugins
     for (const i in settings.pluginsData) {
         if (settings.pluginsData[i].src.length == 0)
