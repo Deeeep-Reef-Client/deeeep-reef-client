@@ -1,54 +1,54 @@
 var options = {};
 
 var DEFAULTS = {
-    redirectAssets: true, 
-} 
+    redirectAssets: true,
+}
 
 function setDefaults() {
     chrome.storage.sync.get(DEFAULTS, function (obj) {
-        chrome.storage.sync.set(obj, syncSettings); 
-    }); 
-} 
+        chrome.storage.sync.set(obj, syncSettings);
+    });
+}
 
 chrome.runtime.onInstalled.addListener(function (info) {
-    setDefaults(); 
-}); 
+    setDefaults();
+});
 
 function syncSettings() {
     chrome.storage.sync.get(DEFAULTS, function (obj) {
-      Object.assign(options, obj); 
-      console.log(options);
+        Object.assign(options, obj);
+        console.log(options);
 
-      let color = options.redirectAssets ? '#00a04a' : '#bb0000'; 
-      let text = options.redirectAssets ? 'ON' : 'OFF'; 
+        let color = options.redirectAssets ? '#00a04a' : '#bb0000';
+        let text = options.redirectAssets ? 'ON' : 'OFF';
 
-      chrome.browserAction.setBadgeBackgroundColor({
-          color: color, 
-      }); 
-      chrome.browserAction.setBadgeText({
-          text: text, 
-      }); 
+        chrome.browserAction.setBadgeBackgroundColor({
+            color: color,
+        });
+        chrome.browserAction.setBadgeText({
+            text: text,
+        });
 
     });
 
     console.log("sync settings running");
 }
 
-syncSettings(); 
+syncSettings();
 
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     if (request == "sync-settings") {
-      syncSettings(); 
-    } 
-}); 
+        syncSettings();
+    }
+});
 
 function toggleRedirect() {
-    options.redirectAssets = !options.redirectAssets; 
+    options.redirectAssets = !options.redirectAssets;
 
-    chrome.storage.sync.set(options, syncSettings); 
+    chrome.storage.sync.set(options, syncSettings);
 }
 
-chrome.browserAction.onClicked.addListener(toggleRedirect); 
+chrome.browserAction.onClicked.addListener(toggleRedirect);
 
 //script
 
@@ -59,20 +59,20 @@ const alreadyChecked = new Set();
 function tempMarkChecked(toAdd) {
     alreadyChecked.add(toAdd);
 
-    console.log(`${toAdd} temp-added to checked list`); 
+    console.log(`${toAdd} temp-added to checked list`);
 
-    setTimeout(function(toRemove) {
+    setTimeout(function (toRemove) {
         alreadyChecked.delete(toRemove);
 
-        console.log(`${toRemove} removed from checked list`); 
+        console.log(`${toRemove} removed from checked list`);
     }, 5000, toAdd);
 }
-  
-chrome.webRequest.onBeforeRequest.addListener(
-    function(details) {
-        let url = options.redirectAssets ? script : details.url; 
 
-        return {redirectUrl: url};
+chrome.webRequest.onBeforeRequest.addListener(
+    function (details) {
+        let url = options.redirectAssets ? script : details.url;
+
+        return { redirectUrl: url };
     },
     {
         urls: [
@@ -83,20 +83,20 @@ chrome.webRequest.onBeforeRequest.addListener(
     ["blocking"]
 );
 
-function genericHandler(redirectTemplate, regex, name, filenameKeys=['filename']) {
+function genericHandler(redirectTemplate, regex, name, filenameKeys = ['filename']) {
     function handler(details) {
-        let redirectUrl = details.url; 
-        
+        let redirectUrl = details.url;
+
         if (options.redirectAssets) {
             const m = regex.exec(details.url); // checks if might be valid X
 
-            console.log(`original ${name} URL is ${details.url}`); 
+            console.log(`original ${name} URL is ${details.url}`);
 
             if (m) {
                 const filenameArray = filenameKeys.map(key => m.groups[key] || '');
                 const filename = filenameArray.join('');
 
-                console.log(filename); 
+                console.log(filename);
 
                 let newRedirectUrl = redirectTemplate + filename; // redirect it
 
@@ -107,36 +107,36 @@ function genericHandler(redirectTemplate, regex, name, filenameKeys=['filename']
                     checkRequest.send(); // sends the request
 
                     if (checkRequest.status >= 200 && checkRequest.status < 300) { // redirect exists
-                        redirectUrl = newRedirectUrl; 
+                        redirectUrl = newRedirectUrl;
 
-                        console.log(`Redirecting to ${newRedirectUrl}`); 
+                        console.log(`Redirecting to ${newRedirectUrl}`);
                     } else {
                         tempMarkChecked(newRedirectUrl);
 
-                        console.log(`${newRedirectUrl} does not exist. Using default.`); 
+                        console.log(`${newRedirectUrl} does not exist. Using default.`);
                     }
                 } else {
-                    console.log(`Already checked ${newRedirectUrl}`); 
+                    console.log(`Already checked ${newRedirectUrl}`);
                 }
-            } 
+            }
         }
 
-        return  {
-            redirectUrl: redirectUrl, 
-        }; 
-    } 
+        return {
+            redirectUrl: redirectUrl,
+        };
+    }
 
-    return handler; 
+    return handler;
 }
 
 const MISC_REDIRECT_TEMPLATE = 'https://deeeep-reef-client.github.io/modded-assets/misc/'; // redirect URLs are all from this
 const MISC_SCHEME = '*://*.deeeep.io/assets/index.*.js'; // these urls will be redirected like ui sprites
 const MISC_REGEX = /.+\/assets\/(?<filename>[^/?]+)(?:\?.*)?$/ // might it be a valid ui sprite? 
 
-const miscHandler = genericHandler(MISC_REDIRECT_TEMPLATE, MISC_REGEX, 'misc'); 
+const miscHandler = genericHandler(MISC_REDIRECT_TEMPLATE, MISC_REGEX, 'misc');
 
 chrome.webRequest.onBeforeRequest.addListener(
-    miscHandler, 
+    miscHandler,
     {
         urls: [
             MISC_SCHEME
@@ -144,4 +144,63 @@ chrome.webRequest.onBeforeRequest.addListener(
         types: ["main_frame", "sub_frame", "stylesheet", "script", "image", "object", "xmlhttprequest", "other"]
     },
     ["blocking"]
-); 
+);
+
+
+const DRC_SKIN_REDIRECT_TEMPLATE = 'http://127.0.0.1:4319/api/skins/'; // redirect URLs are all from this
+const DRC_SKIN_SCHEME = '*://apibeta.deeeep.io/skins/drcskin_*'; // these urls will be redirected like ui sprites
+const DRC_SKIN_REGEX = /.+\/skins\/drcskin_(?<filename>[^/?]+)(?:\?.*)?$/ // might it be a valid ui sprite? 
+
+const drcSkinHandler = genericHandler(DRC_SKIN_REDIRECT_TEMPLATE, DRC_SKIN_REGEX, 'drcSkin');
+
+chrome.webRequest.onBeforeRequest.addListener(
+    function (details) {
+        return { redirectUrl: DRC_SKIN_REDIRECT_TEMPLATE + details.url.match(DRC_SKIN_REGEX).groups.filename };
+    },
+    {
+        urls: [
+            DRC_SKIN_SCHEME
+        ],
+        types: ["main_frame", "sub_frame", "stylesheet", "script", "image", "object", "xmlhttprequest", "other"]
+    },
+    ["blocking"]
+);
+
+const DRC_SKIN_CDN_REDIRECT_TEMPLATE = 'http://127.0.0.1:4319/cdn/skins/'; // redirect URLs are all from this
+const DRC_SKIN_CDN_SCHEME = '*://*.deeeep.io/assets/skins/drcskin_*'; // these urls will be redirected like ui sprites
+const DRC_SKIN_CDN_REGEX = /.+\/assets\/skins\/drcskin_(?<filename>[^/?]+)(?:\?.*)?$/ // might it be a valid ui sprite? 
+
+const drcSkinCdnHandler = genericHandler(DRC_SKIN_CDN_REDIRECT_TEMPLATE, DRC_SKIN_CDN_REGEX, 'drcSkinCdn');
+
+chrome.webRequest.onBeforeRequest.addListener(
+    function (details) {
+        return { redirectUrl: DRC_SKIN_CDN_REDIRECT_TEMPLATE + details.url.match(DRC_SKIN_CDN_REGEX).groups.filename };
+    },
+    {
+        urls: [
+            DRC_SKIN_CDN_SCHEME
+        ],
+        types: ["main_frame", "sub_frame", "stylesheet", "script", "image", "object", "xmlhttprequest", "other"]
+    },
+    ["blocking"]
+);
+
+
+const DRC_SKIN_CUSTOM_REDIRECT_TEMPLATE = 'http://127.0.0.1:4319/cdn/skins/'; // redirect URLs are all from this
+const DRC_SKIN_CUSTOM_SCHEME = '*://cdn.deeeep.io/custom/skins/drcskin_*'; // these urls will be redirected like ui sprites
+const DRC_SKIN_CUSTOM_REGEX = /.+\/custom\/skins\/drcskin_(?<filename>[^/?]+)(?:\?.*)?$/ // might it be a valid ui sprite? 
+
+const drcSkinCustomHandler = genericHandler(DRC_SKIN_CUSTOM_REDIRECT_TEMPLATE, DRC_SKIN_CUSTOM_REGEX, 'drcSkinCustom');
+
+chrome.webRequest.onBeforeRequest.addListener(
+    function (details) {
+        return { redirectUrl: DRC_SKIN_CUSTOM_REDIRECT_TEMPLATE + details.url.match(DRC_SKIN_CUSTOM_REGEX).groups.filename };
+    },
+    {
+        urls: [
+            DRC_SKIN_CUSTOM_SCHEME
+        ],
+        types: ["main_frame", "sub_frame", "stylesheet", "script", "image", "object", "xmlhttprequest", "other"]
+    },
+    ["blocking"]
+);

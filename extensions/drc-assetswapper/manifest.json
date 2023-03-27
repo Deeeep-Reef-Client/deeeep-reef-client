@@ -13,6 +13,8 @@
     "https://mapmaker.deeeep.io/*",
     "https://beta.deeeep.io/*",
     "https://cdn.deeeep.io/*",
+    "https://api.deeeep.io/*",
+    "https://apibeta.deeeep.io/*",
     "webRequestBlocking",
     "storage"
   ]
