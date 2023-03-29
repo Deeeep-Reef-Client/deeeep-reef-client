@@ -4145,6 +4145,7 @@ window.addEventListener("DOMContentLoaded", () => {
         let assetSwapperRuleSkinName = "";
         assetSwapperRuleList.innerHTML = "";
         for (let i in settings.assetSwapperConfig) {
+            assetSwapperRuleSkinName = "";
             for (let j in animalList) {
                 if (animalList[j].id == settings.assetSwapperConfig[i].animal) {
                     assetSwapperRuleAnimalName = animalList[j].name;
@@ -4184,7 +4185,7 @@ window.addEventListener("DOMContentLoaded", () => {
             mainElem.appendChild(spacer2);
             // Skin name
             const skinElem = document.createElement("p");
-            skinElem.innerText = assetSwapperRuleSkinName;
+            skinElem.innerText = assetSwapperRuleSkinName || "Unknown";
             mainElem.appendChild(skinElem);
             const spacer3 = document.createElement("div");
             spacer3.classList.add("spacer");
