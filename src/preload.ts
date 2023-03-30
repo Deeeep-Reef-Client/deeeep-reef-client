@@ -4484,6 +4484,18 @@ window.addEventListener("DOMContentLoaded", () => {
                         <div class="spacer"></div>
                         <input type="url" id="themeMakerOptionsLoadingBgImage" placeholder="URL to image">
                     </div>
+                    <div class="spacer"></div>
+                    <div class="assetswapper-list-rule">
+                        <p>Loading Icon Image: </p>
+                        <div class="spacer"></div>
+                        <input type="url" id="themeMakerOptionsLoadingIconImage" placeholder="URL to image">
+                    </div>
+                    <div class="spacer"></div>
+                    <div class="assetswapper-list-rule">
+                        <p>Loading Bar Colour: </p>
+                        <div class="spacer"></div>
+                        <input type="color" id="themeMakerOptionsLoadingBarColour" value="#7F1D1D">
+                    </div>
                 </div>
                 <button id="themeMakerAddButton" class="assetswapper-add-button">Save</button>
             </div>
@@ -4503,6 +4515,8 @@ window.addEventListener("DOMContentLoaded", () => {
     const themeMakerOptionsModalTextColour = document.getElementById("themeMakerOptionsModalTextColour") as HTMLInputElement;
     const themeMakerOptionsLoadingBgImage = document.getElementById("themeMakerOptionsLoadingBgImage") as HTMLInputElement;
     const themeMakerOptionsModalTransparency = document.getElementById("themeMakerOptionsModalTransparency") as HTMLInputElement;
+    const themeMakerOptionsLoadingIconImage = document.getElementById("themeMakerOptionsLoadingIconImage") as HTMLInputElement;
+    const themeMakerOptionsLoadingBarColour = document.getElementById("themeMakerOptionsLoadingBarColour") as HTMLInputElement;
 
     const themeMakerModalContainer = document.getElementById("themeMakerModalContainer");
     const themeMakerAddButton = document.getElementById("themeMakerAddButton") as HTMLButtonElement;
@@ -4517,7 +4531,7 @@ window.addEventListener("DOMContentLoaded", () => {
     });
 
     function formatThemeMakerCSS() {
-        let homeBg, loadingBg = "";
+        let homeBg, loadingBg, loadingBall = "";
 
         if (themeMakerOptionsBgImage.value != "") {
             homeBg = `
@@ -4530,6 +4544,18 @@ window.addEventListener("DOMContentLoaded", () => {
             loadingBg = `
             .loading-container {
                 background-image: url(${themeMakerOptionsLoadingBgImage.value}) !important;
+            }
+            `
+        }
+        if (themeMakerOptionsLoadingIconImage.value != "") {
+            loadingBg = `
+            div.loading-bar > img.ball {
+                display: block !important;
+                box-sizing: border-box !important;
+                background: url(${themeMakerOptionsLoadingIconImage.value}) no-repeat !important;
+                width: 128px !important;
+                height: 64px !important;
+                padding-left: 128px !important;
             }
             `
         }
@@ -4608,9 +4634,13 @@ window.addEventListener("DOMContentLoaded", () => {
         }
         .dark .forum-post-page .inner {
             background-color: ${bgColour} !important
+        }  
+        div.loading-bar > div {
+            background-color: ${themeMakerOptionsLoadingBarColour.value} !important;
         }
-        ${homeBg}
-        ${loadingBg}
+        ${homeBg ?? ""}
+        ${loadingBg ?? ""}
+        ${loadingBall ?? ""}
         `;
     }
 
@@ -4649,9 +4679,11 @@ window.addEventListener("DOMContentLoaded", () => {
         themeMakerOptionsName.value = "";
         themeMakerOptionsBgImage.value = "";
         themeMakerOptionsLoadingBgImage.value = "";
-        themeMakerOptionsModalBgColour.value = "#FFFFFF";
+        themeMakerOptionsModalBgColour.value = "#1F2937";
         themeMakerOptionsModalTextColour.value = "#000000";
         themeMakerOptionsModalTransparency.value = "0";
+        themeMakerOptionsLoadingIconImage.value = "";
+        themeMakerOptionsLoadingBarColour.value = "#7F1D1D";
         themeMakerModalContainer!.classList.toggle("drc-modal-hidden");
     });
 
