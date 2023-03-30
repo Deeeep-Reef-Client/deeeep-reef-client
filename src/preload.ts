@@ -4464,7 +4464,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     <div class="assetswapper-list-rule">
                         <p>Modal Colour: </p>
                         <div class="spacer"></div>
-                        <input type="color" id="themeMakerOptionsModalBgColour" value="#FFFFFF">
+                        <input type="color" id="themeMakerOptionsModalBgColour" value="#1F2937">
                     </div>
                     <div class="spacer"></div>
                     <div class="assetswapper-list-rule">
@@ -4632,9 +4632,11 @@ window.addEventListener("DOMContentLoaded", () => {
         themeMakerOptionsName.value = "";
         themeMakerOptionsBgImage.value = "";
         themeMakerOptionsLoadingBgImage.value = "";
-        themeMakerOptionsModalBgColour.value = "#FFFFFF";
+        themeMakerOptionsModalBgColour.value = "#1F2937";
         themeMakerOptionsModalTextColour.value = "#000000";
         themeMakerOptionsModalTransparency.value = "0";
+        themeMakerOptionsLoadingIconImage.value = "";
+        themeMakerOptionsLoadingBarColour.value = "#7F1D1D";
 
         themeMakerModalContainer!.classList.toggle("drc-modal-hidden");
     });
