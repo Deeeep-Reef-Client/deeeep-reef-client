@@ -297,7 +297,7 @@ window.addEventListener("DOMContentLoaded", () => {
             ipcRenderer.send("openDevTools");
         }
     });
-    
+
     // warn if code updated
     const indexScriptTag = document.querySelector("script[src^=\\/assets\\/index\\.]");
     fetch(
@@ -677,7 +677,7 @@ window.addEventListener("DOMContentLoaded", () => {
     gameNameField.focus();
     window.addEventListener("load", () => {
         ipcRenderer.send("sendKeyPress", settings.gameName.slice(-1));
-    }, {once: true});
+    }, { once: true });
 
 
     // misc styles
@@ -4531,77 +4531,96 @@ window.addEventListener("DOMContentLoaded", () => {
     });
 
     function formatThemeMakerCSS() {
-        let homeBg, loadingBg, loadingBall = "";
+        return new Promise<string>(async (resolve, reject) => {
+            let homeBg, loadingBg, loadingBall = "";
 
-        if (themeMakerOptionsBgImage.value != "") {
-            homeBg = `
+            if (themeMakerOptionsBgImage.value != "") {
+                homeBg = `
             .home-page .home-bg {
                 background-image: url(${themeMakerOptionsBgImage.value}) !important;
             }
             `
-        }
-        if (themeMakerOptionsLoadingBgImage.value != "") {
-            loadingBg = `
+            }
+            if (themeMakerOptionsLoadingBgImage.value != "") {
+                loadingBg = `
             .loading-container {
                 background-image: url(${themeMakerOptionsLoadingBgImage.value}) !important;
             }
             `
-        }
-        if (themeMakerOptionsLoadingIconImage.value != "") {
-            loadingBg = `
-            div.loading-bar > img.ball {
-                display: block !important;
-                box-sizing: border-box !important;
-                background: url(${themeMakerOptionsLoadingIconImage.value}) no-repeat !important;
-                width: 128px !important;
-                height: 64px !important;
-                padding-left: 128px !important;
             }
-            `
-        }
+            if (themeMakerOptionsLoadingIconImage.value != "") {
+                const img = new Image();
+                img.src = themeMakerOptionsLoadingIconImage.value;
+                try {
+                    await img.decode();
+                    loadingBg = `
+                        div.loading-bar > img.ball {
+                            display: block !important;
+                            box-sizing: border-box !important;
+                            background: url(${themeMakerOptionsLoadingIconImage.value}) no-repeat !important;
+                            width: ${img.naturalWidth}px !important;
+                            height: ${img.naturalHeight}px !important;
+                            padding-left: ${img.naturalWidth}px !important;
+                        }
+                        `
+                } catch (e) {
+                    console.log("Could not load loading ball. Using defaults instead.");
+                    // Just in case the request fails
+                    loadingBg = `
+                    div.loading-bar > img.ball {
+                        display: block !important;
+                        box-sizing: border-box !important;
+                        background: url(${themeMakerOptionsLoadingIconImage.value}) no-repeat !important;
+                        width: 128px !important;
+                        height: 64px !important;
+                        padding-left: 128px !important;
+                    }
+                    `
+                }
+            }
 
-        let bgColour = themeMakerOptionsModalBgColour.value;
-        let alpha = "";
-        switch (themeMakerOptionsModalTransparency.value) {
-            case "10":
-                alpha = "00";
-                break;
-            case "9":
-                alpha = "1A";
-                break;
-            case "8":
-                alpha = "33";
-                break;
-            case "7":
-                alpha = "4D";
-                break;
-            case "6":
-                alpha = "66";
-                break;
-            case "5":
-                alpha = "80";
-                break;
-            case "4":
-                alpha = "99";
-                break;
-            case "3":
-                alpha = "B3";
-                break;
-            case "2":
-                alpha = "CC";
-                break;
-            case "1":
-                alpha = "E6";
-                break;
-            case "0":
-                alpha = "FF";
-                break;
-        }
-        bgColour += alpha;
+            let bgColour = themeMakerOptionsModalBgColour.value;
+            let alpha = "";
+            switch (themeMakerOptionsModalTransparency.value) {
+                case "10":
+                    alpha = "00";
+                    break;
+                case "9":
+                    alpha = "1A";
+                    break;
+                case "8":
+                    alpha = "33";
+                    break;
+                case "7":
+                    alpha = "4D";
+                    break;
+                case "6":
+                    alpha = "66";
+                    break;
+                case "5":
+                    alpha = "80";
+                    break;
+                case "4":
+                    alpha = "99";
+                    break;
+                case "3":
+                    alpha = "B3";
+                    break;
+                case "2":
+                    alpha = "CC";
+                    break;
+                case "1":
+                    alpha = "E6";
+                    break;
+                case "0":
+                    alpha = "FF";
+                    break;
+            }
+            bgColour += alpha;
 
-        let bgOpacity = (10 - Number(themeMakerOptionsModalTransparency.value)) / 10
+            let bgOpacity = (10 - Number(themeMakerOptionsModalTransparency.value)) / 10
 
-        return `
+            resolve(`
         div.modal-content {
             background-color: ${bgColour} !important;
         }
@@ -4641,13 +4660,14 @@ window.addEventListener("DOMContentLoaded", () => {
         ${homeBg ?? ""}
         ${loadingBg ?? ""}
         ${loadingBall ?? ""}
-        `;
+        `);
+        });
     }
 
-    themeMakerAddButton.addEventListener("click", () => {
+    themeMakerAddButton.addEventListener("click", async () => {
         settings.userThemeData.push({
             name: themeMakerOptionsName.value,
-            src: formatThemeMakerCSS(),
+            src: await formatThemeMakerCSS(),
             active: true
         });
         for (let i in settings.userThemeData) {
