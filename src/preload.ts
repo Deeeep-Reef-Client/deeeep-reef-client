@@ -5079,6 +5079,7 @@ window.addEventListener("DOMContentLoaded", () => {
             uninstallElem.classList.add("assetswapper-new-button");
             uninstallElem.innerText = "Uninstall";
             uninstallElem.addEventListener("click", () => {
+                settings.pluginsData.find(item => item == settings.pluginsData[i]).src.filter((s: any) => s.type === "uninstall").forEach((s: any) => eval(s.src));
                 settings.pluginsData = settings.pluginsData.filter(item => item != settings.pluginsData[i]);
                 saveSettings();
                 updateInstalledPluginsList();
@@ -5260,7 +5261,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 saveSettings();
                 // plugins
                 pluginSrc.src.filter((s: any) => s.type === "install").forEach((s: any) => eval(s.src));
-                
+
                 searchPluginsModalContainer!.classList.toggle("drc-modal-hidden");
                 window.removeEventListener("keydown", searchPluginsEnterListener);
             });

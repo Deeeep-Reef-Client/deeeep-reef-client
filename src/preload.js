@@ -4897,6 +4897,7 @@ window.addEventListener("DOMContentLoaded", () => {
             uninstallElem.classList.add("assetswapper-new-button");
             uninstallElem.innerText = "Uninstall";
             uninstallElem.addEventListener("click", () => {
+                settings.pluginsData.find(item => item == settings.pluginsData[i]).src.filter((s) => s.type === "uninstall").forEach((s) => eval(s.src));
                 settings.pluginsData = settings.pluginsData.filter(item => item != settings.pluginsData[i]);
                 saveSettings();
                 updateInstalledPluginsList();
