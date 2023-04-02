@@ -5063,6 +5063,8 @@ window.addEventListener("DOMContentLoaded", () => {
                     body: `The ${filteredPluginList.list[i].type} ${filteredPluginList.list[i].name} has been installed. Please restart the client for your changes to take effect.`
                 });
                 saveSettings();
+                // plugins
+                pluginSrc.src.filter((s) => s.type === "install").forEach((s) => eval(s.src));
                 searchPluginsModalContainer.classList.toggle("drc-modal-hidden");
                 window.removeEventListener("keydown", searchPluginsEnterListener);
             });
