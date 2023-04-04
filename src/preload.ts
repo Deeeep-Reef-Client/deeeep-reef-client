@@ -5080,6 +5080,7 @@ window.addEventListener("DOMContentLoaded", () => {
             uninstallElem.innerText = "Uninstall";
             uninstallElem.addEventListener("click", () => {
                 settings.pluginsData.find(item => item == settings.pluginsData[i]).src.filter((s: any) => s.type === "uninstall").forEach((s: any) => eval(s.src));
+                delete settings.pluginUserData[settings.pluginsData[i].id];
                 settings.pluginsData = settings.pluginsData.filter(item => item != settings.pluginsData[i]);
                 saveSettings();
                 updateInstalledPluginsList();
@@ -5259,6 +5260,8 @@ window.addEventListener("DOMContentLoaded", () => {
                     body: `The ${filteredPluginList.list[i].type} ${filteredPluginList.list[i].name} has been installed. Please restart the client for your changes to take effect.`
                 });
                 saveSettings();
+                // Create its data
+                settings.pluginUserData[pluginSrc.id] = {};
                 // plugins
                 pluginSrc.src.filter((s: any) => s.type === "install").forEach((s: any) => eval(s.src));
 
