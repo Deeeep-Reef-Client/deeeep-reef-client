@@ -903,7 +903,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
             ipcRenderer.send("update-badge", badgeCount || null);
         });
-        xhr.send();
+        try { xhr.send(); } catch (e) {};
     }
     checkForumNotifications();
     setInterval(checkForumNotifications, 30000);
@@ -929,7 +929,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
             ipcRenderer.send("update-badge", badgeCount || null);
         });
-        xhr.send();
+        try { xhr.send(); } catch (e) {};
     }
     checkFriendRequests();
     setInterval(checkFriendRequests, 30000);

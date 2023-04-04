@@ -853,7 +853,11 @@ window.addEventListener("DOMContentLoaded", () => {
             badgeCount = friendRequestCount + forumNotificationCount;
             ipcRenderer.send("update-badge", badgeCount || null);
         });
-        xhr.send();
+        try {
+            xhr.send();
+        }
+        catch (e) { }
+        ;
     }
     checkFriendRequests();
     setInterval(checkFriendRequests, 30000);
