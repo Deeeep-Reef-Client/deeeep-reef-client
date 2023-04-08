@@ -4530,6 +4530,15 @@ window.addEventListener("DOMContentLoaded", () => {
     themeMakerAddButton.addEventListener("click", async () => {
         settings.userThemeData.push({
             name: themeMakerOptionsName.value,
+            themedata: {
+                bgImage: themeMakerOptionsBgImage.value,
+                loadingBgImage: themeMakerOptionsLoadingBgImage.value,
+                modalBgColour: themeMakerOptionsModalBgColour.value,
+                modalTextColour: themeMakerOptionsModalTextColour.value,
+                modalTransparency: themeMakerOptionsModalTransparency.value,
+                loadingIconImage: themeMakerOptionsLoadingIconImage.value,
+                loadingBarColour: themeMakerOptionsLoadingBarColour.value
+            },
             src: await formatThemeMakerCSS(),
             active: true
         });
@@ -4616,45 +4625,59 @@ window.addEventListener("DOMContentLoaded", () => {
             editElem.innerText = "Edit";
             editElem.addEventListener("click", () => {
                 themeMakerEditTheme = true;
-                const cssParser = new cssjs.cssjs();
-                const parsed = cssParser.parseCSS(settings.userThemeData[i].src);
-                let bgImageRule = parsed.filter((r) => r.selector === ".home-page .home-bg");
-                let loadingBgImageRule = parsed.filter((r) => r.selector === ".loading-container");
-                let modalBgRule = parsed.filter((r) => r.selector === "div.modal-content");
-                let modalTextRule = parsed.filter((r) => r.selector === "span.modal__title");
-                let modalTransparencyRule = parsed.filter((r) => r.selector === "div.modal-content");
-                themeMakerOptionsName.value = settings.userThemeData[i].name;
-                themeMakerOptionsBgImage.value = bgImageRule.length ?
-                    bgImageRule[0].rules.filter((r) => r.directive === "background-image")[0].value
-                        .replace("!important", "")
-                        .replace("url(", "")
-                        .replace(")", "")
-                        .trim() :
-                    "";
-                themeMakerOptionsLoadingBgImage.value = loadingBgImageRule.length ?
-                    loadingBgImageRule[0].rules.filter((r) => r.directive === "background-image")[0].value
-                        .replace("!important", "")
-                        .replace("url(", "")
-                        .replace(")", "")
-                        .trim() :
-                    "";
-                themeMakerOptionsModalBgColour.value = modalBgRule.length ?
-                    modalBgRule[0].rules.filter((r) => r.directive === "background-color")[0].value
-                        .replace("!important", "")
-                        .trim()
-                        .slice(0, -2) :
-                    "";
-                themeMakerOptionsModalTextColour.value = modalTextRule.length ?
-                    modalTextRule[0].rules.filter((r) => r.directive === "color")[0].value
-                        .replace("!important", "")
-                        .trim() :
-                    "";
-                themeMakerOptionsModalTransparency.value = modalTransparencyRule.length ?
-                    modalTransparencyRule[0].rules.filter((r) => r.directive === "background-color")[0].value
-                        .replace("!important", "")
-                        .trim()
-                        .slice(-2) :
-                    "";
+                if (settings.userThemeData[i].themedata === undefined) {
+                    // In case the theme was created without theme data
+                    // I won't include loading icon/colour since the new themedata will be rolling in the same update anyway
+                    const cssParser = new cssjs.cssjs();
+                    const parsed = cssParser.parseCSS(settings.userThemeData[i].src);
+                    let bgImageRule = parsed.filter((r) => r.selector === ".home-page .home-bg");
+                    let loadingBgImageRule = parsed.filter((r) => r.selector === ".loading-container");
+                    let modalBgRule = parsed.filter((r) => r.selector === "div.modal-content");
+                    let modalTextRule = parsed.filter((r) => r.selector === "span.modal__title");
+                    let modalTransparencyRule = parsed.filter((r) => r.selector === "div.modal-content");
+                    themeMakerOptionsName.value = settings.userThemeData[i].name;
+                    themeMakerOptionsBgImage.value = bgImageRule.length ?
+                        bgImageRule[0].rules.filter((r) => r.directive === "background-image")[0].value
+                            .replace("!important", "")
+                            .replace("url(", "")
+                            .replace(")", "")
+                            .trim() :
+                        "";
+                    themeMakerOptionsLoadingBgImage.value = loadingBgImageRule.length ?
+                        loadingBgImageRule[0].rules.filter((r) => r.directive === "background-image")[0].value
+                            .replace("!important", "")
+                            .replace("url(", "")
+                            .replace(")", "")
+                            .trim() :
+                        "";
+                    themeMakerOptionsModalBgColour.value = modalBgRule.length ?
+                        modalBgRule[0].rules.filter((r) => r.directive === "background-color")[0].value
+                            .replace("!important", "")
+                            .trim()
+                            .slice(0, -2) :
+                        "";
+                    themeMakerOptionsModalTextColour.value = modalTextRule.length ?
+                        modalTextRule[0].rules.filter((r) => r.directive === "color")[0].value
+                            .replace("!important", "")
+                            .trim() :
+                        "";
+                    themeMakerOptionsModalTransparency.value = modalTransparencyRule.length ?
+                        modalTransparencyRule[0].rules.filter((r) => r.directive === "background-color")[0].value
+                            .replace("!important", "")
+                            .trim()
+                            .slice(-2) :
+                        "";
+                }
+                else {
+                    themeMakerOptionsName.value = settings.userThemeData[i].name;
+                    themeMakerOptionsBgImage.value = settings.userThemeData[i].themedata["bgImage"] ?? "";
+                    themeMakerOptionsLoadingBgImage.value = settings.userThemeData[i].themedata["loadingBgImage"] ?? "";
+                    themeMakerOptionsModalBgColour.value = settings.userThemeData[i].themedata["modalBgColour"] ?? "#1F2937";
+                    themeMakerOptionsModalTextColour.value = settings.userThemeData[i].themedata["modalTextColour"] ?? "#FFFFFF";
+                    themeMakerOptionsModalTransparency.value = settings.userThemeData[i].themedata["modalTransparency"] ?? "0";
+                    themeMakerOptionsLoadingIconImage.value = settings.userThemeData[i].themedata["loadingIconImage"] ?? "";
+                    themeMakerOptionsLoadingBarColour.value = settings.userThemeData[i].themedata["loadingBarColour"] ?? "#7F1D1D";
+                }
                 themeMakerModalContainer.classList.toggle("drc-modal-hidden");
             });
             mainElem.appendChild(editElem);
