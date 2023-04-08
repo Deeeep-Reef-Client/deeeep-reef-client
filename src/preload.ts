@@ -903,7 +903,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
             ipcRenderer.send("update-badge", badgeCount || null);
         });
-        try { xhr.send(); } catch (e) {};
+        try { xhr.send(); } catch (e) { };
     }
     checkForumNotifications();
     setInterval(checkForumNotifications, 30000);
@@ -929,7 +929,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
             ipcRenderer.send("update-badge", badgeCount || null);
         });
-        try { xhr.send(); } catch (e) {};
+        try { xhr.send(); } catch (e) { };
     }
     checkFriendRequests();
     setInterval(checkFriendRequests, 30000);
@@ -4476,7 +4476,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     <div class="assetswapper-list-rule">
                         <p>Text Colour: </p>
                         <div class="spacer"></div>
-                        <input type="color" id="themeMakerOptionsModalTextColour" value="#000000">
+                        <input type="color" id="themeMakerOptionsModalTextColour" value="#FFFFFF">
                     </div>
                     <div class="spacer"></div>
                     <div class="assetswapper-list-rule">
@@ -4683,7 +4683,7 @@ window.addEventListener("DOMContentLoaded", () => {
         themeMakerOptionsBgImage.value = "";
         themeMakerOptionsLoadingBgImage.value = "";
         themeMakerOptionsModalBgColour.value = "#1F2937";
-        themeMakerOptionsModalTextColour.value = "#000000";
+        themeMakerOptionsModalTextColour.value = "#FFFFFF";
         themeMakerOptionsModalTransparency.value = "0";
         themeMakerOptionsLoadingIconImage.value = "";
         themeMakerOptionsLoadingBarColour.value = "#7F1D1D";
@@ -4700,7 +4700,7 @@ window.addEventListener("DOMContentLoaded", () => {
         themeMakerOptionsBgImage.value = "";
         themeMakerOptionsLoadingBgImage.value = "";
         themeMakerOptionsModalBgColour.value = "#1F2937";
-        themeMakerOptionsModalTextColour.value = "#000000";
+        themeMakerOptionsModalTextColour.value = "#FFFFFF";
         themeMakerOptionsModalTransparency.value = "0";
         themeMakerOptionsLoadingIconImage.value = "";
         themeMakerOptionsLoadingBarColour.value = "#7F1D1D";
