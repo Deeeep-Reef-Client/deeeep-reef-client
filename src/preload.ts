@@ -4930,7 +4930,8 @@ window.addEventListener("DOMContentLoaded", () => {
         themeMakerImportExportModalContainer!.classList.toggle("drc-modal-hidden");
         const content = JSON.stringify({
             name: exportedTheme.name,
-            src: exportedTheme.src
+            src: exportedTheme.src,
+            themedata: exportedTheme.themedata
         });
         const path = await ipcRenderer.invoke("getPath", "downloads");
         try {
