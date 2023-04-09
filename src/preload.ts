@@ -4532,7 +4532,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
     function formatThemeMakerCSS() {
         return new Promise<string>(async (resolve, reject) => {
-            let homeBg, loadingBg, loadingBall = "";
+            let homeBg, loadingBg, loadingBall;
 
             if (themeMakerOptionsBgImage.value != "") {
                 homeBg = `
@@ -4553,7 +4553,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 img.src = themeMakerOptionsLoadingIconImage.value;
                 try {
                     await img.decode();
-                    loadingBg = `
+                    loadingBall = `
                         div.loading-bar > img.ball {
                             display: block !important;
                             box-sizing: border-box !important;
@@ -4566,7 +4566,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 } catch (e) {
                     console.log("Could not load loading ball. Using defaults instead.");
                     // Just in case the request fails
-                    loadingBg = `
+                    loadingBall = `
                     div.loading-bar > img.ball {
                         display: block !important;
                         box-sizing: border-box !important;
