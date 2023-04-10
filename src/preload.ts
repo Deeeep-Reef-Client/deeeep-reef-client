@@ -12,13 +12,13 @@ import tippy from 'tippy.js';
 const DRC = {
     // Client info
     Client: {
-        Name: "Deeeep.io Reef Client",
-        Version: "0.9.1",
-        VersionTag: "v0.9.1-beta"
+        name: "Deeeep.io Reef Client",
+        version: "0.9.1",
+        versionTag: "v0.9.1-beta"
     },
     // Utility functions
     Utils: {
-        HabitatToArray: function (num: number): string[] {
+        habitatToArray: function (num: number): string[] {
             class Habitat {
                 habitatNum: number;
 
@@ -84,7 +84,7 @@ const DRC = {
         }
     },
     Modal: {
-        BuildModal: function (id: string, title: string, content: string): HTMLDivElement {
+        buildModal: function (id: string, title: string, content: string): HTMLDivElement {
             const modalId = id.replaceAll(' ', "");
             const modalDiv = document.createElement("div");
             document.getElementById("app")!.appendChild(modalDiv);
@@ -114,7 +114,7 @@ const DRC = {
             });
             return modal as HTMLDivElement;
         },
-        BuildTab: function (id: string, content: {
+        buildTab: function (id: string, content: {
             content: string,
             name: string
         }[], parent: HTMLElement): HTMLDivElement {
@@ -165,7 +165,7 @@ const DRC = {
         }
     },
     Preload: {
-        EvalInBrowserContext: function (str: string) {
+        evalInBrowserContext: function (str: string) {
             ipcRenderer.send("evalInBrowserContext", str);
         }
     },
@@ -289,7 +289,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const clientVersion = document.querySelector(".client-version") as HTMLSpanElement;
 
     /// @REMIND Update client version
-    clientVersion.innerText = clientVersion.innerText + ", DRC " + DRC.Client.VersionTag;
+    clientVersion.innerText = clientVersion.innerText + ", DRC " + DRC.Client.versionTag;
 
     // devtools
     window.addEventListener("keydown", (key: KeyboardEvent) => {
@@ -596,7 +596,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     viewingGhostsSetting.querySelector(".el-checkbox__input")!.classList.add("is-checked");
                 };
                 if (gameStarted) {
-                    DRC.Preload.EvalInBrowserContext(`game.currentScene.viewingGhosts = ${settings.viewingGhosts};`);
+                    DRC.Preload.evalInBrowserContext(`game.currentScene.viewingGhosts = ${settings.viewingGhosts};`);
                 }
                 saveSettings();
             });
@@ -5353,7 +5353,7 @@ window.addEventListener("DOMContentLoaded", () => {
   </svg>`
     topRightNav!.insertBefore(aboutDrcButtonWrapper, settingsButtonWrapper);
 
-    const aboutDrcModalMain = DRC.Modal.BuildModal("aboutDrc", "About the Client", `
+    const aboutDrcModalMain = DRC.Modal.buildModal("aboutDrc", "About the Client", `
     <div class="drc-tabs drc-tabs-left" style="min-height: 200px;">
         <div class="drc-tabs-header drc-is-left">
             <div class="drc-tabs-nav-wrap drc-is-left">
@@ -5538,10 +5538,10 @@ window.addEventListener("DOMContentLoaded", () => {
     aboutDrcButton.addEventListener("click", () => aboutDrcModalMain.classList.toggle("drc-modal-hidden"));
 
     (async () => {
-        aboutDrcVersionTag!.innerText = DRC.Client.VersionTag;
+        aboutDrcVersionTag!.innerText = DRC.Client.versionTag;
         const latestVersion = await ipcRenderer.invoke("getVersion");
-        aboutDrcVersionTag!.classList.add((DRC.Client.VersionTag === latestVersion) ? "drc-text-green" : "drc-text-red");
-        aboutDrcUpdateStatus!.innerHTML = (DRC.Client.VersionTag === latestVersion) ?
+        aboutDrcVersionTag!.classList.add((DRC.Client.versionTag === latestVersion) ? "drc-text-green" : "drc-text-red");
+        aboutDrcUpdateStatus!.innerHTML = (DRC.Client.versionTag === latestVersion) ?
             ", the latest version." :
             ". A new update <b class=\"drc-text-cyan\">" + latestVersion + "</b> has been detected.";
     })();
@@ -5572,7 +5572,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
                 function ghostSuicide(key: KeyboardEvent) {
                     if (key.code != "KeyX") return;
-                    DRC.Preload.EvalInBrowserContext(`
+                    DRC.Preload.evalInBrowserContext(`
                     if (game.currentScene.myAnimal._visibleFishLevel == 33) {
                         game.inputManager.handleGhostSuicide();
                     }
@@ -5581,7 +5581,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
                 function cancelBoost(key: KeyboardEvent) {
                     if (key.code != "KeyC") return;
-                    DRC.Preload.EvalInBrowserContext(`
+                    DRC.Preload.evalInBrowserContext(`
                     game.inputManager.pressElapsed = 0;
                     game.inputManager.pointerDown = false;
                     `);
@@ -5611,16 +5611,16 @@ window.addEventListener("DOMContentLoaded", () => {
 
                 // ghosts
                 if (settings.viewingGhosts) {
-                    DRC.Preload.EvalInBrowserContext(`game.currentScene.viewingGhosts = true;`);
+                    DRC.Preload.evalInBrowserContext(`game.currentScene.viewingGhosts = true;`);
                 } else {
-                    DRC.Preload.EvalInBrowserContext(`game.currentScene.viewingGhosts = false;`);
+                    DRC.Preload.evalInBrowserContext(`game.currentScene.viewingGhosts = false;`);
                 }
 
                 window.addEventListener("keydown", ghostSuicide);
                 window.addEventListener("keydown", cancelBoost);
 
                 let advancedProfanityFilter = setInterval(() => {
-                    DRC.Preload.EvalInBrowserContext(`
+                    DRC.Preload.evalInBrowserContext(`
                     var data = [];
                     for (let i in game.currentScene.chatMessages) {
                         data.push({
@@ -5641,7 +5641,7 @@ window.addEventListener("DOMContentLoaded", () => {
                             if (profanityFilter.isProfane(message)) {
                                 const cleaned = profanityFilter.clean(message);
                                 console.log(cleaned);
-                                DRC.Preload.EvalInBrowserContext(`
+                                DRC.Preload.evalInBrowserContext(`
                                 console.log(game.currentScene.chatMessages[${i}])
                                 console.log(game.currentScene.chatMessages[${i}].setText)
                                 
@@ -5659,7 +5659,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     if (settings.pluginsData[i].src.length == 0) continue;
                     for (const j in settings.pluginsData[i].src) {
                         if (settings.pluginsData[i].src[j].type == "game") {
-                            DRC.Preload.EvalInBrowserContext(settings.pluginsData[i].src[j].src);
+                            DRC.Preload.evalInBrowserContext(settings.pluginsData[i].src[j].src);
                         }
                     }
                 }
@@ -5670,7 +5670,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     DRC.EventObject.dispatchEvent(DRC.Events.EventList.GameEvolved);
 
                     for (let i in settings.assetSwapperConfig) {
-                        DRC.Preload.EvalInBrowserContext(`
+                        DRC.Preload.evalInBrowserContext(`
                         if (${settings.assetSwapperConfig[i].animal} == game.currentScene.myAnimal.visibleFishLevel) {
                             game.currentScene.myAnimal.setSkin(${settings.assetSwapperConfig[i].skin});
                         };
@@ -5686,7 +5686,7 @@ window.addEventListener("DOMContentLoaded", () => {
                         const animalNameElement = document.querySelector("div.stats > div.animal-data > div.detailed-info > h4.name") as HTMLHeadingElement;
                         evolveObserver.observe(animalNameElement!, { childList: true });
                         for (let i in settings.assetSwapperConfig) {
-                            DRC.Preload.EvalInBrowserContext(`
+                            DRC.Preload.evalInBrowserContext(`
                             if (${settings.assetSwapperConfig[i].animal} == game.currentScene.myAnimal.visibleFishLevel) {
                                 game.currentScene.myAnimal.setSkin("${settings.assetSwapperConfig[i].skin}");
                             };
