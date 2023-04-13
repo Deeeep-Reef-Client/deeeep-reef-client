@@ -4496,6 +4496,20 @@ window.addEventListener("DOMContentLoaded", () => {
                         <div class="spacer"></div>
                         <input type="color" id="themeMakerOptionsLoadingBarColour" value="#7F1D1D">
                     </div>
+                    <div class="spacer"></div>
+                    <div class="assetswapper-list-rule">
+                        <p>Advanced Theme: </p>
+                        <div class="spacer"></div>
+                        <input type="checkbox" id="themeMakerOptionsAdvancedTheme">
+                    </div>
+                    <div class="spacer"></div>
+                    <div id="themeMakerWrapperOptionsAdvancedScript" class="drc-modal-hidden">
+                        <div class="assetswapper-list-rule">
+                            <p>Advanced Script: </p>
+                            <div class="spacer"></div>
+                            <textarea id="themeMakerOptionsAdvancedScript"></textarea>
+                        </div>
+                    </div
                 </div>
                 <button id="themeMakerAddButton" class="assetswapper-add-button">Save</button>
             </div>
@@ -4517,9 +4531,17 @@ window.addEventListener("DOMContentLoaded", () => {
     const themeMakerOptionsModalTransparency = document.getElementById("themeMakerOptionsModalTransparency") as HTMLInputElement;
     const themeMakerOptionsLoadingIconImage = document.getElementById("themeMakerOptionsLoadingIconImage") as HTMLInputElement;
     const themeMakerOptionsLoadingBarColour = document.getElementById("themeMakerOptionsLoadingBarColour") as HTMLInputElement;
+    const themeMakerOptionsAdvancedTheme = document.getElementById("themeMakerOptionsAdvancedTheme") as HTMLInputElement;
+    const themeMakerOptionsAdvancedScript = document.getElementById("themeMakerOptionsAdvancedScript") as HTMLTextAreaElement;
+
+    const themeMakerWrapperOptionsAdvancedScript = document.getElementById("themeMakerWrapperOptionsAdvancedScript") as HTMLDivElement;
 
     const themeMakerModalContainer = document.getElementById("themeMakerModalContainer");
     const themeMakerAddButton = document.getElementById("themeMakerAddButton") as HTMLButtonElement;
+
+    themeMakerOptionsAdvancedTheme.addEventListener("click", () => {
+        themeMakerWrapperOptionsAdvancedScript.classList.toggle("drc-modal-hidden");
+    });
 
     // Moved to here bc vars must be initialised
     const themeMakerButton = document.getElementById("themeMakerButton") as HTMLButtonElement;
@@ -4665,7 +4687,7 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 
     themeMakerAddButton.addEventListener("click", async () => {
-        settings.userThemeData.push({
+        let theme: any = {
             name: themeMakerOptionsName.value,
             themedata: {
                 bgImage: themeMakerOptionsBgImage.value,
@@ -4678,7 +4700,12 @@ window.addEventListener("DOMContentLoaded", () => {
             },
             src: await formatThemeMakerCSS(),
             active: true
-        });
+        };
+        if (themeMakerOptionsAdvancedTheme.checked) {
+            theme.themetype = "advancedtheme";
+            theme.script = themeMakerOptionsAdvancedScript.value
+        }
+        settings.userThemeData.push(theme);
         for (let i in settings.userThemeData) {
             settings.userThemeData[i].active = false;
         }
@@ -4696,7 +4723,9 @@ window.addEventListener("DOMContentLoaded", () => {
         themeMakerOptionsModalTransparency.value = "0";
         themeMakerOptionsLoadingIconImage.value = "";
         themeMakerOptionsLoadingBarColour.value = "#7F1D1D";
-
+        themeMakerOptionsAdvancedTheme.checked = false;
+        themeMakerOptionsAdvancedScript.value = "";
+        themeMakerWrapperOptionsAdvancedScript.classList.add("drc-modal-hidden");
         themeMakerModalContainer!.classList.toggle("drc-modal-hidden");
     });
 
@@ -4713,6 +4742,9 @@ window.addEventListener("DOMContentLoaded", () => {
         themeMakerOptionsModalTransparency.value = "0";
         themeMakerOptionsLoadingIconImage.value = "";
         themeMakerOptionsLoadingBarColour.value = "#7F1D1D";
+        themeMakerOptionsAdvancedTheme.checked = false;
+        themeMakerOptionsAdvancedScript.value = "";
+        themeMakerWrapperOptionsAdvancedScript.classList.add("drc-modal-hidden");
         themeMakerModalContainer!.classList.toggle("drc-modal-hidden");
     });
 
@@ -4740,11 +4772,18 @@ window.addEventListener("DOMContentLoaded", () => {
             selectElem.type = "radio";
             selectElem.name = "userThemeList"
             selectElem.addEventListener("click", () => {
+                // Notify if theme is off
+                if (settings.userThemeData.find(t => t.active)?.themetype === "advancedtheme") {
+                    new Notification("Advanced Theme deactivated", {
+                        body: "You may need to restart the Client for your changes to take effect."
+                    });
+                }
                 // clear active
                 for (let j in settings.userThemeData) {
                     settings.userThemeData[j].active = false;
                 }
                 settings.userThemeData[i].active = true;
+                if (settings.userThemeData[i].themetype === "advancedtheme") eval(settings.userThemeData[i].script);
                 saveSettings();
                 reloadCustomTheme();
             });
@@ -4836,6 +4875,11 @@ window.addEventListener("DOMContentLoaded", () => {
             deleteElem.classList.add("assetswapper-new-button");
             deleteElem.innerText = "Delete";
             deleteElem.addEventListener("click", () => {
+                if (settings.userThemeData[i].themetype === "advancedtheme" && settings.userThemeData[i].active) {
+                    new Notification("Active Advanced Theme deleted", {
+                        body: "You may need to restart the Client for your changes to take effect."
+                    });
+                }
                 settings.userThemeData = settings.userThemeData.filter(item => item != settings.userThemeData[i]);
                 saveSettings();
                 updateThemeList();
@@ -4934,10 +4978,11 @@ window.addEventListener("DOMContentLoaded", () => {
             themedata: exportedTheme.themedata
         });
         const path = await ipcRenderer.invoke("getPath", "downloads");
+        const sub = exportedTheme.themetype === "advancedtheme" ? "drcadvancedtheme" : "drctheme";
         try {
-            fs.writeFileSync(path + `/${exportedTheme.name.replace(/[^a-zA-Z0-9]/g, '')}.drctheme.json`, content);
+            fs.writeFileSync(path + `/${exportedTheme.name.replace(/[^a-zA-Z0-9]/g, '')}.${sub}.json`, content);
             new Notification("Theme exported!", {
-                body: `Your theme has been exported to ${exportedTheme.name.replace(/[^a-zA-Z0-9]/g, '')}.drctheme.json in your Downloads folder. `
+                body: `Your theme has been exported to ${exportedTheme.name.replace(/[^a-zA-Z0-9]/g, '')}.${sub}.json in your Downloads folder. `
             });
             // file written successfully
         } catch (err) {
@@ -5747,6 +5792,12 @@ window.addEventListener("DOMContentLoaded", () => {
             subtree: true
         });
     });
+
+    // advanced theme
+    for (const i in settings.userThemeData) {
+        if (!settings.userThemeData[i].active || settings.userThemeData[i].themetype === undefined || settings.userThemeData[i].themetype != "advancedtheme") continue;
+        eval(settings.userThemeData[i].script);
+    }
 
     // plugins
     for (const i in settings.pluginsData) {
