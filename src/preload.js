@@ -4854,6 +4854,11 @@ window.addEventListener("DOMContentLoaded", () => {
                     body: "Something went wrong while importing your theme. Check that it is not corrupted."
                 });
             }
+            if (parsedTheme.themetype !== undefined && parsedTheme.themetype === "advancedtheme") {
+                new Notification("Advanced Theme imported", {
+                    body: "For security reasons, you will need to manually enable this theme. Make sure you trust the author of this theme."
+                });
+            }
             settings.userThemeData.push({
                 name: parsedTheme.name,
                 src: parsedTheme.src,
@@ -4863,7 +4868,9 @@ window.addEventListener("DOMContentLoaded", () => {
             for (let i in settings.userThemeData) {
                 settings.userThemeData[i].active = false;
             }
-            settings.userThemeData[settings.userThemeData.length - 1].active = true;
+            if (parsedTheme.themetype === undefined || parsedTheme.themetype !== "advancedtheme") {
+                settings.userThemeData[settings.userThemeData.length - 1].active = true;
+            }
             updateThemeList();
             reloadCustomTheme();
             saveSettings();
