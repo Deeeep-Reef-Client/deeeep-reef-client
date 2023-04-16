@@ -4718,6 +4718,10 @@ window.addEventListener("DOMContentLoaded", () => {
                     themeMakerOptionsLoadingBarColour.value = settings.userThemeData[i].themedata["loadingBarColour"] ?? "#7F1D1D";
                     themeMakerOptionsAdvancedTheme.checked = (settings.userThemeData[i].themetype !== undefined && settings.userThemeData[i].themetype === "advancedtheme") ? true : false;
                     themeMakerOptionsAdvancedScript.value = settings.userThemeData[i].script ?? "";
+                    if (settings.userThemeData[i].themetype !== undefined && settings.userThemeData[i].themetype === "advancedtheme")
+                        themeMakerWrapperOptionsAdvancedScript.classList.remove("drc-modal-hidden");
+                    else
+                        themeMakerWrapperOptionsAdvancedScript.classList.add("drc-modal-hidden");
                 }
                 themeMakerModalContainer.classList.toggle("drc-modal-hidden");
             });
