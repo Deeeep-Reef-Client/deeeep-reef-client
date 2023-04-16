@@ -4820,11 +4820,16 @@ window.addEventListener("DOMContentLoaded", () => {
     themeMakerExportButton.addEventListener("click", async () => {
         const exportedTheme = JSON.parse(exportThemeDropdown.value);
         themeMakerImportExportModalContainer.classList.toggle("drc-modal-hidden");
-        const content = JSON.stringify({
+        let theme = {
             name: exportedTheme.name,
             src: exportedTheme.src,
             themedata: exportedTheme.themedata
-        });
+        };
+        if (exportedTheme.themetype === "advancedtheme") {
+            theme.themetype = "advancedtheme";
+            theme.script = exportedTheme.script;
+        }
+        const content = JSON.stringify(theme);
         const path = await ipcRenderer.invoke("getPath", "downloads");
         const sub = exportedTheme.themetype === "advancedtheme" ? "drcadvancedtheme" : "drctheme";
         try {
@@ -4860,23 +4865,28 @@ window.addEventListener("DOMContentLoaded", () => {
                     body: "Something went wrong while importing your theme. Check that it is not corrupted."
                 });
             }
-            if (parsedTheme.themetype !== undefined && parsedTheme.themetype === "advancedtheme") {
+            let isAdvancedTheme = parsedTheme.themetype !== undefined && parsedTheme.themetype === "advancedtheme";
+            if (isAdvancedTheme) {
                 new Notification("Advanced Theme imported", {
                     body: "For security reasons, you will need to manually enable this theme. Make sure you trust the author of this theme."
                 });
             }
-            settings.userThemeData.push({
+            let theme = {
                 name: parsedTheme.name,
                 src: parsedTheme.src,
                 active: true
-            });
+            };
+            if (isAdvancedTheme) {
+                theme.themetype = "advancedtheme";
+                theme.script = parsedTheme.script;
+            }
+            settings.userThemeData.push(theme);
             themeMakerImportExportModalContainer.classList.toggle("drc-modal-hidden");
             for (let i in settings.userThemeData) {
                 settings.userThemeData[i].active = false;
             }
-            if (parsedTheme.themetype === undefined || parsedTheme.themetype !== "advancedtheme") {
+            if (!isAdvancedTheme)
                 settings.userThemeData[settings.userThemeData.length - 1].active = true;
-            }
             updateThemeList();
             reloadCustomTheme();
             saveSettings();
