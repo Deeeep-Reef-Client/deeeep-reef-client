@@ -4864,6 +4864,8 @@ window.addEventListener("DOMContentLoaded", () => {
                     themeMakerOptionsModalTransparency.value = settings.userThemeData[i].themedata["modalTransparency"] ?? "0";
                     themeMakerOptionsLoadingIconImage.value = settings.userThemeData[i].themedata["loadingIconImage"] ?? "";
                     themeMakerOptionsLoadingBarColour.value = settings.userThemeData[i].themedata["loadingBarColour"] ?? "#7F1D1D";
+                    themeMakerOptionsAdvancedTheme.checked = (settings.userThemeData[i].themetype !== undefined && settings.userThemeData[i].themetype === "advancedtheme") ? true : false;
+                    themeMakerOptionsAdvancedScript.value = settings.userThemeData[i].script ?? "";
                 }
 
                 themeMakerModalContainer!.classList.toggle("drc-modal-hidden");
