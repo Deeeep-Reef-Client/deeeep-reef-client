@@ -4783,7 +4783,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     settings.userThemeData[j].active = false;
                 }
                 settings.userThemeData[i].active = true;
-                if (settings.userThemeData[i].themetype === "advancedtheme") eval(settings.userThemeData[i].script);
+                if (settings.userThemeData[i].themetype === "advancedtheme") DRC.Preload.evalInBrowserContext(settings.userThemeData[i].script);
                 saveSettings();
                 reloadCustomTheme();
             });
@@ -5820,7 +5820,7 @@ window.addEventListener("DOMContentLoaded", () => {
     // advanced theme
     for (const i in settings.userThemeData) {
         if (!settings.userThemeData[i].active || settings.userThemeData[i].themetype === undefined || settings.userThemeData[i].themetype != "advancedtheme") continue;
-        eval(settings.userThemeData[i].script);
+        DRC.Preload.evalInBrowserContext(settings.userThemeData[i].script);
     }
 
     // plugins
