@@ -4805,6 +4805,18 @@ window.addEventListener("DOMContentLoaded", () => {
             spacer1.classList.add("spacer");
             mainElem.appendChild(spacer1);
 
+            if (settings.userThemeData[i].themetype === "advancedtheme") {
+                // advanced theme
+                const advancedElem = document.createElement("p");
+                advancedElem.setAttribute("style", "color:gray;");
+                advancedElem.innerText = "(Advanced)";
+                mainElem.appendChild(advancedElem);
+
+                const spacer_a = document.createElement("div");
+                spacer_a.classList.add("spacer");
+                mainElem.appendChild(spacer_a);
+            }
+
             // Edit button
             const editElem = document.createElement("button");
             editElem.classList.add("assetswapper-new-button");
