@@ -4886,6 +4886,10 @@ window.addEventListener("DOMContentLoaded", () => {
             });
             mainElem.appendChild(editElem);
 
+            const spacer2 = document.createElement("div");
+            spacer2.classList.add("spacer");
+            mainElem.appendChild(spacer2);
+
             // Delete button
             const deleteElem = document.createElement("button");
             deleteElem.classList.add("assetswapper-new-button");
