@@ -5122,6 +5122,17 @@ window.addEventListener("DOMContentLoaded", () => {
             const spacer4 = document.createElement("div");
             spacer4.classList.add("spacer");
             mainElem.appendChild(spacer4);
+            // Verified badge
+            if (filteredPluginList.list[i].author === "Dev") {
+                const verifiedELem = document.createElement("img");
+                verifiedELem.setAttribute("src", "https://deeeep-reef-client.netlify.app/assets/verified.png");
+                verifiedELem.setAttribute("height", "20px");
+                verifiedELem.setAttribute("width", "20px");
+                mainElem.appendChild(verifiedELem);
+                const spacer4_1 = document.createElement("div");
+                spacer4_1.classList.add("spacer");
+                mainElem.appendChild(spacer4_1);
+            }
             // Install button
             const installElem = document.createElement("button");
             installElem.classList.add("assetswapper-new-button");
