@@ -5043,6 +5043,12 @@ window.addEventListener("DOMContentLoaded", () => {
                 <div class="plugins-search-bar">
                     <input id="pluginsSearchQuery" placeholder="Find plugin">
                     <div class="spacer"></div>
+                    <select id="pluginsSearchType">
+                        <option value="all">All</option>
+                        <option value="plugin">Plugins</option>
+                        <option value="theme">Themes</option>
+                    </select>
+                    <div class="spacer"></div>
                     <button id="pluginsSearchButton" class="assetswapper-new-button">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-search" viewBox="0 0 16 16">
@@ -5066,8 +5072,12 @@ window.addEventListener("DOMContentLoaded", () => {
     const searchPluginsCloseButton = document.getElementById("searchPluginsCloseButton");
     const searchPluginsList = document.getElementById("searchPluginsList");
     const pluginsSearchQuery = document.getElementById("pluginsSearchQuery");
+    const pluginsSearchType = document.getElementById("pluginsSearchType");
     const pluginsSearchButton = document.getElementById("pluginsSearchButton");
     pluginsSearchButton?.addEventListener("click", () => {
+        updateFilteredPlugins();
+    });
+    pluginsSearchType.addEventListener("change", () => {
         updateFilteredPlugins();
     });
     function updateSearchPluginsList() {
@@ -5218,7 +5228,10 @@ window.addEventListener("DOMContentLoaded", () => {
                     break;
                 }
             }
-            return result;
+            return result
+                && (pluginsSearchType.value === "all"
+                    || (pluginsSearchType.value === "plugin" && p.type === "plugin")
+                    || (pluginsSearchType.value === "theme" && p.type === "theme"));
         });
         updateSearchPluginsList();
     }
@@ -5232,6 +5245,7 @@ window.addEventListener("DOMContentLoaded", () => {
     searchPluginsButton.addEventListener("click", async () => {
         searchPluginsModalContainer.classList.toggle("drc-modal-hidden");
         pluginsSearchQuery.value = "";
+        pluginsSearchType.value = "all";
         await fetch("https://deeeep-reef-client.github.io/plugins-api/registry.json")
             .then(res => res.json())
             .then(data => {
