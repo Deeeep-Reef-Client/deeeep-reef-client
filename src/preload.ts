@@ -4503,6 +4503,8 @@ window.addEventListener("DOMContentLoaded", () => {
                         <input type="checkbox" id="themeMakerOptionsAdvancedTheme">
                     </div>
                     <div class="spacer"></div>
+                    <div id="themeMakerWarningsAdvancedTheme" class="drc-modal-hidden" style="color:gray;">🛈 Make sure you trust the code. Pasting malicious code can compromise your machine.</div>
+                    <div class="spacer"></div>
                     <div id="themeMakerWrapperOptionsAdvancedScript" class="drc-modal-hidden">
                         <div class="assetswapper-list-rule">
                             <p>Advanced Script: </p>
@@ -4534,6 +4536,8 @@ window.addEventListener("DOMContentLoaded", () => {
     const themeMakerOptionsAdvancedTheme = document.getElementById("themeMakerOptionsAdvancedTheme") as HTMLInputElement;
     const themeMakerOptionsAdvancedScript = document.getElementById("themeMakerOptionsAdvancedScript") as HTMLTextAreaElement;
 
+    const themeMakerWarningsAdvancedTheme = document.getElementById("themeMakerWarningsAdvancedTheme") as HTMLDivElement;
+
     const themeMakerWrapperOptionsAdvancedScript = document.getElementById("themeMakerWrapperOptionsAdvancedScript") as HTMLDivElement;
 
     const themeMakerModalContainer = document.getElementById("themeMakerModalContainer");
@@ -4541,6 +4545,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
     themeMakerOptionsAdvancedTheme.addEventListener("click", () => {
         themeMakerWrapperOptionsAdvancedScript.classList.toggle("drc-modal-hidden");
+        themeMakerWarningsAdvancedTheme.classList.toggle("drc-modal-hidden");
     });
 
     // Moved to here bc vars must be initialised
@@ -4726,6 +4731,7 @@ window.addEventListener("DOMContentLoaded", () => {
         themeMakerOptionsAdvancedTheme.checked = false;
         themeMakerOptionsAdvancedScript.value = "";
         themeMakerWrapperOptionsAdvancedScript.classList.add("drc-modal-hidden");
+        themeMakerWarningsAdvancedTheme.classList.add("drc-modal-hidden");
         themeMakerModalContainer!.classList.toggle("drc-modal-hidden");
     });
 
@@ -4745,6 +4751,7 @@ window.addEventListener("DOMContentLoaded", () => {
         themeMakerOptionsAdvancedTheme.checked = false;
         themeMakerOptionsAdvancedScript.value = "";
         themeMakerWrapperOptionsAdvancedScript.classList.add("drc-modal-hidden");
+        themeMakerWarningsAdvancedTheme.classList.add("drc-modal-hidden");
         themeMakerModalContainer!.classList.toggle("drc-modal-hidden");
     });
 
@@ -4878,8 +4885,14 @@ window.addEventListener("DOMContentLoaded", () => {
                     themeMakerOptionsLoadingBarColour.value = settings.userThemeData[i].themedata["loadingBarColour"] ?? "#7F1D1D";
                     themeMakerOptionsAdvancedTheme.checked = (settings.userThemeData[i].themetype !== undefined && settings.userThemeData[i].themetype === "advancedtheme") ? true : false;
                     themeMakerOptionsAdvancedScript.value = settings.userThemeData[i].script ?? "";
-                    if (settings.userThemeData[i].themetype !== undefined && settings.userThemeData[i].themetype === "advancedtheme") themeMakerWrapperOptionsAdvancedScript.classList.remove("drc-modal-hidden");
-                    else themeMakerWrapperOptionsAdvancedScript.classList.add("drc-modal-hidden");
+                    if (settings.userThemeData[i].themetype !== undefined && settings.userThemeData[i].themetype === "advancedtheme") {
+                        themeMakerWrapperOptionsAdvancedScript.classList.remove("drc-modal-hidden");
+                        themeMakerWarningsAdvancedTheme.classList.remove("drc-modal-hidden");
+                    }
+                    else {
+                        themeMakerWrapperOptionsAdvancedScript.classList.add("drc-modal-hidden");
+                        themeMakerWarningsAdvancedTheme.classList.add("drc-modal-hidden");
+                    }
                 }
 
                 themeMakerModalContainer!.classList.toggle("drc-modal-hidden");
