@@ -5036,31 +5036,27 @@ window.addEventListener("DOMContentLoaded", () => {
                     body: "Something went wrong while importing your theme. Check that it is not corrupted."
                 });
             }
-            let isAdvancedTheme = parsedTheme.themetype !== undefined && parsedTheme.themetype === "advancedtheme";
-            if (isAdvancedTheme) {
-                new Notification("Advanced Theme imported", {
-                    body: "For security reasons, you will need to manually enable this theme. Make sure you trust the author of this theme."
+
+            themeMakerImportExportModalContainer!.classList.toggle("drc-modal-hidden");
+
+            // Prohibit importing advanced themes
+            if (parsedTheme.themetype !== undefined && parsedTheme.themetype === "advancedtheme") {
+                new Notification("Advanced Theme cannot be imported", {
+                    body: "For security reasons, Advanced Themes can only be installed from the Plugins Registry."
                 });
+                return;
             }
 
-            let theme: any = {
+            settings.userThemeData.push({
                 name: parsedTheme.name,
                 src: parsedTheme.src,
                 active: true
-            }
-
-            if (isAdvancedTheme) {
-                theme.themetype = "advancedtheme";
-                theme.script = parsedTheme.script
-            }
-
-            settings.userThemeData.push(theme);
-            themeMakerImportExportModalContainer!.classList.toggle("drc-modal-hidden");
+            });
 
             for (let i in settings.userThemeData) {
                 settings.userThemeData[i].active = false;
             }
-            if (!isAdvancedTheme) settings.userThemeData[settings.userThemeData.length - 1].active = true;
+            settings.userThemeData[settings.userThemeData.length - 1].active = true;
 
 
             updateThemeList();
