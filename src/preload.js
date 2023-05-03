@@ -4645,8 +4645,12 @@ window.addEventListener("DOMContentLoaded", () => {
                     settings.userThemeData[j].active = false;
                 }
                 settings.userThemeData[i].active = true;
-                if (settings.userThemeData[i].themetype === "advancedtheme")
+                if (settings.userThemeData[i].themetype === "advancedtheme") {
+                    new Notification("Advanced Theme activated", {
+                        body: "You may need to restart the Client for your changes to take effect."
+                    });
                     DRC.Preload.evalInBrowserContext(settings.userThemeData[i].script);
+                }
                 saveSettings();
                 reloadCustomTheme();
             });
