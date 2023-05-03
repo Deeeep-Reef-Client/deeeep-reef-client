@@ -5188,11 +5188,17 @@ window.addEventListener("DOMContentLoaded", () => {
                 }
                 else {
                     // Theme
-                    settings.userThemeData.push({
+                    let theme = {
                         name: pluginSrc.name,
                         src: pluginSrc.src,
                         active: true
-                    });
+                    };
+                    // Is advanced theme?
+                    if (pluginSrc.themetype !== undefined && pluginSrc.themetype === "advancedtheme") {
+                        theme.themetype = "advancedtheme";
+                        theme.script = pluginSrc.script;
+                    }
+                    settings.userThemeData.push(theme);
                     for (let i in settings.userThemeData) {
                         settings.userThemeData[i].active = false;
                     }
