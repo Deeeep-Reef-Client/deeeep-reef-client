@@ -4708,7 +4708,16 @@ window.addEventListener("DOMContentLoaded", () => {
         };
         if (themeMakerOptionsAdvancedTheme.checked) {
             theme.themetype = "advancedtheme";
-            theme.script = themeMakerOptionsAdvancedScript.value
+            theme.script = themeMakerOptionsAdvancedScript.value;
+
+            new Notification("Advanced Theme activated", {
+                body: "You may need to restart the Client for your changes to take effect."
+            });
+        }
+        if (settings.userThemeData.find(t => t.active)?.themetype === "advancedtheme") {
+            new Notification("Advanced Theme deactivated", {
+                body: "You may need to restart the Client for your changes to take effect."
+            });
         }
         settings.userThemeData.push(theme);
         for (let i in settings.userThemeData) {
