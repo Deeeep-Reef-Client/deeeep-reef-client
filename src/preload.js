@@ -5490,7 +5490,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     url: window.location.href
                 });
                 function ghostSuicide(key) {
-                    if (key.code != "KeyX")
+                    if (key.code != "KeyX" || !document.contains(document.querySelector("div.chat-input.horizontal-center[style='display: none;']")))
                         return;
                     DRC.Preload.evalInBrowserContext(`
                     if (game.currentScene.myAnimal._visibleFishLevel == 33) {
@@ -5500,7 +5500,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 }
                 ;
                 function cancelBoost(key) {
-                    if (key.code != "KeyC")
+                    if (key.code != "KeyC" || !document.contains(document.querySelector("div.chat-input.horizontal-center[style='display: none;']")))
                         return;
                     DRC.Preload.evalInBrowserContext(`
                     game.inputManager.pressElapsed = 0;
