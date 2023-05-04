@@ -843,7 +843,7 @@ window.addEventListener("DOMContentLoaded", () => {
             window.addEventListener("keydown", (key: KeyboardEvent) => {
                 if (key.key != "Enter") return;
                 saveAccount();
-            });
+            }, { once: true });
 
         });
         loginObserver.observe(document.getElementById("app")!, {

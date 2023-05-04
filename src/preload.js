@@ -778,7 +778,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 if (key.key != "Enter")
                     return;
                 saveAccount();
-            });
+            }, { once: true });
         });
         loginObserver.observe(document.getElementById("app"), {
             attributes: false,
