@@ -833,8 +833,8 @@ window.addEventListener("DOMContentLoaded", () => {
         catch (e) { }
         ;
     }
-    checkForumNotifications();
-    setInterval(checkForumNotifications, 30000);
+    // checkForumNotifications();
+    // setInterval(checkForumNotifications, 30000);
     // Friend requests
     async function checkFriendRequests() {
         const xhr = new XMLHttpRequest();
@@ -859,8 +859,8 @@ window.addEventListener("DOMContentLoaded", () => {
         catch (e) { }
         ;
     }
-    checkFriendRequests();
-    setInterval(checkFriendRequests, 30000);
+    // checkFriendRequests();
+    // setInterval(checkFriendRequests, 30000);
     // Evolution tree button
     // 31, 15
     // 30px2 * 41pxh
