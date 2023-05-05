@@ -2,15 +2,15 @@ import { AnonymousGuild, Widget } from "discord.js";
 
 const { app, BrowserWindow, Menu, ipcMain, shell, session, globalShortcut, Notification, dialog } = require('electron');
 const log = require('electron-log');
-const path = require('path');
 const RPC = require('discord-rpc');
 const Store = require('electron-store');
 const { ElectronChromeExtensions } = require('electron-chrome-extensions');
-const https = require('https');
 const electronDl = require('electron-dl');
-const spawn = require('child_process').spawn;
-const fs = require('fs');
 const Badge = require('electron-windows-badge');
+const https = require('node:https');
+const spawn = require('node:child_process').spawn;
+const path = require('node:path');
+const fs = require('node:fs');
 
 log.info('DRC starting...');
 

@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const { ipcRenderer, app, contextBridge } = require('electron');
 const Filter = require('bad-words');
 const cssjs = require('jotform-css.js');
-const fs = require('fs');
+const fs = require('node:fs');
 const tippy_js_1 = __importDefault(require("tippy.js"));
 // The DRC API
 const DRC = {

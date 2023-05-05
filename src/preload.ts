@@ -4,7 +4,7 @@ import { load } from "dotenv";
 const { ipcRenderer, app, contextBridge } = require('electron');
 const Filter = require('bad-words');
 const cssjs = require('jotform-css.js');
-const fs = require('fs');
+const fs = require('node:fs');
 
 import tippy from 'tippy.js';
 
