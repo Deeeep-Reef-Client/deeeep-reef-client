@@ -5657,6 +5657,13 @@ window.addEventListener("DOMContentLoaded", () => {
             subtree: true
         });
     });
+    // Game started/ended
+    DRC.EventObject.addEventListener(DRC.Events.GameStarted, () => {
+        ipcRenderer.send("gameStarted");
+    });
+    DRC.EventObject.addEventListener(DRC.Events.GameEnded, () => {
+        ipcRenderer.send("gameEnded");
+    });
     // advanced theme
     for (const i in settings.userThemeData) {
         if (!settings.userThemeData[i].active || settings.userThemeData[i].themetype === undefined || settings.userThemeData[i].themetype != "advancedtheme")

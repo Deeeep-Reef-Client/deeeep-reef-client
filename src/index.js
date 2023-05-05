@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const { app, BrowserWindow, Menu, ipcMain, shell, session, globalShortcut, Notification } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain, shell, session, globalShortcut, Notification, dialog } = require('electron');
 const log = require('electron-log');
 const path = require('path');
 const RPC = require('discord-rpc');
@@ -192,6 +192,8 @@ ipcMain.on("saveSettings", (_event, newSettings) => {
     settings = newSettings;
     store.set("settings", newSettings);
 });
+// Random data
+let gameStarted = false;
 // Create window
 const createWindow = () => {
     // Create the browser window.
@@ -299,6 +301,19 @@ const createWindow = () => {
     ]);
     */
     // Menu.setApplicationMenu(menu);
+    // Close confirmation
+    window.on("close", (e) => {
+        if (!gameStarted)
+            return;
+        let response = dialog.showMessageBoxSync(window, {
+            type: "question",
+            buttons: ["Exit", "Cancel"],
+            title: "Exit Confirmation",
+            message: "Are you sure you want to quit? You have an ongoing game."
+        });
+        if (response === 1)
+            e.preventDefault();
+    });
     // Extensions
     const extensions = new ElectronChromeExtensions();
     extensions.addTab(window.webContents, window);
@@ -450,6 +465,13 @@ const createWindow = () => {
     // current version tag
     ipcMain.handle("getVersion", async () => {
         return currentVersionId;
+    });
+    // Game started/ended
+    ipcMain.on("gameStarted", () => {
+        gameStarted = true;
+    });
+    ipcMain.on("gameEnded", () => {
+        gameStarted = false;
     });
     // DRC.Main.Session.AddOnBeforeRequestListener({
     //     urls: ["*://electron.github.io/*"],

@@ -5695,6 +5695,7 @@ window.addEventListener("DOMContentLoaded", () => {
     btn!.addEventListener("click", () => {
 
         if (gameStarted) return;
+
         const element = document.getElementById("app");
 
         // Wait until game finished loading to log URL for RPC
@@ -5889,6 +5890,14 @@ window.addEventListener("DOMContentLoaded", () => {
             characterData: false,
             subtree: true
         });
+    });
+
+    // Game started/ended
+    DRC.EventObject.addEventListener(DRC.Events.GameStarted, () => {
+        ipcRenderer.send("gameStarted");
+    });
+    DRC.EventObject.addEventListener(DRC.Events.GameEnded, () => {
+        ipcRenderer.send("gameEnded");
     });
 
     // advanced theme
