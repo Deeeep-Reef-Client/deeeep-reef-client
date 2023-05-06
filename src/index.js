@@ -517,17 +517,32 @@ app.on('ready', () => {
             }
         });
     }).end();
-    https.request({
-        host: "deeeep-reef-client.netlify.app",
-        path: "/api/insturl.txt"
-    }, (res) => {
-        res.on('data', (chunk) => {
-            instUrl += chunk;
-        });
-        res.on('end', () => {
-            log.info(`Installer URL: ${instUrl}`);
-        });
-    }).end();
+    let instUrlPath = "";
+    // Windows
+    if (process.platform === "win32") {
+        instUrlPath = "/api/insturl-win32.txt";
+    }
+    else {
+        // Not supported OS
+        newUpdate = false;
+        new Notification({
+            title: "Failed to fetch installer URL",
+            body: "Unsupported operating system."
+        }).show();
+    }
+    if (instUrlPath !== "") {
+        https.request({
+            host: "deeeep-reef-client.netlify.app",
+            path: instUrlPath
+        }, (res) => {
+            res.on('data', (chunk) => {
+                instUrl += chunk;
+            });
+            res.on('end', () => {
+                log.info(`Installer URL: ${instUrl}`);
+            });
+        }).end();
+    }
     // Create window
     createWindow();
 });
