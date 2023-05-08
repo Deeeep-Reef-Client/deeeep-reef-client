@@ -218,6 +218,8 @@ const createWindow = () => {
     const loadingWindow = new BrowserWindow({
         width: 960,
         height: 540,
+        frame: false,
+        resizable: false
     });
     loadingWindow.loadFile("src/loading.html");
     loadingWindow.removeMenu();
