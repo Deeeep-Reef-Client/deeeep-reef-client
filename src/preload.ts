@@ -291,6 +291,172 @@ window.addEventListener("DOMContentLoaded", () => {
     /// @REMIND Update client version
     clientVersion.innerText = clientVersion.innerText + ", DRC " + DRC.Client.versionTag;
 
+    // Top right nav
+    const topRightNav = document.querySelector("div.el-row.top-right-nav.items-center");
+
+    // Seamless title bar
+    const windowControlsStyle = document.createElement("style");
+    windowControlsStyle.innerHTML = `
+        @media (-webkit-device-pixel-ratio: 1.5), (device-pixel-ratio: 1.5),
+        (-webkit-device-pixel-ratio: 2), (device-pixel-ratio: 2),
+        (-webkit-device-pixel-ratio: 3), (device-pixel-ratio: 3) {
+        #windowControls .icon {
+            width: 10px;
+            height: 10px;
+        }
+        }
+
+        #windowControls {
+            display: grid;
+            grid-template-columns: repeat(3, 46px);
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 35px;
+            background-color: #2f3342;
+            border-radius: 0px 0px 0px 15px;
+            z-index: 99999;
+        }
+        
+        #windowControls .button {
+            grid-row: 1 / span 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+        #windowMinButton {
+            grid-column: 1;
+        }
+        #windowMaxButton, #windowRestoreButton {
+            grid-column: 2;
+        }
+        #windowCloseButton {
+            grid-column: 3;
+        }
+        #windowControls {
+            -webkit-app-region: no-drag;
+            pointer-events: auto;
+        }
+        
+        #windowControls .button {
+            user-select: none;
+        }
+        #windowControls .button:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        #windowControls .button:active {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        #windowCloseButton:hover {
+            background: #E81123 !important;
+        }
+        #windowCloseButton:active {
+            background: #F1707A !important;
+        }
+        #windowCloseButton:active .icon {
+            filter: invert(1);
+        }
+        
+        #windowRestoreButton {
+            display: none;
+        }
+
+        #windowMinButton {
+            border-radius: 0px 0px 0px 15px;
+        }
+
+        #windowDragRegion {
+            -webkit-app-region: drag;
+            pointer-events: none;
+            width: 100%;
+            height: 0.5rem;
+        }
+    `;
+
+    document.head.appendChild(windowControlsStyle);
+    const windowControls = document.createElement("div");
+    windowControls.innerHTML = `
+        <div id="windowDragRegion">
+        <div id="windowControls">
+
+            <div class="button" id="windowMinButton">
+                <img class="icon" srcset="https://deeeep-reef-client.netlify.app/assets/titlebar_icons/min-w-10.png 1x, https://deeeep-reef-client.netlify.app/assets/titlebar_icons/min-w-12.png 1.25x, https://deeeep-reef-client.netlify.app/assets/titlebar_icons/min-w-15.png 1.5x, https://deeeep-reef-client.netlify.app/assets/titlebar_icons/min-w-15.png 1.75x, https://deeeep-reef-client.netlify.app/assets/titlebar_icons/min-w-20.png 2x, https://deeeep-reef-client.netlify.app/assets/titlebar_icons/min-w-20.png 2.25x, https://deeeep-reef-client.netlify.app/assets/titlebar_icons/min-w-24.png 2.5x, https://deeeep-reef-client.netlify.app/assets/titlebar_icons/min-w-30.png 3x, https://deeeep-reef-client.netlify.app/assets/titlebar_icons/min-w-30.png 3.5x" draggable="false" />
+            </div>
+
+            <div class="button" id="windowMaxButton">
+                <img class="icon" srcset="https://deeeep-reef-client.netlify.app/assets/titlebar_icons/max-w-10.png 1x, https://deeeep-reef-client.netlify.app/assets/titlebar_icons/max-w-12.png 1.25x, https://deeeep-reef-client.netlify.app/assets/titlebar_icons/max-w-15.png 1.5x, https://deeeep-reef-client.netlify.app/assets/titlebar_icons/max-w-15.png 1.75x, https://deeeep-reef-client.netlify.app/assets/titlebar_icons/max-w-20.png 2x, https://deeeep-reef-client.netlify.app/assets/titlebar_icons/max-w-20.png 2.25x, https://deeeep-reef-client.netlify.app/assets/titlebar_icons/max-w-24.png 2.5x, https://deeeep-reef-client.netlify.app/assets/titlebar_icons/max-w-30.png 3x, https://deeeep-reef-client.netlify.app/assets/titlebar_icons/max-w-30.png 3.5x" draggable="false" />
+            </div>
+
+            <div class="button" id="windowRestoreButton">
+                <img class="icon" srcset="https://deeeep-reef-client.netlify.app/assets/titlebar_icons/restore-w-10.png 1x, https://deeeep-reef-client.netlify.app/assets/titlebar_icons/restore-w-12.png 1.25x, https://deeeep-reef-client.netlify.app/assets/titlebar_icons/restore-w-15.png 1.5x, https://deeeep-reef-client.netlify.app/assets/titlebar_icons/restore-w-15.png 1.75x, https://deeeep-reef-client.netlify.app/assets/titlebar_icons/restore-w-20.png 2x, https://deeeep-reef-client.netlify.app/assets/titlebar_icons/restore-w-20.png 2.25x, https://deeeep-reef-client.netlify.app/assets/titlebar_icons/restore-w-24.png 2.5x, https://deeeep-reef-client.netlify.app/assets/titlebar_icons/restore-w-30.png 3x, https://deeeep-reef-client.netlify.app/assets/titlebar_icons/restore-w-30.png 3.5x" draggable="false" />
+            </div>
+
+            <div class="button" id="windowCloseButton">
+                <img class="icon" srcset="https://deeeep-reef-client.netlify.app/assets/titlebar_icons/close-w-10.png 1x, https://deeeep-reef-client.netlify.app/assets/titlebar_icons/close-w-12.png 1.25x, https://deeeep-reef-client.netlify.app/assets/titlebar_icons/close-w-15.png 1.5x, https://deeeep-reef-client.netlify.app/assets/titlebar_icons/close-w-15.png 1.75x, https://deeeep-reef-client.netlify.app/assets/titlebar_icons/close-w-20.png 2x, https://deeeep-reef-client.netlify.app/assets/titlebar_icons/close-w-20.png 2.25x, https://deeeep-reef-client.netlify.app/assets/titlebar_icons/close-w-24.png 2.5x, https://deeeep-reef-client.netlify.app/assets/titlebar_icons/close-w-30.png 3x, https://deeeep-reef-client.netlify.app/assets/titlebar_icons/close-w-30.png 3.5x" draggable="false" />
+            </div>
+
+        </div>
+        </div>
+    `;
+    document.body.appendChild(windowControls);
+
+    const windowMinimiseButton = document.getElementById("windowMinButton");
+    const windowMaximiseButton = document.getElementById("windowMaxButton");
+    const windowRestoreButton = document.getElementById("windowRestoreButton");
+    const windowCloseButton = document.getElementById("windowCloseButton");
+
+    windowMinimiseButton!.addEventListener("click", () => {
+        ipcRenderer.send("windowMinimise");
+    });
+
+    windowMaximiseButton!.addEventListener("click", () => {
+        windowMaximiseButton!.setAttribute("style", "display:none;");
+        windowRestoreButton!.setAttribute("style", "");
+        ipcRenderer.send("windowMaximise");
+    });
+
+    windowRestoreButton!.addEventListener("click", () => {
+        windowMaximiseButton!.setAttribute("style", "");
+        windowRestoreButton!.setAttribute("style", "display:none;");
+        ipcRenderer.send("windowRestore");
+    });
+
+    windowCloseButton!.addEventListener("click", () => {
+        ipcRenderer.send("windowClose");
+    });
+
+    ipcRenderer.on("windowMaximise", () => {
+        windowMaximiseButton!.setAttribute("style", "display:none;");
+        windowRestoreButton!.setAttribute("style", "");
+    });
+
+    ipcRenderer.on("windowRestore", () => {
+        windowMaximiseButton!.setAttribute("style", "");
+        windowRestoreButton!.setAttribute("style", "display:none;");
+    });
+
+    const windowNavSpacer = document.createElement("div"); // WIll be appended at the end of the function
+    windowNavSpacer.setAttribute("style", "width:138px;");
+
+    const windowLeaderboardSpacer = document.createElement("div"); // WIll be appended every time game starts
+    windowLeaderboardSpacer.setAttribute("style", "height:28px;");
+
+    DRC.EventObject.addEventListener(DRC.Events.GameStarted, () => {
+        const topRightOverlay = document.querySelector("div.overlay.gm-1 > div.top-right > div.flex.flex-col");
+        const leaderboardObserver = new MutationObserver((mutations) => {
+            if (!document.contains(document.querySelector("div.leaderboard.ranking")) || document.contains(windowLeaderboardSpacer)) return;
+
+            topRightOverlay!.insertBefore(windowLeaderboardSpacer, document.querySelector("div.leaderboard.ranking"));
+        });
+        leaderboardObserver.observe(topRightOverlay!, {
+            childList: true,
+            subtree: true
+        })
+    });
+
     // devtools
     window.addEventListener("keydown", (key: KeyboardEvent) => {
         if (key.code == "F12") {
@@ -4092,7 +4258,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
     // Asset swapper
     // Asset swapper button
-    const topRightNav = document.querySelector("div.el-row.top-right-nav.items-center");
     const settingsButtonWrapper = topRightNav!.querySelector("div > button.el-button.el-button--small.btn.nice-button.gray.has-icon.square.only-icon")!.parentElement;
     const assetSwapperButtonWrapper = settingsButtonWrapper!.cloneNode(true) as HTMLDivElement;
     const assetSwapperButton = assetSwapperButtonWrapper.firstElementChild as HTMLButtonElement;
@@ -5689,6 +5854,9 @@ window.addEventListener("DOMContentLoaded", () => {
             ". A new update <b class=\"drc-text-cyan\">" + latestVersion + "</b> has been detected.";
     })();
 
+    // Seamless titlebar void
+    topRightNav!.appendChild(windowNavSpacer);
+    console.log(windowNavSpacer);
 
     // Watch for match start
     const btn = document.querySelector(".play");

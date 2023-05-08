@@ -256,6 +256,7 @@ const createWindow = () => {
         width: 800,
         height: 600,
         show: false,
+        frame: false,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
             sandbox: false
@@ -366,6 +367,30 @@ const createWindow = () => {
     */
     // Menu.setApplicationMenu(menu);
 
+    // Menu bar
+    ipcMain.on("windowMinimise", () => {
+        window.minimize();
+    });
+
+    ipcMain.on("windowMaximise", () => {
+        window.maximize();
+    });
+
+    ipcMain.on("windowRestore", () => {
+        window.unmaximize();
+    });
+
+    ipcMain.on("windowClose", () => {
+        window.close();
+    });
+
+    window.on("maximize", () => {
+        window.webContents.send("windowMaximise");
+    });
+
+    window.on("unmaximize", () => {
+        window.webContents.send("windowRestore");
+    });
 
     // Close confirmation
     window.on("close", (e: any) => {
