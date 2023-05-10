@@ -5957,14 +5957,23 @@ window.addEventListener("DOMContentLoaded", () => {
 
                     ipcRenderer.once("gameChatMessages", (_event: Event, chatMessages: any) => {
                         for (let i in chatMessages) {
-                            const message = chatMessages[i].text._text;
+                            // Patch leetspeak
+                            const message = chatMessages[i].text._text
+                                .replaceAll('1', 'i')
+                                .replaceAll('2', 'z')
+                                .replaceAll('3', '3')
+                                .replaceAll('4', 'a')
+                                .replaceAll('5', 's')
+                                .replaceAll('6', 'g')
+                                .replaceAll('7', 't')
+                                .replaceAll('8', 'b')
+                                .replaceAll('9', 'g')
+                                .replaceAll('0', 'o')
+
                             if (profanityFilter.isProfane(message)) {
                                 const cleaned = profanityFilter.clean(message);
                                 console.log(cleaned);
                                 DRC.Preload.evalInBrowserContext(`
-                                console.log(game.currentScene.chatMessages[${i}])
-                                console.log(game.currentScene.chatMessages[${i}].setText)
-                                
                                     game.currentScene.chatMessages[${i}].setText(
                                         "${cleaned}"
                                     );
