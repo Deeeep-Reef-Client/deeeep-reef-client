@@ -5967,19 +5967,23 @@ window.addEventListener("DOMContentLoaded", () => {
                 window.addEventListener("keydown", cancelBoost);
 
                 let advancedProfanityFilter = setInterval(() => {
+                    if (!settings.advancedProfanityFilter) return;
+                    
                     DRC.Preload.evalInBrowserContext(`
-                    var data = [];
-                    for (let i in game.currentScene.chatMessages) {
-                        data.push({
-                            text: {
-                                _text: game.currentScene.chatMessages[i].text._text
-                            }
+                    (() => {
+                        let data = [];
+                        for (let i in game.currentScene.chatMessages) {
+                            data.push({
+                                text: {
+                                    _text: game.currentScene.chatMessages[i].text._text
+                                }
+                            });
+                        }
+                        window.electronAPI.ipcRenderer.send("ipcProxy", {
+                            channel: "gameChatMessages",
+                            data
                         });
-                    }
-                    window.electronAPI.ipcRenderer.send("ipcProxy", {
-                        channel: "gameChatMessages",
-                        data
-                    });
+                    })();
                     `);
 
                     ipcRenderer.once("gameChatMessages", (_event: Event, chatMessages: any) => {
