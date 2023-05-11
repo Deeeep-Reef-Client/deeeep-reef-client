@@ -138,6 +138,10 @@ const schema = {
                     type: "object"
                 }
             },
+            colourblind: {
+                type: "boolean",
+                default: false
+            },
             developer: {
                 type: "boolean",
                 default: false
@@ -163,6 +167,7 @@ let settings = {
     advancedProfanityFilter: true,
     gameName: "",
     gameAccounts: [],
+    colourblind: false,
     developer: false
 };
 Object.assign(settings, store.get("settings") ?? {});
@@ -183,6 +188,7 @@ if (settings === undefined) {
         advancedProfanityFilter: true,
         gameName: "",
         gameAccounts: [],
+        colourblind: false,
         developer: false
     };
     store.set("settings", settings);
@@ -450,6 +456,11 @@ const createWindow = () => {
     ;
     if (settings.pluginsData === undefined) {
         settings.pluginsData = [];
+        store.set("settings", settings);
+    }
+    ;
+    if (settings.colourblind === undefined) {
+        settings.colourblind = false;
         store.set("settings", settings);
     }
     ;

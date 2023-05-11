@@ -232,6 +232,7 @@ interface SettingsTemplate {
     advancedProfanityFilter: boolean;
     gameName: string;
     gameAccounts: Array<any>;
+    colourblind: boolean;
     developer: boolean;
 }
 
@@ -251,6 +252,7 @@ let settings: SettingsTemplate = {
     advancedProfanityFilter: true,
     gameName: "",
     gameAccounts: [],
+    colourblind: false,
     developer: false
 };
 ipcRenderer.on("settings", (_event: Event, s: SettingsTemplate) => {
@@ -767,6 +769,31 @@ window.addEventListener("DOMContentLoaded", () => {
                 saveSettings();
             });
             graphicsPane!.appendChild(viewingGhostsSetting);
+
+            // Colourblind Mode
+            const colourblindSetting = graphicsPane!.childNodes[2].cloneNode(true) as HTMLDivElement;
+            const colourblindName = colourblindSetting.querySelector(".el-form-item__label") as HTMLDivElement;
+            const colourblindDesc = colourblindSetting.querySelector(".notes") as HTMLSpanElement;
+            const colourblindCheckbox = colourblindSetting.querySelector(".el-checkbox__input > input") as HTMLInputElement;
+            colourblindName!.setAttribute("id", "colourblindName");
+            colourblindName!.innerText = "Colourblind Mode";
+            colourblindDesc!.innerText = "Toggles colourblind colour changes";
+            if (settings.colourblind) {
+                colourblindSetting.querySelector(".el-checkbox__input")!.classList.add("is-checked");
+            } else {
+                colourblindSetting.querySelector(".el-checkbox__input")!.classList.remove("is-checked");
+            }
+            colourblindCheckbox.addEventListener("click", () => {
+                if (settings.colourblind) {
+                    settings.colourblind = false;
+                    colourblindSetting.querySelector(".el-checkbox__input")!.classList.remove("is-checked");
+                } else {
+                    settings.colourblind = true;
+                    colourblindSetting.querySelector(".el-checkbox__input")!.classList.add("is-checked");
+                };
+                saveSettings();
+            });
+            graphicsPane!.appendChild(colourblindSetting);
 
             // Chat Settings
 
@@ -5983,6 +6010,42 @@ window.addEventListener("DOMContentLoaded", () => {
                     });
                 }, 200);
 
+                let colourblindMode = setInterval(() => {
+                    // Return if settings not opened or not in PD and TFFA
+                    if (!settings.colourblind || (gamemode !== "PD" && gamemode !== "TFFA")) return;
+
+                    /*
+                        '<GRE>[GRE] DRC</GRE>'
+                        '<GRE>test</GRE> DRC'
+                        #app > div.overlay.gm-2 > div.pd-overlay > div.pd-preparation
+
+                    */
+                    DRC.Preload.evalInBrowserContext(`
+                    (() => {
+                        let colourblindData = [];
+                        for (let i in game.currentScene.entityManager.animalsList) {
+                            colourblindData.push({
+                                text: game.currentScene.entityManager.animalsList[i].nameObject.text
+                            });
+                        }
+                        window.electronAPI.ipcRenderer.send("ipcProxy", {
+                            channel: "gameColourblindNames",
+                            data: colourblindData
+                        });
+                    })();
+                    `);
+
+                    ipcRenderer.once("gameColourblindNames", (_event: Event, colourblindNames: any) => {
+                        for (let i in colourblindNames) {
+                            if (!colourblindNames[i].text.startsWith("<GRE>")) continue;
+
+                            DRC.Preload.evalInBrowserContext(`
+                            game.currentScene.entityManager.animalsList[${i}].nameObject.text = "${colourblindNames[i].text.replace("<GRE>", "<BLU>")
+                                }"
+                            `);
+                        }
+                    });
+                }, 200);
                 // plugins
                 for (const i in settings.pluginsData) {
                     if (settings.pluginsData[i].src.length == 0) continue;
@@ -6049,6 +6112,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     window.removeEventListener("keydown", cancelBoost);
 
                     clearInterval(advancedProfanityFilter);
+                    clearInterval(colourblindMode);
                 }
 
                 // Watch for game end
