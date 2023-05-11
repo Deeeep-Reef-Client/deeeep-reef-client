@@ -6046,6 +6046,36 @@ window.addEventListener("DOMContentLoaded", () => {
                         }
                     });
                 }, 200);
+
+                if (gamemode === "PD") {
+                    const pdPreparationObserver = new MutationObserver(() => {
+                        if (document.contains(document.querySelector("div.pd-overlay > div > div.center > div.chat-container > div > div.messages-container > div"))) {
+                            const pdPreparationMessageContainer = document.querySelector("div.pd-overlay > div > div.center > div.chat-container > div > div.messages-container > div") as HTMLDivElement;
+                            const colourblindObserver = new MutationObserver(() => {
+                                const pdPreparationMessages = pdPreparationMessageContainer.children;
+                                for (let i = 0; i < pdPreparationMessages.length; i++) {
+                                    if (!pdPreparationMessages[i].querySelector("span")!.classList.contains("side-0")) continue;
+
+                                    pdPreparationMessages[i].querySelector("span")?.classList.remove("side-0");
+                                    pdPreparationMessages[i].querySelector("span")?.classList.add("drc-text-cyan");
+                                }
+                            });
+
+                            colourblindObserver.observe(pdPreparationMessageContainer, {
+                                subtree: true,
+                                childList: true
+                            });
+
+                            pdPreparationObserver.disconnect();
+                        }
+                    });
+
+                    pdPreparationObserver.observe(document.querySelector("#app > div.overlay.gm-2 > div.pd-overlay")!, {
+                        childList: true,
+                        subtree: true
+                    });
+                }
+
                 // plugins
                 for (const i in settings.pluginsData) {
                     if (settings.pluginsData[i].src.length == 0) continue;
