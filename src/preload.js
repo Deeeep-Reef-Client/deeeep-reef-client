@@ -1014,8 +1014,8 @@ window.addEventListener("DOMContentLoaded", () => {
         catch (e) { }
         ;
     }
-    // checkForumNotifications();
-    // setInterval(checkForumNotifications, 30000);
+    checkForumNotifications();
+    setInterval(checkForumNotifications, 30000);
     // Friend requests
     async function checkFriendRequests() {
         const xhr = new XMLHttpRequest();
@@ -1040,8 +1040,8 @@ window.addEventListener("DOMContentLoaded", () => {
         catch (e) { }
         ;
     }
-    // checkFriendRequests();
-    // setInterval(checkFriendRequests, 30000);
+    checkFriendRequests();
+    setInterval(checkFriendRequests, 30000);
     // Evolution tree button
     // 31, 15
     // 30px2 * 41pxh
@@ -5734,19 +5734,23 @@ window.addEventListener("DOMContentLoaded", () => {
                 window.addEventListener("keydown", ghostSuicide);
                 window.addEventListener("keydown", cancelBoost);
                 let advancedProfanityFilter = setInterval(() => {
+                    if (!settings.advancedProfanityFilter)
+                        return;
                     DRC.Preload.evalInBrowserContext(`
-                    var data = [];
-                    for (let i in game.currentScene.chatMessages) {
-                        data.push({
-                            text: {
-                                _text: game.currentScene.chatMessages[i].text._text
-                            }
+                    (() => {
+                        let data = [];
+                        for (let i in game.currentScene.chatMessages) {
+                            data.push({
+                                text: {
+                                    _text: game.currentScene.chatMessages[i].text._text
+                                }
+                            });
+                        }
+                        window.electronAPI.ipcRenderer.send("ipcProxy", {
+                            channel: "gameChatMessages",
+                            data
                         });
-                    }
-                    window.electronAPI.ipcRenderer.send("ipcProxy", {
-                        channel: "gameChatMessages",
-                        data
-                    });
+                    })();
                     `);
                     ipcRenderer.once("gameChatMessages", (_event, chatMessages) => {
                         for (let i in chatMessages) {
