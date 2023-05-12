@@ -539,7 +539,6 @@ window.addEventListener("DOMContentLoaded", () => {
         };
     }
 
-
     reloadCustomTheme();
 
     // Light Theme
@@ -558,6 +557,14 @@ window.addEventListener("DOMContentLoaded", () => {
     v3uiStyle.setAttribute("id", "v3uiStyle");
     v3uiStyle.href = settings.v3ui ? "https://deeeep-reef-client.netlify.app/assets/v3ui.css" : '';
     document.head.appendChild(v3uiStyle);
+
+    // Colourblind Mode
+    const colourblindTheme = document.createElement("link");
+    colourblindTheme.rel = "stylesheet";
+    colourblindTheme.type = "text/css";
+    colourblindTheme.setAttribute("id", "colourblindThemeStyle");
+    colourblindTheme.href = settings.colourblind ? "https://deeeep-reef-client.netlify.app/assets/colourblind.css" : '';
+    document.head.appendChild(colourblindTheme);
 
     // Custom Settings
     // Watch for settings pane opened
@@ -5968,7 +5975,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
                 let advancedProfanityFilter = setInterval(() => {
                     if (!settings.advancedProfanityFilter) return;
-                    
+
                     DRC.Preload.evalInBrowserContext(`
                     (() => {
                         let data = [];
@@ -6051,34 +6058,34 @@ window.addEventListener("DOMContentLoaded", () => {
                     });
                 }, 200);
 
-                if (gamemode === "PD") {
-                    const pdPreparationObserver = new MutationObserver(() => {
-                        if (document.contains(document.querySelector("div.pd-overlay > div > div.center > div.chat-container > div > div.messages-container > div"))) {
-                            const pdPreparationMessageContainer = document.querySelector("div.pd-overlay > div > div.center > div.chat-container > div > div.messages-container > div") as HTMLDivElement;
-                            const colourblindObserver = new MutationObserver(() => {
-                                const pdPreparationMessages = pdPreparationMessageContainer.children;
-                                for (let i = 0; i < pdPreparationMessages.length; i++) {
-                                    if (!pdPreparationMessages[i].querySelector("span")!.classList.contains("side-0")) continue;
+                // if (gamemode === "PD") {
+                //     const pdPreparationObserver = new MutationObserver(() => {
+                //         if (document.contains(document.querySelector("div.pd-overlay > div > div.center > div.chat-container > div > div.messages-container > div"))) {
+                //             const pdPreparationMessageContainer = document.querySelector("div.pd-overlay > div > div.center > div.chat-container > div > div.messages-container > div") as HTMLDivElement;
+                //             const colourblindObserver = new MutationObserver(() => {
+                //                 const pdPreparationMessages = pdPreparationMessageContainer.children;
+                //                 for (let i = 0; i < pdPreparationMessages.length; i++) {
+                //                     if (!pdPreparationMessages[i].querySelector("span")!.classList.contains("side-0")) continue;
 
-                                    pdPreparationMessages[i].querySelector("span")?.classList.remove("side-0");
-                                    pdPreparationMessages[i].querySelector("span")?.classList.add("drc-text-cyan");
-                                }
-                            });
+                //                     pdPreparationMessages[i].querySelector("span")?.classList.remove("side-0");
+                //                     pdPreparationMessages[i].querySelector("span")?.classList.add("drc-text-cyan");
+                //                 }
+                //             });
 
-                            colourblindObserver.observe(pdPreparationMessageContainer, {
-                                subtree: true,
-                                childList: true
-                            });
+                //             colourblindObserver.observe(pdPreparationMessageContainer, {
+                //                 subtree: true,
+                //                 childList: true
+                //             });
 
-                            pdPreparationObserver.disconnect();
-                        }
-                    });
+                //             pdPreparationObserver.disconnect();
+                //         }
+                //     });
 
-                    pdPreparationObserver.observe(document.querySelector("#app > div.overlay.gm-2 > div.pd-overlay")!, {
-                        childList: true,
-                        subtree: true
-                    });
-                }
+                //     pdPreparationObserver.observe(document.querySelector("#app > div.overlay.gm-2 > div.pd-overlay")!, {
+                //         childList: true,
+                //         subtree: true
+                //     });
+                // }
 
                 // plugins
                 for (const i in settings.pluginsData) {
