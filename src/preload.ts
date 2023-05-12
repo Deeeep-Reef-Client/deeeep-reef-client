@@ -4282,7 +4282,10 @@ window.addEventListener("DOMContentLoaded", () => {
     });
     // hotkey V for toggling evolution tree
     window.addEventListener("keydown", (key: KeyboardEvent) => {
-        if (key.code != "KeyV" || !gameStarted || !document.contains(document.querySelector("div.chat-input.horizontal-center[style='display: none;']"))) return;
+        if (key.code != "KeyV" 
+        || !gameStarted 
+        || !document.contains(document.querySelector("div.chat-input.horizontal-center[style='display: none;']"))
+        || document.contains(document.querySelector("div.center > div.chat-container > div"))) return;
         treeModalContainer!.classList.remove("drc-modal-hidden");
     });
     window.addEventListener("keyup", (key: KeyboardEvent) => {
