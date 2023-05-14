@@ -794,9 +794,12 @@ window.addEventListener("DOMContentLoaded", () => {
                 if (settings.colourblind) {
                     settings.colourblind = false;
                     colourblindSetting.querySelector(".el-checkbox__input")!.classList.remove("is-checked");
+
+                    colourblindTheme.setAttribute("href", "");
                 } else {
                     settings.colourblind = true;
                     colourblindSetting.querySelector(".el-checkbox__input")!.classList.add("is-checked");
+                    colourblindTheme.setAttribute("href", "https://deeeep-reef-client.netlify.app/assets/colourblind.css");
                 };
                 saveSettings();
             });
