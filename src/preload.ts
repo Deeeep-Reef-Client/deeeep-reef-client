@@ -187,12 +187,47 @@ const DRC = {
             SettingsOpened: new CustomEvent("DRC.SettingsOpened"),
         }
     },
+    // Internal messaging
+    InternalMessaging: {
+        sendColourblindNames: function (colourblindNames: any) {
+            for (let i in colourblindNames) {
+                if (!colourblindNames[i].text.startsWith("<GRE>")) continue;
+
+                DRC.Preload.evalInBrowserContext(`
+                game.currentScene.entityManager.animalsList[${i}].nameObject.text = "${colourblindNames[i].text.replace("<GRE>", "<BLU>")
+                }"
+                `);
+            }
+        },
+        sendGameChatMessages: function (chatMessages: any) {
+            for (let i in chatMessages) {
+                // Patch leetspeak
+                const message = chatMessages[i].text._text
+                    .replaceAll('1', 'i')
+                    .replaceAll('2', 'z')
+                    .replaceAll('3', '3')
+                    .replaceAll('4', 'a')
+                    .replaceAll('5', 's')
+                    .replaceAll('6', 'g')
+                    .replaceAll('7', 't')
+                    .replaceAll('8', 'b')
+                    .replaceAll('9', 'g')
+                    .replaceAll('0', 'o')
+
+                if (profanityFilter.isProfane(message)) {
+                    const cleaned = profanityFilter.clean(message);
+                    console.log(cleaned);
+                    DRC.Preload.evalInBrowserContext(`
+                        game.currentScene.chatMessages[${i}].setText(
+                            "${cleaned}"
+                        );
+                    `);
+                }
+            }
+        }
+    }
 };
 Object.freeze(DRC); // Don't touch my api
-// Expose my API
-contextBridge.exposeInMainWorld('DRC_API', {
-    DRC
-})
 
 
 // Maintain compatibility when update
@@ -204,9 +239,9 @@ if (window.location.hostname.startsWith("beta")) {
 }
 
 // expose IPC to main world
-contextBridge.exposeInMainWorld('electronAPI', {
-    ipcRenderer
-})
+contextBridge.exposeInMainWorld("DRC_API", {
+    DRC
+});
 
 interface ConsoleMessageEvent {
     level: Number;
@@ -4293,10 +4328,10 @@ window.addEventListener("DOMContentLoaded", () => {
     });
     // hotkey V for toggling evolution tree
     window.addEventListener("keydown", (key: KeyboardEvent) => {
-        if (key.code != "KeyV" 
-        || !gameStarted 
-        || !document.contains(document.querySelector("div.chat-input.horizontal-center[style='display: none;']"))
-        || document.contains(document.querySelector("div.center > div.chat-container > div"))) return;
+        if (key.code != "KeyV"
+            || !gameStarted
+            || !document.contains(document.querySelector("div.chat-input.horizontal-center[style='display: none;']"))
+            || document.contains(document.querySelector("div.center > div.chat-container > div"))) return;
         treeModalContainer!.classList.remove("drc-modal-hidden");
     });
     window.addEventListener("keyup", (key: KeyboardEvent) => {
@@ -6008,39 +6043,38 @@ window.addEventListener("DOMContentLoaded", () => {
                                 }
                             });
                         }
-                        window.electronAPI.ipcRenderer.send("ipcProxy", {
-                            channel: "gameChatMessages",
-                            data
-                        });
+                        window.DRC_API.DRC.InternalMessaging.sendGameChatMessages(data);
                     })();
                     `);
 
-                    ipcRenderer.once("gameChatMessages", (_event: Event, chatMessages: any) => {
-                        for (let i in chatMessages) {
-                            // Patch leetspeak
-                            const message = chatMessages[i].text._text
-                                .replaceAll('1', 'i')
-                                .replaceAll('2', 'z')
-                                .replaceAll('3', '3')
-                                .replaceAll('4', 'a')
-                                .replaceAll('5', 's')
-                                .replaceAll('6', 'g')
-                                .replaceAll('7', 't')
-                                .replaceAll('8', 'b')
-                                .replaceAll('9', 'g')
-                                .replaceAll('0', 'o')
+                    // Everything handler by the DRC API
 
-                            if (profanityFilter.isProfane(message)) {
-                                const cleaned = profanityFilter.clean(message);
-                                console.log(cleaned);
-                                DRC.Preload.evalInBrowserContext(`
-                                    game.currentScene.chatMessages[${i}].setText(
-                                        "${cleaned}"
-                                    );
-                                `);
-                            }
-                        }
-                    });
+                    // ipcRenderer.once("gameChatMessages", (_event: Event, chatMessages: any) => {
+                    //     for (let i in chatMessages) {
+                    //         // Patch leetspeak
+                    //         const message = chatMessages[i].text._text
+                    //             .replaceAll('1', 'i')
+                    //             .replaceAll('2', 'z')
+                    //             .replaceAll('3', '3')
+                    //             .replaceAll('4', 'a')
+                    //             .replaceAll('5', 's')
+                    //             .replaceAll('6', 'g')
+                    //             .replaceAll('7', 't')
+                    //             .replaceAll('8', 'b')
+                    //             .replaceAll('9', 'g')
+                    //             .replaceAll('0', 'o')
+
+                    //         if (profanityFilter.isProfane(message)) {
+                    //             const cleaned = profanityFilter.clean(message);
+                    //             console.log(cleaned);
+                    //             DRC.Preload.evalInBrowserContext(`
+                    //                 game.currentScene.chatMessages[${i}].setText(
+                    //                     "${cleaned}"
+                    //                 );
+                    //             `);
+                    //         }
+                    //     }
+                    // });
                 }, 200);
 
                 let colourblindMode = setInterval(() => {
@@ -6061,23 +6095,23 @@ window.addEventListener("DOMContentLoaded", () => {
                                 text: game.currentScene.entityManager.animalsList[i].nameObject.text
                             });
                         }
-                        window.electronAPI.ipcRenderer.send("ipcProxy", {
-                            channel: "gameColourblindNames",
-                            data: colourblindData
-                        });
+                        window.DRC_API.DRC.InternalMessaging.sendColourblindNames(colourblindData);
                     })();
                     `);
 
-                    ipcRenderer.once("gameColourblindNames", (_event: Event, colourblindNames: any) => {
-                        for (let i in colourblindNames) {
-                            if (!colourblindNames[i].text.startsWith("<GRE>")) continue;
 
-                            DRC.Preload.evalInBrowserContext(`
-                            game.currentScene.entityManager.animalsList[${i}].nameObject.text = "${colourblindNames[i].text.replace("<GRE>", "<BLU>")
-                                }"
-                            `);
-                        }
-                    });
+                    // All the handling done by the DRC API
+
+                    // ipcRenderer.once("gameColourblindNames", (_event: Event, colourblindNames: any) => {
+                    //     for (let i in colourblindNames) {
+                    //         if (!colourblindNames[i].text.startsWith("<GRE>")) continue;
+
+                    //         DRC.Preload.evalInBrowserContext(`
+                    //         game.currentScene.entityManager.animalsList[${i}].nameObject.text = "${colourblindNames[i].text.replace("<GRE>", "<BLU>")
+                    //             }"
+                    //         `);
+                    //     }
+                    // });
                 }, 200);
 
                 // if (gamemode === "PD") {
