@@ -852,6 +852,9 @@ window.addEventListener("DOMContentLoaded", () => {
                 } else {
                     settings.developer = true;
                     developerModeSetting.querySelector(".el-checkbox__input")!.classList.add("is-checked");
+                    new Notification("Developer Mode enabled", {
+                        body: "Only enable this setting if you know what you are doing."
+                    });
                 };
                 saveSettings();
             });
