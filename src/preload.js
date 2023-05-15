@@ -4569,6 +4569,7 @@ window.addEventListener("DOMContentLoaded", () => {
                         <div class="spacer"></div>
                         <input type="color" id="themeMakerOptionsLoadingBarColour" value="#7F1D1D">
                     </div>
+                    <div id="themeMakerAdvancedThemeContainer" class="drc-modal-hidden">
                     <div class="spacer"></div>
                     <div class="assetswapper-list-rule">
                         <p>Advanced Theme: </p>
@@ -4584,7 +4585,8 @@ window.addEventListener("DOMContentLoaded", () => {
                             <div class="spacer"></div>
                             <textarea id="themeMakerOptionsAdvancedScript"></textarea>
                         </div>
-                    </div
+                    </div>
+                    </div>
                 </div>
                 <button id="themeMakerAddButton" class="assetswapper-add-button">Save</button>
             </div>
@@ -4610,8 +4612,12 @@ window.addEventListener("DOMContentLoaded", () => {
     const themeMakerOptionsAdvancedScript = document.getElementById("themeMakerOptionsAdvancedScript");
     const themeMakerWarningsAdvancedTheme = document.getElementById("themeMakerWarningsAdvancedTheme");
     const themeMakerWrapperOptionsAdvancedScript = document.getElementById("themeMakerWrapperOptionsAdvancedScript");
+    const themeMakerAdvancedThemeContainer = document.getElementById("themeMakerAdvancedThemeContainer");
     const themeMakerModalContainer = document.getElementById("themeMakerModalContainer");
     const themeMakerAddButton = document.getElementById("themeMakerAddButton");
+    if (settings.developer) {
+        themeMakerAdvancedThemeContainer.classList.remove("drc-modal-hidden");
+    }
     themeMakerOptionsAdvancedTheme.addEventListener("click", () => {
         themeMakerWrapperOptionsAdvancedScript.classList.toggle("drc-modal-hidden");
         themeMakerWarningsAdvancedTheme.classList.toggle("drc-modal-hidden");
