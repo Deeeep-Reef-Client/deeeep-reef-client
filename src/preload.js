@@ -187,6 +187,22 @@ const DRC = {
                 `);
             }
         },
+        sendColourblindChatMessages: function (chatMessages) {
+            for (let i in chatMessages) {
+                const message = chatMessages[i].text._text;
+                /*
+                "<desc><TEAM></desc> <GRE>test</GRE> DRC <id>636</id> : test"
+                "<GRE>test</GRE> DRC <id>636</id> : test"
+                */
+                if (message.match(/^(<desc><(TEAM|ALL)><\/desc> )?<GRE>/)) {
+                    DRC.Preload.evalInBrowserContext(`
+                        game.currentScene.chatMessages[${i}].setText(
+                            "${message.replace("<GRE>", "<BLU>").replace("</GRE>", "</BLU>")}"
+                        );
+                    `);
+                }
+            }
+        },
         sendGameChatMessages: function (chatMessages) {
             for (let i in chatMessages) {
                 // Patch leetspeak
@@ -5845,6 +5861,7 @@ window.addEventListener("DOMContentLoaded", () => {
                         #app > div.overlay.gm-2 > div.pd-overlay > div.pd-preparation
 
                     */
+                    // Names
                     DRC.Preload.evalInBrowserContext(`
                     (() => {
                         let colourblindData = [];
@@ -5854,6 +5871,20 @@ window.addEventListener("DOMContentLoaded", () => {
                             });
                         }
                         window.DRC_API.DRC.InternalMessaging.sendColourblindNames(colourblindData);
+                    })();
+                    `);
+                    // Chat messages
+                    DRC.Preload.evalInBrowserContext(`
+                    (() => {
+                        let colourblindData = [];
+                        for (let i in game.currentScene.chatMessages) {
+                            colourblindData.push({
+                                text: {
+                                    _text: game.currentScene.chatMessages[i].text._text
+                                }
+                            });
+                        }
+                        window.DRC_API.DRC.InternalMessaging.sendColourblindChatMessages(colourblindData);
                     })();
                     `);
                     // All the handling done by the DRC API
