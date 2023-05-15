@@ -966,6 +966,11 @@ window.addEventListener("DOMContentLoaded", () => {
             });
             mainElem.appendChild(autoLoginElem);
 
+            const spacer = document.createElement("div");
+            spacer.classList.add("spacer");
+            mainElem.appendChild(spacer);
+
+
             // username
             const usernameElem = document.createElement("p");
             usernameElem.innerText = settings.gameAccounts[i].username;
