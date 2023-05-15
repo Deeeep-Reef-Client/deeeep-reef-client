@@ -193,7 +193,7 @@ const DRC = {
                 const message = chatMessages[i].text._text
                     .replaceAll('1', 'i')
                     .replaceAll('2', 'z')
-                    .replaceAll('3', '3')
+                    .replaceAll('3', 'e')
                     .replaceAll('4', 'a')
                     .replaceAll('5', 's')
                     .replaceAll('6', 'g')
