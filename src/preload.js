@@ -859,7 +859,9 @@ window.addEventListener("DOMContentLoaded", () => {
     gameNameField.value = settings.gameName.slice(0, -1);
     gameNameField.focus();
     window.addEventListener("load", () => {
-        ipcRenderer.send("sendKeyPress", settings.gameName.slice(-1));
+        ipcRenderer.on("windowFocus", () => {
+            ipcRenderer.send("sendKeyPress", settings.gameName.slice(-1));
+        });
     }, { once: true });
     // misc styles
     const miscStyles = document.createElement("style");

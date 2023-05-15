@@ -297,6 +297,10 @@ const createWindow = () => {
         if (!finishedLoad) window.close();
     });
 
+    window.on("focus", () => {
+        window.webContents.send("windowFocus");
+    });
+
     window.webContents.once('did-finish-load', () => {
         finishedLoad = true;
         loadingWindow.close();

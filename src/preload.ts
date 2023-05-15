@@ -195,7 +195,7 @@ const DRC = {
 
                 DRC.Preload.evalInBrowserContext(`
                 game.currentScene.entityManager.animalsList[${i}].nameObject.text = "${colourblindNames[i].text.replace("<GRE>", "<BLU>")
-                }"
+                    }"
                 `);
             }
         },
@@ -917,7 +917,9 @@ window.addEventListener("DOMContentLoaded", () => {
     gameNameField.value = settings.gameName.slice(0, -1);
     gameNameField.focus();
     window.addEventListener("load", () => {
-        ipcRenderer.send("sendKeyPress", settings.gameName.slice(-1));
+        ipcRenderer.on("windowFocus", () => {
+            ipcRenderer.send("sendKeyPress", settings.gameName.slice(-1));
+        });
     }, { once: true });
 
 
