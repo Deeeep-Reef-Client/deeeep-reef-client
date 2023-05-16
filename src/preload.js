@@ -874,11 +874,9 @@ window.addEventListener("DOMContentLoaded", () => {
     gameNameField.value = settings.gameName;
     gameNameField.value = settings.gameName.slice(0, -1);
     gameNameField.focus();
-    window.addEventListener("load", () => {
-        ipcRenderer.on("windowFocus", () => {
-            ipcRenderer.send("sendKeyPress", settings.gameName.slice(-1));
-        });
-    }, { once: true });
+    ipcRenderer.once("windowFocus", () => {
+        ipcRenderer.send("sendKeyPress", settings.gameName.slice(-1));
+    });
     // misc styles
     const miscStyles = document.createElement("style");
     miscStyles.innerHTML = `
