@@ -607,6 +607,21 @@ const createWindow = () => {
         gameStarted = false;
     });
 
+    // Take a screenshot
+    ipcMain.on("captureScreenshot", () => {
+        window.webContents.capturePage().then((image: any) => {
+            try {
+                fs.writeFileSync(`${app.getPath("downloads")}/drc_screenshot_${Math.random().toString(36).slice(2, 8)}.png`, image.toPNG());
+                // file written successfully
+            } catch (err) {
+                console.error(err);
+                new Notification("Something went wrong", {
+                    body: `An error occurred while taking a screenshot.`
+                });
+            }
+        })
+    });
+
     // DRC.Main.Session.AddOnBeforeRequestListener({
     //     urls: ["*://electron.github.io/*"],
     //     regex: [/https:\/\/electron\.github\.io\/?.*/]

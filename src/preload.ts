@@ -6016,6 +6016,30 @@ window.addEventListener("DOMContentLoaded", () => {
                     `);
                 };
 
+                async function takeScreenshot(key: KeyboardEvent) {
+                    if (key.code !== "KeyP" 
+                    || !document.contains(document.querySelector("#canvas-container > canvas")) 
+                    || !document.contains(document.querySelector("div.chat-input.horizontal-center[style='display: none;']"))
+                    || !document.contains(document.querySelector("div.home-page[style='display: none;']"))) return;
+
+                    ipcRenderer.send("captureScreenshot");
+
+                    const overlayDiv = document.createElement("div");
+                    overlayDiv.setAttribute("style", `
+                    background-color: rgba(0, 0, 0, 0.4);
+                    top: 0;
+                    right: 0;
+                    bottom: 0;
+                    left: 0;
+                    position: absolute;
+                    width: 100vw;
+                    height: 100vh;
+                    pointer-events: none;
+                    `);
+                    document.getElementById("canvas-container")?.appendChild(overlayDiv);
+                    setTimeout(() => overlayDiv.remove(), 200);
+                };
+
                 // tree button
                 try {
                     const gameOverlay = document.querySelector("div.overlay.gm-1");
@@ -6047,6 +6071,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
                 window.addEventListener("keydown", ghostSuicide);
                 window.addEventListener("keydown", cancelBoost);
+                window.addEventListener("keydown", takeScreenshot);
 
                 let advancedProfanityFilter = setInterval(() => {
                     if (!settings.advancedProfanityFilter) return;
@@ -6242,6 +6267,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
                     window.removeEventListener("keydown", ghostSuicide);
                     window.removeEventListener("keydown", cancelBoost);
+                    window.removeEventListener("keydown", takeScreenshot);
 
                     clearInterval(advancedProfanityFilter);
                     clearInterval(colourblindMode);
