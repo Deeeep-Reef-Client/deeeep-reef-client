@@ -4346,14 +4346,14 @@ window.addEventListener("DOMContentLoaded", () => {
     });
     // hotkey V for toggling evolution tree
     window.addEventListener("keydown", (key: KeyboardEvent) => {
-        if (key.code != "KeyV"
+        if (key.code != "KeyT"
             || !gameStarted
             || !document.contains(document.querySelector("div.chat-input.horizontal-center[style='display: none;']"))
             || document.contains(document.querySelector("div.center > div.chat-container > div"))) return;
         treeModalContainer!.classList.remove("drc-modal-hidden");
     });
     window.addEventListener("keyup", (key: KeyboardEvent) => {
-        if (key.code != "KeyV") return;
+        if (key.code != "KeyT") return;
         treeModalContainer!.classList.add("drc-modal-hidden");
     });
 
@@ -6017,7 +6017,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 };
 
                 async function takeScreenshot(key: KeyboardEvent) {
-                    if (key.code !== "KeyP" 
+                    if (key.code !== "KeyV" 
                     || !document.contains(document.querySelector("#canvas-container > canvas")) 
                     || !document.contains(document.querySelector("div.chat-input.horizontal-center[style='display: none;']"))
                     || !document.contains(document.querySelector("div.home-page[style='display: none;']"))) return;
