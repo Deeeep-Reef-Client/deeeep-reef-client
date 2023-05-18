@@ -194,7 +194,7 @@ const DRC = {
                 "<desc><TEAM></desc> <GRE>test</GRE> DRC <id>636</id> : test"
                 "<GRE>test</GRE> DRC <id>636</id> : test"
                 */
-                if (message.match(/^(<desc><(TEAM|ALL)><\/desc> )?<GRE>/)) {
+                if (message.match(/^(<desc>(<TEAM>|\[TEAM\]|<ALL>|\[ALL\])<\/desc> )?<GRE>/)) {
                     DRC.Preload.evalInBrowserContext(`
                         game.currentScene.chatMessages[${i}].setText(
                             "${message.replace("<GRE>", "<BLU>").replace("</GRE>", "</BLU>")}"
