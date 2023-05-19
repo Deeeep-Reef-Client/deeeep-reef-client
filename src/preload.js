@@ -929,17 +929,11 @@ window.addEventListener("DOMContentLoaded", () => {
                 const usernameField = document.querySelector("div.modal__content > div.text-center > form.el-form > div.el-form-item input.el-input__inner[type='text']");
                 const passwordField = document.querySelector("div.modal__content > div.text-center > form.el-form > div.el-form-item input.el-input__inner[type='password']");
                 accountsModalContainer.classList.toggle("drc-modal-hidden");
-                usernameField.value = username.slice(0, -1);
-                usernameField.focus();
-                ipcRenderer.send("sendKeyPress", username.slice(-1));
-                usernameField.addEventListener("keyup", () => {
-                    passwordField.value = password.slice(0, -1);
-                    passwordField.focus();
-                    ipcRenderer.send("sendKeyPress", password.slice(-1));
-                    passwordField.addEventListener("keyup", () => {
-                        document.querySelector("div.modal__action > div#routeModalActions > button.el-button.btn.nice-button.green").dispatchEvent(new MouseEvent("click"));
-                    });
-                });
+                usernameField.value = username;
+                usernameField.dispatchEvent(new Event("input"));
+                passwordField.value = password;
+                passwordField.dispatchEvent(new Event("input"));
+                document.querySelector("div.modal__action > div#routeModalActions > button.el-button.btn.nice-button.green").dispatchEvent(new MouseEvent("click"));
             });
             mainElem.appendChild(autoLoginElem);
             const spacer = document.createElement("div");

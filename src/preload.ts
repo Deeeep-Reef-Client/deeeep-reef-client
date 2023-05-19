@@ -998,20 +998,13 @@ window.addEventListener("DOMContentLoaded", () => {
                 const passwordField = (document.querySelector("div.modal__content > div.text-center > form.el-form > div.el-form-item input.el-input__inner[type='password']") as HTMLInputElement)
                 accountsModalContainer!.classList.toggle("drc-modal-hidden");
 
-                usernameField.value = username.slice(0, -1);
-                usernameField.focus();
-                ipcRenderer.send("sendKeyPress", username.slice(-1));
+                usernameField.value = username;
+                usernameField.dispatchEvent(new Event("input"));
 
-                usernameField.addEventListener("keyup", () => {
+                passwordField.value = password;
+                passwordField.dispatchEvent(new Event("input"));
 
-                    passwordField.value = password.slice(0, -1);
-                    passwordField.focus();
-                    ipcRenderer.send("sendKeyPress", password.slice(-1));
-
-                    passwordField.addEventListener("keyup", () => {
-                        document.querySelector("div.modal__action > div#routeModalActions > button.el-button.btn.nice-button.green")!.dispatchEvent(new MouseEvent("click"));
-                    });
-                });
+                document.querySelector("div.modal__action > div#routeModalActions > button.el-button.btn.nice-button.green")!.dispatchEvent(new MouseEvent("click"));
             });
             mainElem.appendChild(autoLoginElem);
 
@@ -6013,10 +6006,10 @@ window.addEventListener("DOMContentLoaded", () => {
                 };
 
                 async function takeScreenshot(key: KeyboardEvent) {
-                    if (key.code !== "KeyV" 
-                    || !document.contains(document.querySelector("#canvas-container > canvas")) 
-                    || !document.contains(document.querySelector("div.chat-input.horizontal-center[style='display: none;']"))
-                    || !document.contains(document.querySelector("div.home-page[style='display: none;']"))) return;
+                    if (key.code !== "KeyV"
+                        || !document.contains(document.querySelector("#canvas-container > canvas"))
+                        || !document.contains(document.querySelector("div.chat-input.horizontal-center[style='display: none;']"))
+                        || !document.contains(document.querySelector("div.home-page[style='display: none;']"))) return;
 
                     ipcRenderer.send("captureScreenshot");
 
