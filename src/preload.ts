@@ -931,11 +931,7 @@ window.addEventListener("DOMContentLoaded", () => {
         saveSettings();
     }
     gameNameField.value = settings.gameName;
-    gameNameField.value = settings.gameName.slice(0, -1);
-    gameNameField.focus();
-    ipcRenderer.once("windowFocus", () => {
-        ipcRenderer.send("sendKeyPress", settings.gameName.slice(-1));
-    });
+    gameNameField.dispatchEvent(new Event("input"));
 
 
 
