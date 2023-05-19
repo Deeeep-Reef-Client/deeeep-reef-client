@@ -651,8 +651,8 @@ app.on('ready', () => {
     // Check for updates
     log.info("Checking updates...");
     https.request({
-        host: "deeeep-reef-client.netlify.app",
-        path: "/api/versionid.txt"
+        host: "deeeep-reef-client.github.io",
+        path: "/website/api/versionid.txt"
     }, (res: any) => {
         res.on('data', (chunk: any) => {
             currentVersionId += chunk;
@@ -686,8 +686,8 @@ app.on('ready', () => {
 
     if (instUrlPath !== "") {
         https.request({
-            host: "deeeep-reef-client.netlify.app",
-            path: instUrlPath
+            host: "deeeep-reef-client.github.io",
+            path: "/website" + instUrlPath
         }, (res: any) => {
             res.on('data', (chunk: any) => {
                 instUrl += chunk;
