@@ -863,7 +863,7 @@ window.addEventListener("DOMContentLoaded", () => {
     });
     // Save name
     const gameNameField = document.querySelector("div.name-input > div.el-input__wrapper > input.el-input__inner");
-    gameNameField.addEventListener("change", (e) => {
+    gameNameField.addEventListener("input", (e) => {
         settings.gameName = e.target.value;
         saveSettings();
     });
