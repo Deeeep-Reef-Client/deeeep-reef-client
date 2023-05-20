@@ -84,12 +84,13 @@ const DRC = {
         }
     },
     Modal: {
-        buildModal: function (id: string, title: string, content: string): HTMLDivElement {
+        buildModal: function (id: string, title: string, content: string, noOverlay?: boolean): HTMLDivElement {
             const modalId = id.replaceAll(' ', "");
             const modalDiv = document.createElement("div");
             document.getElementById("app")!.appendChild(modalDiv);
             modalDiv.outerHTML = `<div id="${modalId}ModalContainer" class="drc-modal-modal-container drc-modal-hidden">
             <div id="${modalId}Container" class="drc-modal-container">
+                ${noOverlay ? "" : "<div class=\"drc-modal-overlay vfm--overlay\"></div>"}
                 <div id="${modalId}Modal" class="modal-content drc-modal-modal-content">
                     <span class="drc-modal-title">
                         <div></div>
