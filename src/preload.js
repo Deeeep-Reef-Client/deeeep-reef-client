@@ -5728,7 +5728,6 @@ window.addEventListener("DOMContentLoaded", () => {
     })();
     // Seamless titlebar void
     topRightNav.appendChild(windowNavSpacer);
-    console.log(windowNavSpacer);
     // Watch for match start
     const btn = document.querySelector(".play");
     btn.addEventListener("click", () => {
