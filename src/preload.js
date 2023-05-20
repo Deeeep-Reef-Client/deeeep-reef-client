@@ -1048,6 +1048,12 @@ window.addEventListener("DOMContentLoaded", () => {
     let forumNotificationCount = 0;
     let friendRequestCount = 0;
     async function checkForumNotifications() {
+        let isLoggedIn = false;
+        await fetch("https://apibeta.deeeep.io/auth/me")
+            .then(response => response.json())
+            .then(data => { isLoggedIn = data?.statusCode !== 403; });
+        if (!isLoggedIn)
+            return;
         const xhr = new XMLHttpRequest();
         xhr.open('GET', "https://apibeta.deeeep.io/forumNotifications/count");
         xhr.withCredentials = true;
@@ -1070,10 +1076,16 @@ window.addEventListener("DOMContentLoaded", () => {
         catch (e) { }
         ;
     }
-    // checkForumNotifications();
-    // setInterval(checkForumNotifications, 30000);
+    checkForumNotifications();
+    setInterval(checkForumNotifications, 30000);
     // Friend requests
     async function checkFriendRequests() {
+        let isLoggedIn = false;
+        await fetch("https://apibeta.deeeep.io/auth/me")
+            .then(response => response.json())
+            .then(data => { isLoggedIn = data?.statusCode !== 403; });
+        if (!isLoggedIn)
+            return;
         const xhr = new XMLHttpRequest();
         xhr.open('GET', "https://apibeta.deeeep.io/friendRequests/count");
         xhr.withCredentials = true;
@@ -1096,8 +1108,8 @@ window.addEventListener("DOMContentLoaded", () => {
         catch (e) { }
         ;
     }
-    // checkFriendRequests();
-    // setInterval(checkFriendRequests, 30000);
+    checkFriendRequests();
+    setInterval(checkFriendRequests, 30000);
     // Evolution tree button
     // 31, 15
     // 30px2 * 41pxh
