@@ -384,11 +384,7 @@ const createWindow = () => {
 
         if (docassetsOn) loadDocassets();
 
-        if (adBlockerOn) await window.webContents.session.loadExtension(app.getAppPath() + "/extensions/ublock");
-
-        await window.webContents.session.loadExtension(app.getAppPath() + "/extensions/drc-assetswapper");
-        await window.webContents.session.loadExtension(app.getAppPath() + "/extensions/drc-as-copy");
-
+        if (adBlockerOn) loadAdblocker();
 
         window.loadURL("https://deeeep.io");
         window.hide();
@@ -798,6 +794,28 @@ function loadDocassets() {
         },
         CDNSkinHandler
     );
+}
+
+function loadAdblocker() {
+    DRC.Main.defaultSession.webRequest.onBeforeRequest(
+        {
+            urls: [
+                "*://*.doubleclick.net/*",
+                "*://*.googlesyndication.com/*",
+                "*://adservice.google.com/*",
+                "*://*.googleadservices.com/*",
+                "*://app-measurement.com/*",
+                "*://analytics.google.com/*",
+                "*://*.googleanalytics.com/*",
+                "*://google-analytics.com/*",
+                "*://*.google-analytics.com/*"
+            ]
+        },
+        (details: any, callback: Function) => {
+            callback({
+                cancel: true
+            });
+        });
 }
 
 interface ElectronDlFile {
