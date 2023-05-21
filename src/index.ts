@@ -382,7 +382,7 @@ const createWindow = () => {
 
         loadDrcAssetswapper();
 
-        if (docassetsOn) await window.webContents.session.loadExtension(app.getAppPath() + "/extensions/docassets");
+        if (docassetsOn) loadDocassets();
 
         if (adBlockerOn) await window.webContents.session.loadExtension(app.getAppPath() + "/extensions/ublock");
 
@@ -662,25 +662,20 @@ function genericAssetswapperHandler(redirectTemplate: string, regex: RegExp, nam
                     path: newRedirectUrlObject.pathname,
                     method: 'GET'
                 }, (res: any) => {
+                    assetswapperAlreadyChecked.add(newRedirectUrl);
+
                     if (res.statusCode === 200) {
                         redirectUrl = newRedirectUrl;
-                        assetswapperAlreadyChecked.add(newRedirectUrl);
-
-                        callback({ redirectURL: redirectUrl });
                     } else {
                         setTimeout(() => {
                             assetswapperAlreadyChecked.delete(newRedirectUrl);
 
-                            console.log(`${newRedirectUrl} removed from checked list`);
+                            // console.log(`${newRedirectUrl} removed from checked list`);
                         }, 5000);
-
-                        console.log(`${newRedirectUrl} does not exist.`);
                     }
+                    callback({ redirectURL: redirectUrl });
                 }).end();
-            } else {
-                callback();
-                console.log(newRedirectUrl + " has already been checked.");
-            }
+            } else callback();
         } else callback();
     };
 }
@@ -697,6 +692,111 @@ function loadDrcAssetswapper() {
             urls: [MISC_SCHEME]
         },
         miscHandler
+    );
+}
+
+function loadDocassets() {
+    const ANIMATION_REDIRECT_TEMPLATE = 'https://the-doctorpus.github.io/doc-assets/images/default/animations/';
+    const ANIMATION_SCHEME = '*://*.deeeep.io/assets/animations/*';
+    const ANIMATION_REGEX = /.+\/animations\/(?<filename>[^?]+)(?:\?.*)?$/
+
+    const animationHandler = genericAssetswapperHandler(ANIMATION_REDIRECT_TEMPLATE, ANIMATION_REGEX, 'animation');
+
+    DRC.Main.defaultSession.webRequest.onBeforeRequest(
+        {
+            urls: [ANIMATION_SCHEME]
+        },
+        animationHandler
+    );
+
+    const CHAR_REDIRECT_TEMPLATE = 'https://the-doctorpus.github.io/doc-assets/images/characters/'; // redirect URLs are all from this
+    const CHAR_SCHEME = '*://*.deeeep.io/*assets/characters/*'; // these urls will be redirected like characters
+    const CHAR_REGEX = /.+\/characters\/(?<filename>[^?]+)(?:\?.*)?$/ // might it be a valid character? 
+
+    const charHandler = genericAssetswapperHandler(CHAR_REDIRECT_TEMPLATE, CHAR_REGEX, 'character');
+
+    DRC.Main.defaultSession.webRequest.onBeforeRequest(
+        {
+            urls: [CHAR_SCHEME]
+        },
+        charHandler
+    );
+
+    const SPRITESHEET_REDIRECT_TEMPLATE = 'https://the-doctorpus.github.io/doc-assets/images/default/spritesheets/'; // redirect URLs are all from this
+    const SPRITESHEET_SCHEME = '*://*.deeeep.io/assets/spritesheets/*'; // these urls will be redirected like spritesheets
+    const SPRITESHEET_REGEX = /.+\/spritesheets\/(?<filename>[^?]+)(?:\?.*)?$/ // might it be a valid spritesheet? 
+
+    const spritesheetHandler = genericAssetswapperHandler(SPRITESHEET_REDIRECT_TEMPLATE, SPRITESHEET_REGEX, 'spritesheet');
+
+    DRC.Main.defaultSession.webRequest.onBeforeRequest(
+        {
+            urls: [SPRITESHEET_SCHEME]
+        },
+        spritesheetHandler
+    );
+
+    const MAP_SPRITESHEET_REDIRECT_TEMPLATE = 'https://the-doctorpus.github.io/doc-assets/images/default/mapmaker-asset-packs/'; // redirect URLs are all from this
+    const MAP_SPRITESHEET_SCHEME = '*://*.deeeep.io/assets/packs/*'; // these urls will be redirected like map spritesheets
+    const MAP_SPRITESHEET_REGEX = /.+\/packs\/(?<filename>[^?]+)(?:\?.*)?$/ // might it be a valid map spritesheet? 
+
+    const mapSpritesheetHandler = genericAssetswapperHandler(MAP_SPRITESHEET_REDIRECT_TEMPLATE, MAP_SPRITESHEET_REGEX, 'map spritesheet');
+
+    DRC.Main.defaultSession.webRequest.onBeforeRequest(
+        {
+            urls: [MAP_SPRITESHEET_SCHEME]
+        },
+        mapSpritesheetHandler
+    );
+
+    const IMG_REDIRECT_TEMPLATE = 'https://the-doctorpus.github.io/doc-assets/images/img/'; // redirect URLs are all from this
+    const IMG_SCHEME = '*://*.deeeep.io/img/*'; // these urls will be redirected like ui sprites
+    const IMG_REGEX = /.+\/img\/(?<filename>[^?]+)(?:\?.*)?$/ // might it be a valid ui sprite? 
+
+    const imgSpriteHandler = genericAssetswapperHandler(IMG_REDIRECT_TEMPLATE, IMG_REGEX, 'img spritesheet');
+
+    DRC.Main.defaultSession.webRequest.onBeforeRequest(
+        {
+            urls: [IMG_SCHEME]
+        },
+        imgSpriteHandler
+    );
+
+    const PET_REDIRECT_TEMPLATE = 'https://the-doctorpus.github.io/doc-assets/images/custom/pets/';
+    const PET_SCHEME = '*://*.deeeep.io/custom/pets/*'
+    const PET_REGEX = /.+\/pets\/(?<filename>[^?]+)(?:\?.*)?$/
+
+    const petHandler = genericAssetswapperHandler(PET_REDIRECT_TEMPLATE, PET_REGEX, 'pet');
+
+    DRC.Main.defaultSession.webRequest.onBeforeRequest(
+        {
+            urls: [PET_SCHEME]
+        },
+        petHandler
+    );
+
+    const SKIN_REDIRECT_TEMPLATE = 'https://the-doctorpus.github.io/doc-assets/images/skans/'; // redirect URLs are all from this
+    const CDN_SKIN_REDIRECT_TEMPLATE = 'https://the-doctorpus.github.io/doc-assets/images/skans/custom/'; // redirect URLs are all from this
+    const SKIN_SCHEME = '*://*.deeeep.io/assets/skins/*'; // these urls will be redirected like skins
+    const CDN_SKIN_SCHEME = '*://cdn.deeeep.io/custom/skins/*';
+    const SKIN_REGEX = /.+\/skins\/(?<filename>[^?]+)(?:\?.*)?$/; // might it be a valid skin? 
+    const CDN_REGEX = /skins\/(?:(?<skin_name>[A-Za-z]+)|(?:(?<skin_id>[0-9]+)(?<version>-[0-9]+)(?<post_version>(?<extra_asset_name>-[A-Za-z0-9-_]+)?)))(?<suffix>\.[a-zA-Z0-9]+)/;
+    // skins submitted through Creators Center have a special scheme and must be stripped of their version number
+
+    const nonCDNSkinHandler = genericAssetswapperHandler(SKIN_REDIRECT_TEMPLATE, SKIN_REGEX, 'non-CDN skin');
+    const CDNSkinHandler = genericAssetswapperHandler(CDN_SKIN_REDIRECT_TEMPLATE, CDN_REGEX, 'CDN skin', ['skin_name', 'skin_id', 'post_version', 'suffix']);
+
+    DRC.Main.defaultSession.webRequest.onBeforeRequest(
+        {
+            urls: [SKIN_SCHEME]
+        },
+        nonCDNSkinHandler
+    );
+
+    DRC.Main.defaultSession.webRequest.onBeforeRequest(
+        {
+            urls: [CDN_SKIN_SCHEME]
+        },
+        CDNSkinHandler
     );
 }
 
