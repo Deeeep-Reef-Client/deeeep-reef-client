@@ -4,7 +4,6 @@ const { app, BrowserWindow, Menu, ipcMain, shell, session, globalShortcut, Notif
 const log = require('electron-log');
 const RPC = require('discord-rpc');
 const Store = require('electron-store');
-const { ElectronChromeExtensions } = require('electron-chrome-extensions');
 const electronDl = require('electron-dl');
 const Badge = require('electron-windows-badge');
 const enhanceWebRequest = require('electron-better-web-request').default;
@@ -304,9 +303,6 @@ const createWindow = () => {
         if (response === 1)
             e.preventDefault();
     });
-    // Extensions
-    const extensions = new ElectronChromeExtensions();
-    extensions.addTab(window.webContents, window);
     // Loads doc assets
     let docassetsOn = settings.docassets;
     if (docassetsOn === undefined) {
