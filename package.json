@@ -84,6 +84,7 @@
     "bad-words": "^3.0.4",
     "discord-rpc": "^4.0.1",
     "discord.js": "^14.7.1",
+    "electron-better-web-request": "^1.0.1",
     "electron-chrome-extensions": "^3.9.0",
     "electron-dl": "^3.4.0",
     "electron-log": "^4.4.8",

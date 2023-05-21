@@ -7,6 +7,7 @@ const Store = require('electron-store');
 const { ElectronChromeExtensions } = require('electron-chrome-extensions');
 const electronDl = require('electron-dl');
 const Badge = require('electron-windows-badge');
+const enhanceWebRequest = require('electron-better-web-request').default;
 const https = require('node:https');
 const spawn = require('node:child_process').spawn;
 const path = require('node:path');
@@ -19,54 +20,12 @@ let newUpdate = false;
 let instUrl = "";
 const versionId = "v0.9.1-beta";
 let currentVersionId = "";
-// The DRC API for main
-let DRC_DATA = {
-    Main: {
-        Session: {
-            OnBeforeRequestUrls: [],
-            OnBeforeRequestListeners: [],
-        }
-    }
-};
+// DRC API
 const DRC = {
     Main: {
-        Session: {
-            AddOnBeforeRequestListener(filter, callback) {
-                DRC_DATA.Main.Session.OnBeforeRequestUrls = DRC_DATA.Main.Session.OnBeforeRequestUrls.concat(filter.urls);
-                DRC_DATA.Main.Session.OnBeforeRequestListeners.push({
-                    regex: filter.regex,
-                    callback
-                });
-                for (let i in DRC_DATA.Main.Session.OnBeforeRequestListeners) {
-                    console.log(DRC_DATA.Main.Session.OnBeforeRequestListeners[i].callback.toString());
-                }
-                // session.defaultSession.webRequest.onBeforeSendHeaders(
-                //     {
-                //         urls: ['https://*.github.com/*', '*://electron.github.io/*']
-                //     }, 
-                //     (details: any, callback: Function) => {
-                //     details.requestHeaders['User-Agent'] = 'MyAgent'
-                //     callback({ requestHeaders: details.requestHeaders })
-                // })
-                session.defaultSession.webRequest.onBeforeRequest({
-                    urls: DRC_DATA.Main.Session.OnBeforeRequestUrls
-                }, (details, callback) => {
-                    let cb = new Function();
-                    for (let i in DRC_DATA.Main.Session.OnBeforeRequestListeners) {
-                        for (let j in DRC_DATA.Main.Session.OnBeforeRequestListeners[i].regex) {
-                            if (!details.url.match(DRC_DATA.Main.Session.OnBeforeRequestListeners[i].regex[j]))
-                                continue;
-                            cb = DRC_DATA.Main.Session.OnBeforeRequestListeners[i].callback;
-                            break;
-                        }
-                    }
-                    cb(details, callback);
-                });
-            }
-        }
+        defaultSession: new Object()
     }
 };
-Object.freeze(DRC); // Don't touch my API
 const schema = {
     settings: {
         type: "object",
@@ -548,6 +507,8 @@ const createWindow = () => {
     }
 };
 app.on('ready', () => {
+    // Better WebRequest
+    DRC.Main.defaultSession = enhanceWebRequest(session.defaultSession);
     // Check for updates
     log.info("Checking updates...");
     https.request({
