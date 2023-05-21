@@ -379,11 +379,12 @@ const createWindow = () => {
 
     (async () => {
         console.log(app.getAppPath());
+
+        loadDrcAssetswapper();
+
         if (docassetsOn) await window.webContents.session.loadExtension(app.getAppPath() + "/extensions/docassets");
-        else await window.webContents.session.loadExtension(app.getAppPath() + "/extensions/drc-as-copy")
 
         if (adBlockerOn) await window.webContents.session.loadExtension(app.getAppPath() + "/extensions/ublock");
-        else await window.webContents.session.loadExtension(app.getAppPath() + "/extensions/drc-assetswapper")
 
         await window.webContents.session.loadExtension(app.getAppPath() + "/extensions/drc-assetswapper");
         await window.webContents.session.loadExtension(app.getAppPath() + "/extensions/drc-as-copy");
@@ -641,6 +642,63 @@ app.on('ready', () => {
     // Create window
     createWindow();
 });
+
+// Copyright (c) 2023 Doctorpus <https://github.com/The-Doctorpus>
+const assetswapperAlreadyChecked = new Set();
+
+function genericAssetswapperHandler(redirectTemplate: string, regex: RegExp, name: string, filenameKeys = ['filename']) {
+    return (details: any, callback: Function) => {
+        let redirectUrl = details.url;
+        const m = regex.exec(details.url);
+        if (m) {
+            //@ts-ignore: I know better!
+            const filenameArray = filenameKeys.map(key => m?.groups[key] || '');
+            const filename = filenameArray.join('');
+            let newRedirectUrl = redirectTemplate + filename;
+            const newRedirectUrlObject = new URL(newRedirectUrl);
+            if (!assetswapperAlreadyChecked.has(newRedirectUrl)) {
+                https.request({
+                    host: newRedirectUrlObject.hostname,
+                    path: newRedirectUrlObject.pathname,
+                    method: 'GET'
+                }, (res: any) => {
+                    if (res.statusCode === 200) {
+                        redirectUrl = newRedirectUrl;
+                        assetswapperAlreadyChecked.add(newRedirectUrl);
+
+                        callback({ redirectURL: redirectUrl });
+                    } else {
+                        setTimeout(() => {
+                            assetswapperAlreadyChecked.delete(newRedirectUrl);
+
+                            console.log(`${newRedirectUrl} removed from checked list`);
+                        }, 5000);
+
+                        console.log(`${newRedirectUrl} does not exist.`);
+                    }
+                }).end();
+            } else {
+                callback();
+                console.log(newRedirectUrl + " has already been checked.");
+            }
+        } else callback();
+    };
+}
+
+function loadDrcAssetswapper() {
+    const MISC_REDIRECT_TEMPLATE = 'https://deeeep-reef-client.github.io/modded-assets/misc/'; // redirect URLs are all from this
+    const MISC_SCHEME = '*://*.deeeep.io/assets/index.*.js'; // these urls will be redirected like ui sprites
+    const MISC_REGEX = /.+\/assets\/(?<filename>[^/?]+)(?:\?.*)?$/ // might it be a valid ui sprite? 
+
+    const miscHandler = genericAssetswapperHandler(MISC_REDIRECT_TEMPLATE, MISC_REGEX, 'misc');
+
+    DRC.Main.defaultSession.webRequest.onBeforeRequest(
+        {
+            urls: [MISC_SCHEME]
+        },
+        miscHandler
+    );
+}
 
 interface ElectronDlFile {
     filename: string;
