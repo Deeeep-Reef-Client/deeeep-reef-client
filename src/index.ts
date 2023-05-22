@@ -28,6 +28,41 @@ let currentVersionId = "";
 const DRC: any = {
     Main: {
         defaultSession: new Object()
+    },
+    WebRequestHandlers: {
+        genericAssetswapperHandler: function (redirectTemplate: string, regex: RegExp, name: string, filenameKeys = ['filename']) {
+            return (details: any, callback: Function) => {
+                let redirectUrl = details.url;
+                const m = regex.exec(details.url);
+                if (m) {
+                    //@ts-ignore: I know better!
+                    const filenameArray = filenameKeys.map(key => m?.groups[key] || '');
+                    const filename = filenameArray.join('');
+                    let newRedirectUrl = redirectTemplate + filename;
+                    const newRedirectUrlObject = new URL(newRedirectUrl);
+                    if (!assetswapperAlreadyChecked.has(newRedirectUrl)) {
+                        https.request({
+                            host: newRedirectUrlObject.hostname,
+                            path: newRedirectUrlObject.pathname,
+                            method: 'GET'
+                        }, (res: any) => {
+                            assetswapperAlreadyChecked.add(newRedirectUrl);
+
+                            if (res.statusCode === 200) {
+                                redirectUrl = newRedirectUrl;
+                            } else {
+                                setTimeout(() => {
+                                    assetswapperAlreadyChecked.delete(newRedirectUrl);
+
+                                    // console.log(`${newRedirectUrl} removed from checked list`);
+                                }, 5000);
+                            }
+                            callback({ redirectURL: redirectUrl });
+                        }).end();
+                    } else callback();
+                } else callback();
+            };
+        }
     }
 };
 
@@ -354,7 +389,7 @@ const createWindow = () => {
 
         if (response === 1) e.preventDefault();
     });
-    
+
     // Loads doc assets
     let docassetsOn = settings.docassets;
     if (docassetsOn === undefined) {
@@ -636,46 +671,12 @@ app.on('ready', () => {
 // Copyright (c) 2023 Doctorpus <https://github.com/The-Doctorpus>
 const assetswapperAlreadyChecked = new Set();
 
-function genericAssetswapperHandler(redirectTemplate: string, regex: RegExp, name: string, filenameKeys = ['filename']) {
-    return (details: any, callback: Function) => {
-        let redirectUrl = details.url;
-        const m = regex.exec(details.url);
-        if (m) {
-            //@ts-ignore: I know better!
-            const filenameArray = filenameKeys.map(key => m?.groups[key] || '');
-            const filename = filenameArray.join('');
-            let newRedirectUrl = redirectTemplate + filename;
-            const newRedirectUrlObject = new URL(newRedirectUrl);
-            if (!assetswapperAlreadyChecked.has(newRedirectUrl)) {
-                https.request({
-                    host: newRedirectUrlObject.hostname,
-                    path: newRedirectUrlObject.pathname,
-                    method: 'GET'
-                }, (res: any) => {
-                    assetswapperAlreadyChecked.add(newRedirectUrl);
-
-                    if (res.statusCode === 200) {
-                        redirectUrl = newRedirectUrl;
-                    } else {
-                        setTimeout(() => {
-                            assetswapperAlreadyChecked.delete(newRedirectUrl);
-
-                            // console.log(`${newRedirectUrl} removed from checked list`);
-                        }, 5000);
-                    }
-                    callback({ redirectURL: redirectUrl });
-                }).end();
-            } else callback();
-        } else callback();
-    };
-}
-
 function loadDrcAssetswapper() {
     const MISC_REDIRECT_TEMPLATE = 'https://deeeep-reef-client.github.io/modded-assets/misc/'; // redirect URLs are all from this
     const MISC_SCHEME = '*://*.deeeep.io/assets/index.*.js'; // these urls will be redirected like ui sprites
     const MISC_REGEX = /.+\/assets\/(?<filename>[^/?]+)(?:\?.*)?$/ // might it be a valid ui sprite? 
 
-    const miscHandler = genericAssetswapperHandler(MISC_REDIRECT_TEMPLATE, MISC_REGEX, 'misc');
+    const miscHandler = DRC.WebRequestHandlers.genericAssetswapperHandler(MISC_REDIRECT_TEMPLATE, MISC_REGEX, 'misc');
 
     DRC.Main.defaultSession.webRequest.onBeforeRequest(
         {
@@ -690,7 +691,7 @@ function loadDocassets() {
     const ANIMATION_SCHEME = '*://*.deeeep.io/assets/animations/*';
     const ANIMATION_REGEX = /.+\/animations\/(?<filename>[^?]+)(?:\?.*)?$/
 
-    const animationHandler = genericAssetswapperHandler(ANIMATION_REDIRECT_TEMPLATE, ANIMATION_REGEX, 'animation');
+    const animationHandler = DRC.WebRequestHandlers.genericAssetswapperHandler(ANIMATION_REDIRECT_TEMPLATE, ANIMATION_REGEX, 'animation');
 
     DRC.Main.defaultSession.webRequest.onBeforeRequest(
         {
@@ -703,7 +704,7 @@ function loadDocassets() {
     const CHAR_SCHEME = '*://*.deeeep.io/*assets/characters/*'; // these urls will be redirected like characters
     const CHAR_REGEX = /.+\/characters\/(?<filename>[^?]+)(?:\?.*)?$/ // might it be a valid character? 
 
-    const charHandler = genericAssetswapperHandler(CHAR_REDIRECT_TEMPLATE, CHAR_REGEX, 'character');
+    const charHandler = DRC.WebRequestHandlers.genericAssetswapperHandler(CHAR_REDIRECT_TEMPLATE, CHAR_REGEX, 'character');
 
     DRC.Main.defaultSession.webRequest.onBeforeRequest(
         {
@@ -716,7 +717,7 @@ function loadDocassets() {
     const SPRITESHEET_SCHEME = '*://*.deeeep.io/assets/spritesheets/*'; // these urls will be redirected like spritesheets
     const SPRITESHEET_REGEX = /.+\/spritesheets\/(?<filename>[^?]+)(?:\?.*)?$/ // might it be a valid spritesheet? 
 
-    const spritesheetHandler = genericAssetswapperHandler(SPRITESHEET_REDIRECT_TEMPLATE, SPRITESHEET_REGEX, 'spritesheet');
+    const spritesheetHandler = DRC.WebRequestHandlers.genericAssetswapperHandler(SPRITESHEET_REDIRECT_TEMPLATE, SPRITESHEET_REGEX, 'spritesheet');
 
     DRC.Main.defaultSession.webRequest.onBeforeRequest(
         {
@@ -729,7 +730,7 @@ function loadDocassets() {
     const MAP_SPRITESHEET_SCHEME = '*://*.deeeep.io/assets/packs/*'; // these urls will be redirected like map spritesheets
     const MAP_SPRITESHEET_REGEX = /.+\/packs\/(?<filename>[^?]+)(?:\?.*)?$/ // might it be a valid map spritesheet? 
 
-    const mapSpritesheetHandler = genericAssetswapperHandler(MAP_SPRITESHEET_REDIRECT_TEMPLATE, MAP_SPRITESHEET_REGEX, 'map spritesheet');
+    const mapSpritesheetHandler = DRC.WebRequestHandlers.genericAssetswapperHandler(MAP_SPRITESHEET_REDIRECT_TEMPLATE, MAP_SPRITESHEET_REGEX, 'map spritesheet');
 
     DRC.Main.defaultSession.webRequest.onBeforeRequest(
         {
@@ -742,7 +743,7 @@ function loadDocassets() {
     const IMG_SCHEME = '*://*.deeeep.io/img/*'; // these urls will be redirected like ui sprites
     const IMG_REGEX = /.+\/img\/(?<filename>[^?]+)(?:\?.*)?$/ // might it be a valid ui sprite? 
 
-    const imgSpriteHandler = genericAssetswapperHandler(IMG_REDIRECT_TEMPLATE, IMG_REGEX, 'img spritesheet');
+    const imgSpriteHandler = DRC.WebRequestHandlers.genericAssetswapperHandler(IMG_REDIRECT_TEMPLATE, IMG_REGEX, 'img spritesheet');
 
     DRC.Main.defaultSession.webRequest.onBeforeRequest(
         {
@@ -755,7 +756,7 @@ function loadDocassets() {
     const PET_SCHEME = '*://*.deeeep.io/custom/pets/*'
     const PET_REGEX = /.+\/pets\/(?<filename>[^?]+)(?:\?.*)?$/
 
-    const petHandler = genericAssetswapperHandler(PET_REDIRECT_TEMPLATE, PET_REGEX, 'pet');
+    const petHandler = DRC.WebRequestHandlers.genericAssetswapperHandler(PET_REDIRECT_TEMPLATE, PET_REGEX, 'pet');
 
     DRC.Main.defaultSession.webRequest.onBeforeRequest(
         {
@@ -772,8 +773,8 @@ function loadDocassets() {
     const CDN_REGEX = /skins\/(?:(?<skin_name>[A-Za-z]+)|(?:(?<skin_id>[0-9]+)(?<version>-[0-9]+)(?<post_version>(?<extra_asset_name>-[A-Za-z0-9-_]+)?)))(?<suffix>\.[a-zA-Z0-9]+)/;
     // skins submitted through Creators Center have a special scheme and must be stripped of their version number
 
-    const nonCDNSkinHandler = genericAssetswapperHandler(SKIN_REDIRECT_TEMPLATE, SKIN_REGEX, 'non-CDN skin');
-    const CDNSkinHandler = genericAssetswapperHandler(CDN_SKIN_REDIRECT_TEMPLATE, CDN_REGEX, 'CDN skin', ['skin_name', 'skin_id', 'post_version', 'suffix']);
+    const nonCDNSkinHandler = DRC.WebRequestHandlers.genericAssetswapperHandler(SKIN_REDIRECT_TEMPLATE, SKIN_REGEX, 'non-CDN skin');
+    const CDNSkinHandler = DRC.WebRequestHandlers.genericAssetswapperHandler(CDN_SKIN_REDIRECT_TEMPLATE, CDN_REGEX, 'CDN skin', ['skin_name', 'skin_id', 'post_version', 'suffix']);
 
     DRC.Main.defaultSession.webRequest.onBeforeRequest(
         {
