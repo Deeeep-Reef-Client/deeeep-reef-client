@@ -1141,62 +1141,70 @@ window.addEventListener("DOMContentLoaded", () => {
     let friendRequestCount = 0;
 
     async function checkForumNotifications() {
-        let isLoggedIn = false;
-        await fetch("https://apibeta.deeeep.io/auth/me")
-            .then(response => response.json())
-            .then(data => { isLoggedIn = data?.statusCode !== 403 });
-        if (!isLoggedIn) return;
-        const xhr = new XMLHttpRequest();
-        xhr.open('GET', "https://apibeta.deeeep.io/forumNotifications/count");
-        xhr.withCredentials = true;
-        xhr.addEventListener("load", (_event) => {
-            const forumNotifications = JSON.parse(xhr.response);
+        const authXhr = new XMLHttpRequest();
+        authXhr.open('GET', "https://apibeta.deeeep.io/auth/me");
+        authXhr.withCredentials = true;
+        authXhr.addEventListener("load", () => {
+            const response = JSON.parse(authXhr.responseText);
+            if (response.statusCode !== undefined && response.statusCode === 403) return;
 
-            if (forumNotifications.statusCode !== undefined && forumNotifications.statusCode === 403) return;
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', "https://apibeta.deeeep.io/forumNotifications/count");
+            xhr.withCredentials = true;
+            xhr.addEventListener("load", (_event) => {
+                const forumNotifications = JSON.parse(xhr.response);
 
-            if (forumNotifications.count > forumNotificationCount) {
-                new Notification("New forum notification", {
-                    body: "You received a new Forum notification."
-                });
-            }
+                if (forumNotifications.statusCode !== undefined && forumNotifications.statusCode === 403) return;
 
-            forumNotificationCount = forumNotifications.count;
-            badgeCount = friendRequestCount + forumNotificationCount;
+                if (forumNotifications.count > forumNotificationCount) {
+                    new Notification("New forum notification", {
+                        body: "You received a new Forum notification."
+                    });
+                }
 
-            ipcRenderer.send("update-badge", badgeCount || null);
+                forumNotificationCount = forumNotifications.count;
+                badgeCount = friendRequestCount + forumNotificationCount;
+
+                ipcRenderer.send("update-badge", badgeCount || null);
+            });
+            xhr.send();
         });
-        try { xhr.send(); } catch (e) { };
+        authXhr.send();
     }
     checkForumNotifications();
     setInterval(checkForumNotifications, 30000);
 
     // Friend requests
     async function checkFriendRequests() {
-        let isLoggedIn = false;
-        await fetch("https://apibeta.deeeep.io/auth/me")
-            .then(response => response.json())
-            .then(data => { isLoggedIn = data?.statusCode !== 403 });
-        if (!isLoggedIn) return;
-        const xhr = new XMLHttpRequest();
-        xhr.open('GET', "https://apibeta.deeeep.io/friendRequests/count");
-        xhr.withCredentials = true;
-        xhr.addEventListener("load", (_event) => {
-            const friendRequests = JSON.parse(xhr.response);
+        const authXhr = new XMLHttpRequest();
+        authXhr.open('GET', "https://apibeta.deeeep.io/auth/me");
+        authXhr.withCredentials = true;
+        authXhr.addEventListener("load", () => {
+            const response = JSON.parse(authXhr.responseText);
+            if (response.statusCode !== undefined && response.statusCode === 403) return;
 
-            if (friendRequests.statusCode !== undefined && friendRequests.statusCode === 403) return;
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', "https://apibeta.deeeep.io/friendRequests/count");
+            xhr.withCredentials = true;
+            xhr.addEventListener("load", (_event) => {
+                const friendRequests = JSON.parse(xhr.response);
 
-            if (friendRequests.count > friendRequestCount) {
-                new Notification("New friend request", {
-                    body: "You received a new friend request."
-                });
-            }
+                if (friendRequests.statusCode !== undefined && friendRequests.statusCode === 403) return;
 
-            friendRequestCount = friendRequests.count;
-            badgeCount = friendRequestCount + forumNotificationCount;
+                if (friendRequests.count > friendRequestCount) {
+                    new Notification("New friend request", {
+                        body: "You received a new friend request."
+                    });
+                }
 
-            ipcRenderer.send("update-badge", badgeCount || null);
+                friendRequestCount = friendRequests.count;
+                badgeCount = friendRequestCount + forumNotificationCount;
+
+                ipcRenderer.send("update-badge", badgeCount || null);
+            });
+            xhr.send();
         });
-        try { xhr.send(); } catch (e) { };
+        authXhr.send();
     }
     checkFriendRequests();
     setInterval(checkFriendRequests, 30000);
