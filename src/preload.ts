@@ -5394,7 +5394,7 @@ window.addEventListener("DOMContentLoaded", () => {
         .then(res => res.json())
         .then(data => {
             pluginList = data;
-            filteredPluginList = data;
+            filteredPluginList = data;          
         });
 
     const pluginsButtonWrapper = settingsButtonWrapper!.cloneNode(true) as HTMLDivElement;
@@ -5730,12 +5730,14 @@ window.addEventListener("DOMContentLoaded", () => {
 
     async function updateFilteredPlugins() {
         const search = pluginsSearchQuery.value.split(new RegExp(" "));
-        await fetch("https://deeeep-reef-client.github.io/plugins-api/registry.json")
-            .then(res => res.json())
-            .then(data => {
-                pluginList = data;
-                filteredPluginList = data;
-            });
+        if (Object.keys(pluginList).length === 0) {
+            await fetch("https://deeeep-reef-client.github.io/plugins-api/registry.json")
+                .then(res => res.json())
+                .then(data => {
+                    pluginList = data;
+                    filteredPluginList = data;
+                });
+        } else filteredPluginList = structuredClone(pluginList);
         filteredPluginList.list = filteredPluginList.list.filter((p: any) => {
             let result = false;
             for (const i in search) {
@@ -5764,12 +5766,14 @@ window.addEventListener("DOMContentLoaded", () => {
         searchPluginsModalContainer!.classList.toggle("drc-modal-hidden");
         pluginsSearchQuery.value = "";
         pluginsSearchType.value = "all";
-        await fetch("https://deeeep-reef-client.github.io/plugins-api/registry.json")
-            .then(res => res.json())
-            .then(data => {
-                pluginList = data;
-                filteredPluginList = data;
-            });
+        if (Object.keys(pluginList).length === 0) {
+            await fetch("https://deeeep-reef-client.github.io/plugins-api/registry.json")
+                .then(res => res.json())
+                .then(data => {
+                    pluginList = data;
+                    filteredPluginList = data;
+                });
+        } else filteredPluginList = structuredClone(pluginList);
 
         updateSearchPluginsList();
         window.addEventListener("keydown", searchPluginsEnterListener);
