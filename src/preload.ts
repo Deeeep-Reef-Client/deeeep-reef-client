@@ -5394,8 +5394,57 @@ window.addEventListener("DOMContentLoaded", () => {
         .then(res => res.json())
         .then(data => {
             pluginList = data;
-            filteredPluginList = data;          
+            filteredPluginList = data;
+
+            pluginAutoUpdater();
         });
+
+    async function pluginAutoUpdater() {
+        let plugins = pluginList.list.filter((p: any) => p.type === "plugin");
+
+        for (let i in plugins) {
+            if (
+                !settings.pluginsData.filter((p: any) => p.id === plugins[i].id).length
+                || plugins[i].version === undefined
+                || plugins[i].version === settings.pluginsData.find((p: any) => p.id === plugins[i].id)) continue;
+            new Notification("Plugin update detected", {
+                body: `An update for the plugin ${plugins[i].name} will be automatically installed.`
+            });
+
+            // fetch plugin src from plugin.json
+            let errorDownloading = false;
+            const pluginSrc = await fetch(`https://deeeep-reef-client.github.io/plugins-api/plugins/${plugins[i].id}/plugin.json`)
+                .then(res => res.json())
+                .catch((err) => {
+                    new Notification("Something went wrong", {
+                        body: `An error occurred while downloading an update for your plugin`
+                    });
+                    console.error(err);
+                    errorDownloading = true;
+                });
+            if (errorDownloading) return;
+
+            let installedPlugin: any = {
+                name: pluginSrc.name,
+                id: pluginSrc.id,
+                description: pluginSrc.description,
+                author: pluginSrc.author,
+                src: pluginSrc.src
+            };
+            if (pluginSrc.version) installedPlugin.version = pluginSrc.version;
+            settings.pluginsData = settings.pluginsData.filter((p: any) => p.id !== plugins[i].id);
+            settings.pluginsData.push(installedPlugin);
+
+            updateInstalledPluginsList();
+            new Notification("Plugin updated!", {
+                body: `The plugin ${pluginSrc.name} has been updated. Please restart the client for any changes to take effect.`
+            });
+            saveSettings();
+
+            // Update script
+            pluginSrc.src.filter((s: any) => s.type === "update").forEach((s: any) => eval(s.src));
+        }
+    }
 
     const pluginsButtonWrapper = settingsButtonWrapper!.cloneNode(true) as HTMLDivElement;
     const pluginsButton = pluginsButtonWrapper.firstElementChild as HTMLButtonElement;
