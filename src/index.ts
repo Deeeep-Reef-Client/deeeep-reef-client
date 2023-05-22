@@ -578,9 +578,10 @@ const createWindow = () => {
                 // file written successfully
             } catch (err) {
                 console.error(err);
-                new Notification("Something went wrong", {
-                    body: `An error occurred while taking a screenshot.`
-                });
+                new Notification({
+                    title: "Something went wrong",
+                    body: "An error occurred while taking a screenshot."
+                }).show();
             }
         })
     });
