@@ -21,6 +21,74 @@ const versionId = "v0.9.1-beta";
 let currentVersionId = "";
 // DRC API
 const DRC = {
+    // Client info
+    Client: {
+        name: "Deeeep.io Reef Client",
+        version: "0.9.1",
+        versionTag: "v0.9.1-beta"
+    },
+    // Utility functions
+    Utils: {
+        habitatToArray: function (num) {
+            class Habitat {
+                constructor(num) {
+                    this.NAMES = ['Cold', 'Warm', 'Shallow', 'Deep', 'Fresh', 'Salt', 'Reef'];
+                    this.MAX = Math.pow(2, this.NAMES.length) - 1;
+                    this.habitatNum = num;
+                }
+                convertToBase(num, base) {
+                    let conversion = [];
+                    let power, quotient, remainder = 0;
+                    if (num === 0) {
+                        conversion = [0];
+                    }
+                    else {
+                        power = Math.floor(Math.log(num) / Math.log(base));
+                        while (power >= 0) {
+                            quotient = Math.floor(num / Math.pow(base, power));
+                            remainder = num % Math.pow(base, power);
+                            conversion.unshift(quotient);
+                            num = remainder;
+                            power--;
+                        }
+                    }
+                    return conversion;
+                }
+                convertToList() {
+                    const conversion = this.convertToBase(Math.floor(this.habitatNum), 2);
+                    const length = conversion.length;
+                    let partialDisplay = [];
+                    for (let index = 0; index < length; index += 2) {
+                        let str = "";
+                        let nextFlag = false;
+                        let nextName = "";
+                        let nextIndex = index + 1;
+                        let currentFlag = conversion[index];
+                        let currentName = currentFlag ? this.NAMES[index] : false;
+                        if (nextIndex >= length) {
+                            nextFlag = false;
+                        }
+                        else
+                            nextFlag = conversion[nextIndex];
+                        nextName = nextFlag ? this.NAMES[nextIndex] : false;
+                        if (currentName && nextName) {
+                            str = `${currentName}/${nextName}`;
+                        }
+                        else
+                            str = currentName || nextName;
+                        if (str) {
+                            partialDisplay.push(str);
+                        }
+                    }
+                    return partialDisplay;
+                }
+                hasReef() {
+                    return this.habitatNum >= Math.pow(2, this.NAMES.length - 1);
+                }
+            }
+            return (new Habitat(num)).convertToList();
+        }
+    },
     Main: {
         defaultSession: new Object()
     },
