@@ -5230,8 +5230,8 @@ window.addEventListener("DOMContentLoaded", () => {
                 author: pluginSrc.author,
                 src: pluginSrc.src
             };
-            if (pluginSrc.version)
-                installedPlugin.version = pluginSrc.version;
+            if (plugins[i].version)
+                installedPlugin.version = plugins[i].version;
             settings.pluginsData = settings.pluginsData.filter((p) => p.id !== plugins[i].id);
             settings.pluginsData.push(installedPlugin);
             updateInstalledPluginsList();
