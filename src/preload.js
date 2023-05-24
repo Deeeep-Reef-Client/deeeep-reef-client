@@ -5205,7 +5205,7 @@ window.addEventListener("DOMContentLoaded", () => {
         for (let i in plugins) {
             if (!settings.pluginsData.filter((p) => p.id === plugins[i].id).length
                 || plugins[i].version === undefined
-                || plugins[i].version === settings.pluginsData.find((p) => p.id === plugins[i].id))
+                || plugins[i].version === settings.pluginsData.find((p) => p.id === plugins[i].id)?.version)
                 continue;
             new Notification("Plugin update detected", {
                 body: `An update for the plugin ${plugins[i].name} will be automatically installed.`
