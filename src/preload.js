@@ -184,7 +184,7 @@ const DRC = {
                 if (!colourblindNames[i].text.startsWith("<GRE>"))
                     continue;
                 DRC.Preload.evalInBrowserContext(`
-                game.currentScene.entityManager.animalsList[${i}].nameObject.text = "${colourblindNames[i].text.replace("<GRE>", "<BLU>")}"
+                game.currentScene.entityManager.animalsList[${i}].nameObject.text = "${colourblindNames[i].text.replace("<GRE>", "<BLU>").replaceAll('"', "&drcquot;")}".replaceAll("&drcquot;", '"')
                 `);
             }
         },
@@ -198,7 +198,7 @@ const DRC = {
                 if (message.match(/^(<desc>(<TEAM>|\[TEAM\]|<ALL>|\[ALL\])<\/desc> )?<GRE>/)) {
                     DRC.Preload.evalInBrowserContext(`
                         game.currentScene.chatMessages[${i}].setText(
-                            "${message.replace("<GRE>", "<BLU>").replace("</GRE>", "</BLU>")}"
+                            "${message.replace("<GRE>", "<BLU>").replace("</GRE>", "</BLU>").replaceAll('"', "&drcquot;")}".replaceAll("&drcquot;", '"')
                         );
                     `);
                 }
@@ -223,7 +223,7 @@ const DRC = {
                     console.log(cleaned);
                     DRC.Preload.evalInBrowserContext(`
                         game.currentScene.chatMessages[${i}].setText(
-                            "${cleaned}"
+                            "${cleaned.replaceAll('"', "&drcquot;")}".replaceAll("&drcquot;", '"')
                         );
                     `);
                 }
