@@ -5399,6 +5399,8 @@ window.addEventListener("DOMContentLoaded", () => {
         });
 
     async function pluginAutoUpdater() {
+        if (settings.developer) return;
+        
         let plugins = pluginList.list.filter((p: any) => p.type === "plugin");
 
         for (let i in plugins) {
