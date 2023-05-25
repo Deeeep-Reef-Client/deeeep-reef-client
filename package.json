@@ -78,6 +78,11 @@
       "allowToChangeInstallationDirectory": false,
       "createDesktopShortcut": true
     },
+    "linux": {
+      "target": "AppImage",
+      "icon": "build/icon.png",
+      "description": "A simple desktop client for Deeeep.io"
+    },
     "asar": false
   },
   "dependencies": {
