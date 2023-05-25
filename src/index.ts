@@ -714,6 +714,8 @@ app.on('ready', () => {
     // Windows
     if (process.platform === "win32") {
         instUrlPath = "/api/insturl-win32.txt";
+    } else if (process.platform === "linux") {
+        instUrlPath = "/api/insturl-linux.txt";
     } else {
         // Not supported OS
         newUpdate = false;
