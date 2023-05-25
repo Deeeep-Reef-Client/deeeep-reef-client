@@ -17,15 +17,15 @@ const development = true;
 // Auto update
 let newUpdate = false;
 let instUrl = "";
-const versionId = "v0.9.1-beta";
+const versionId = "v1.0.0";
 let currentVersionId = "";
 // DRC API
 const DRC = {
     // Client info
     Client: {
         name: "Deeeep.io Reef Client",
-        version: "0.9.1",
-        versionTag: "v0.9.1-beta"
+        version: "1.0.0",
+        versionTag: "v1.0.0"
     },
     // Utility functions
     Utils: {
