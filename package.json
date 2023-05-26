@@ -11,9 +11,9 @@
   "scripts": {
     "start": "electron-forge start",
     "build": "tsc && npm exec electron-builder build",
-    "build-win": "tsc && npm exec electron-builder build --win",
-    "build-mac": "tsc && npm exec electron-builder build --mac",
-    "build-linux": "tsc && npm exec electron-builder build --linux",
+    "build-win": "npm exec electron-builder build --win",
+    "build-mac": "npm exec electron-builder build --mac",
+    "build-linux": "npm exec electron-builder build --linux",
     "lint": "echo \"No linting configured\""
   },
   "keywords": [
@@ -60,6 +60,7 @@
   "build": {
     "productName": "Deeeep.io Reef Client",
     "appId": "deeeepio.reefclient",
+    "artifactName": "Deeeep-Reef-Client-${version}-${os}.${ext}",
     "files": [
       "package.json",
       "src/**.js",
