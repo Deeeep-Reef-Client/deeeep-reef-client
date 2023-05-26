@@ -1,0 +1,92 @@
+name: Build/release
+
+on: release
+
+jobs:
+  build-windows:
+    runs-on: "windows-latest"
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v3
+
+      - name: Install Node.js and NPM
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+
+      - name: Install dependencies
+        run: npm install
+      
+      - name: Build application
+        run: npm run build-win
+
+      - name: Get package version
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@v1.3.1
+      
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: Upload Windows artifacts
+          path: |
+            dist/Deeeep-Reef-Client-${{steps.package-version.outputs.current-version}}-win.exe
+
+  build-mac:
+    runs-on: "macos-latest"
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v3
+
+      - name: Install Node.js and NPM
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+
+      - name: Install dependencies
+        run: npm install
+      
+      - name: Build application
+        run: npm run build-mac
+
+      - name: Get package version
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@v1.3.1
+      
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: Upload macOS artifacts
+          path: |
+            dist/Deeeep-Reef-Client-${{steps.package-version.outputs.current-version}}-mac.dmg
+
+  build-linux:
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v3
+
+      - name: Install Node.js and NPM
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+
+      - name: Install dependencies
+        run: npm install
+      
+      - name: Build application
+        run: npm run build-linux
+
+      - name: Get package version
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@v1.3.1
+      
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: Upload Linux artifacts
+          path: |
+            dist/Deeeep-Reef-Client-${{steps.package-version.outputs.current-version}}-linux.AppImage
+        
