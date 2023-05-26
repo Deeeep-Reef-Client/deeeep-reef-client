@@ -1,6 +1,6 @@
 name: Build/release
 
-on: release
+on: workflow_dispatch
 
 jobs:
   build-windows:
