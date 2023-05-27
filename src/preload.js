@@ -347,13 +347,13 @@ window.addEventListener("DOMContentLoaded", () => {
             background: rgba(255,255,255,0.2);
         }
         
-        #windowCloseButton:hover {
+        #windowControls.win > #windowCloseButton:hover {
             background: #E81123 !important;
         }
-        #windowCloseButton:active {
+        #windowControls.win > #windowCloseButton:active {
             background: #F1707A !important;
         }
-        #windowCloseButton:active .icon {
+        #windowControls.win > #windowCloseButton:active .icon {
             filter: invert(1);
         }
         
@@ -363,6 +363,27 @@ window.addEventListener("DOMContentLoaded", () => {
 
         #windowMinButton {
             border-radius: 0px 0px 0px 15px;
+        }
+
+        #windowControls.mac > #windowMinButton > img {
+            background-color: green;
+            border-radius: 50%;
+            width: 15px;
+            height: 15px;
+        }
+
+        #windowControls.mac > #windowMaxButton > img, #windowControls.mac > #windowRestoreButton > img {
+            background-color: yellow;
+            border-radius: 50%;
+            width: 15px;
+            height: 15px;
+        }
+
+        #windowControls.mac > #windowCloseButton > img {
+            background-color: red;
+            border-radius: 50%;
+            width: 15px;
+            height: 15px;
         }
 
         .windowDragRegion {
@@ -397,6 +418,12 @@ window.addEventListener("DOMContentLoaded", () => {
         </div>
     `;
     document.body.appendChild(windowControls);
+    if (process.platform === "win32") {
+        document.getElementById("windowControls").classList.add("win");
+    }
+    else if (process.platform === "darwin") {
+        document.getElementById("windowControls").classList.add("mac");
+    }
     const sideWindowDragRegion = document.createElement("div");
     sideWindowDragRegion.classList.add("windowDragRegion");
     DRC.EventObject.addEventListener(DRC.Events.DocumentLoaded, () => {
