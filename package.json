@@ -11,9 +11,9 @@
   "scripts": {
     "start": "electron-forge start",
     "build": "tsc && npm exec electron-builder build",
-    "build-win": "npm exec electron-builder build --win --publish=never",
-    "build-mac": "npm exec electron-builder build --mac --publish=never",
-    "build-linux": "npm exec electron-builder build --linux --publish=never",
+    "build-win": "npm exec electron-builder build --win --publish never",
+    "build-mac": "npm exec electron-builder build --mac --publish never",
+    "build-linux": "npm exec electron-builder build --linux --publish never",
     "lint": "echo \"No linting configured\""
   },
   "keywords": [
