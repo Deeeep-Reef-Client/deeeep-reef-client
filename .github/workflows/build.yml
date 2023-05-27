@@ -1,6 +1,11 @@
 name: Build/release
 
-on: workflow_dispatch
+on: 
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version"
+        required: true
 
 jobs:
   build-windows:
@@ -21,16 +26,12 @@ jobs:
       - name: Build application
         run: npm run build-win
 
-      - name: Get package version
-        id: package-version
-        uses: martinbeentjes/npm-get-version-action@v1.3.1
-      
       - name: Archive artifacts
         uses: actions/upload-artifact@v3
         with:
           name: Upload Windows artifacts
           path: |
-            dist/Deeeep.io-Reef-Client-${{steps.package-version.outputs.current-version}}-win.exe
+            dist/Deeeep.io-Reef-Client-${{ github.event.inputs.version }}-win.exe
 
   build-mac:
     runs-on: "macos-latest"
@@ -50,16 +51,12 @@ jobs:
       - name: Build application
         run: npm run build-mac
 
-      - name: Get package version
-        id: package-version
-        uses: martinbeentjes/npm-get-version-action@v1.3.1
-      
       - name: Archive artifacts
         uses: actions/upload-artifact@v3
         with:
           name: Upload macOS artifacts
           path: |
-            dist/Deeeep.io-Reef-Client-${{steps.package-version.outputs.current-version}}-mac.dmg
+            dist/Deeeep.io-Reef-Client-${{ github.event.inputs.version }}-mac.dmg
 
   build-linux:
     runs-on: "ubuntu-latest"
@@ -79,14 +76,10 @@ jobs:
       - name: Build application
         run: npm run build-linux
 
-      - name: Get package version
-        id: package-version
-        uses: martinbeentjes/npm-get-version-action@v1.3.1
-      
       - name: Archive artifacts
         uses: actions/upload-artifact@v3
         with:
           name: Upload Linux artifacts
           path: |
-            dist/Deeeep.io-Reef-Client-${{steps.package-version.outputs.current-version}}-linux.AppImage
+            dist/Deeeep.io-Reef-Client-${{ github.event.inputs.version }}-linux.AppImage
         
