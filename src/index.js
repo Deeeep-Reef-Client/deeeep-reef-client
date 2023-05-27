@@ -619,21 +619,32 @@ app.on('ready', () => {
         res.on('end', () => {
             log.info(`Current version: ${currentVersionId}`);
             if (versionId != currentVersionId) {
-                newUpdate = true;
-                new Notification({
-                    title: "New update detected!",
-                    body: "The update will be automatically downloaded when you quit"
-                }).show();
+                if (process.platform === "win32") {
+                    newUpdate = true;
+                    new Notification({
+                        title: "New update detected!",
+                        body: "The update " + versionId + " will be automatically downloaded when you quit"
+                    }).show();
+                }
+                else {
+                    new Notification({
+                        title: "New update detected!",
+                        body: "Please manually update the Client to the update " + versionId
+                    }).show();
+                }
             }
         });
     }).end();
     let instUrlPath = "";
     // Windows
     if (process.platform === "win32") {
-        instUrlPath = "/api/insturl-win32.txt";
+        instUrlPath = "/api/insturl-win.txt";
     }
     else if (process.platform === "linux") {
         instUrlPath = "/api/insturl-linux.txt";
+    }
+    else if (process.platform === "darwin") {
+        instUrlPath = "/api/insturl-mac.txt";
     }
     else {
         // Not supported OS
