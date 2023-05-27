@@ -704,12 +704,12 @@ app.on('ready', () => {
                     newUpdate = true;
                     new Notification({
                         title: "New update detected!",
-                        body: "The update " + versionId + " will be automatically downloaded when you quit"
+                        body: "The update " + currentVersionId + " will be automatically downloaded when you quit"
                     }).show();
                 } else {
                     new Notification({
                         title: "New update detected!",
-                        body: "Please manually update the Client to the update " + versionId
+                        body: "Please manually update the Client to the update " + currentVersionId
                     }).show();
                 }
             }
