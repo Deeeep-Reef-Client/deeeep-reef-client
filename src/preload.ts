@@ -1122,6 +1122,7 @@ window.addEventListener("DOMContentLoaded", () => {
         if (!document.contains(userWidget!.querySelector("button.el-button.btn.nice-button.blue.has-icon"))) return;
 
         userWidget!.querySelector("button.el-button.btn.nice-button.blue.has-icon")!.addEventListener("click", accountOnLogin);
+        userWidget!.querySelector("img.el-image__inner")!.addEventListener("click", accountOnLogin);
     });
 
     userWidgetObserver.observe(userWidget!, {
