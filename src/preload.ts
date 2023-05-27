@@ -422,18 +422,17 @@ window.addEventListener("DOMContentLoaded", () => {
             border-radius: 0px 0px 0px 15px;
         }
 
-        #windowDragRegion {
+        .windowDragRegion {
             -webkit-app-region: drag;
             pointer-events: none;
             width: 100%;
-            height: 0.5rem;
         }
     `;
 
     document.head.appendChild(windowControlsStyle);
     const windowControls = document.createElement("div");
     windowControls.innerHTML = `
-        <div id="windowDragRegion">
+        <div class="windowDragRegion" style="height:0.5rem;">
         <div id="windowControls">
 
             <div class="button" id="windowMinButton">
@@ -456,6 +455,15 @@ window.addEventListener("DOMContentLoaded", () => {
         </div>
     `;
     document.body.appendChild(windowControls);
+
+    const sideWindowDragRegion = document.createElement("div");
+    sideWindowDragRegion.classList.add("windowDragRegion");
+
+    DRC.EventObject.addEventListener(DRC.Events.DocumentLoaded, () => {
+        document.querySelector("div.el-row.header.justify-between.flex-nowrap")?.insertBefore(
+            sideWindowDragRegion, 
+            document.querySelector("div.el-row.header.justify-between.flex-nowrap > div.el-col.el-col-24.auto-col.left")?.nextSibling ?? null);
+    });
 
     const windowMinimiseButton = document.getElementById("windowMinButton");
     const windowMaximiseButton = document.getElementById("windowMaxButton");
