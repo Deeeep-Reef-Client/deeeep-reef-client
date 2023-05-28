@@ -25,6 +25,8 @@ let currentVersionId = "";
 
 
 // DRC API
+const assetswapperAlreadyChecked = new Set();
+const assetswapperNotExists = new Set();
 const DRC: any = {
     // Client info
     Client: {
@@ -112,27 +114,24 @@ const DRC: any = {
                     const filenameArray = filenameKeys.map(key => m?.groups[key] || '');
                     const filename = filenameArray.join('');
                     let newRedirectUrl = redirectTemplate + filename;
-                    const newRedirectUrlObject = new URL(newRedirectUrl);
                     if (!assetswapperAlreadyChecked.has(newRedirectUrl)) {
+                        const newRedirectUrlObject = new URL(newRedirectUrl);
                         https.request({
                             host: newRedirectUrlObject.hostname,
                             path: newRedirectUrlObject.pathname,
                             method: 'GET'
                         }, (res: any) => {
-                            assetswapperAlreadyChecked.add(newRedirectUrl);
-
                             if (res.statusCode === 200) {
+                                assetswapperAlreadyChecked.add(newRedirectUrl);
                                 redirectUrl = newRedirectUrl;
                             } else {
-                                setTimeout(() => {
-                                    assetswapperAlreadyChecked.delete(newRedirectUrl);
-
-                                    // console.log(`${newRedirectUrl} removed from checked list`);
-                                }, 5000);
+                                assetswapperAlreadyChecked.add(newRedirectUrl);
+                                assetswapperNotExists.add(newRedirectUrl);
                             }
                             callback({ redirectURL: redirectUrl });
                         }).end();
-                    } else callback();
+                    } else if (assetswapperNotExists.has(newRedirectUrl)) callback();
+                    else callback({ redirectURL: newRedirectUrl });
                 } else callback();
             };
         }
@@ -752,9 +751,6 @@ app.on('ready', () => {
     // Create window
     createWindow();
 });
-
-// Copyright (c) 2023 Doctorpus <https://github.com/The-Doctorpus>
-const assetswapperAlreadyChecked = new Set();
 
 function loadDrcAssetswapper() {
     const MISC_REDIRECT_TEMPLATE = 'https://deeeep-reef-client.github.io/modded-assets/misc/'; // redirect URLs are all from this
