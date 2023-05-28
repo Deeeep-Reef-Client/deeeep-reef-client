@@ -488,7 +488,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
     DRC.EventObject.addEventListener(DRC.Events.DocumentLoaded, () => {
         document.querySelector("div.el-row.header.justify-between.flex-nowrap")?.insertBefore(
-            sideWindowDragRegion, 
+            sideWindowDragRegion,
             document.querySelector("div.el-row.header.justify-between.flex-nowrap > div.el-col.el-col-24.auto-col.left")?.nextSibling ?? null);
     });
 
@@ -1176,70 +1176,56 @@ window.addEventListener("DOMContentLoaded", () => {
     let friendRequestCount = 0;
 
     async function checkForumNotifications() {
-        const authXhr = new XMLHttpRequest();
-        authXhr.open('GET', "https://apibeta.deeeep.io/auth/me");
-        authXhr.withCredentials = true;
-        authXhr.addEventListener("load", () => {
-            const response = JSON.parse(authXhr.responseText);
-            if (response.statusCode !== undefined && response.statusCode === 403) return;
+        if (document.contains(userWidget!.querySelector("button.el-button.btn.nice-button.blue.has-icon"))) return;
 
-            const xhr = new XMLHttpRequest();
-            xhr.open('GET', "https://apibeta.deeeep.io/forumNotifications/count");
-            xhr.withCredentials = true;
-            xhr.addEventListener("load", (_event) => {
-                const forumNotifications = JSON.parse(xhr.response);
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', "https://apibeta.deeeep.io/forumNotifications/count");
+        xhr.withCredentials = true;
+        xhr.addEventListener("load", (_event) => {
+            const forumNotifications = JSON.parse(xhr.response);
 
-                if (forumNotifications.statusCode !== undefined && forumNotifications.statusCode === 403) return;
+            if (forumNotifications.statusCode !== undefined && forumNotifications.statusCode === 403) return;
 
-                if (forumNotifications.count > forumNotificationCount) {
-                    new Notification("New forum notification", {
-                        body: "You received a new Forum notification."
-                    });
-                }
+            if (forumNotifications.count > forumNotificationCount) {
+                new Notification("New forum notification", {
+                    body: "You received a new Forum notification."
+                });
+            }
 
-                forumNotificationCount = forumNotifications.count;
-                badgeCount = friendRequestCount + forumNotificationCount;
+            forumNotificationCount = forumNotifications.count;
+            badgeCount = friendRequestCount + forumNotificationCount;
 
-                ipcRenderer.send("update-badge", badgeCount || null);
-            });
-            xhr.send();
+            ipcRenderer.send("update-badge", badgeCount || null);
         });
-        authXhr.send();
+        xhr.send();
     }
     checkForumNotifications();
     setInterval(checkForumNotifications, 30000);
 
     // Friend requests
     async function checkFriendRequests() {
-        const authXhr = new XMLHttpRequest();
-        authXhr.open('GET', "https://apibeta.deeeep.io/auth/me");
-        authXhr.withCredentials = true;
-        authXhr.addEventListener("load", () => {
-            const response = JSON.parse(authXhr.responseText);
-            if (response.statusCode !== undefined && response.statusCode === 403) return;
+        if (document.contains(userWidget!.querySelector("div.avatar.tier-null > button.el-button.btn.nice-button.blue.has-icon"))) return;
 
-            const xhr = new XMLHttpRequest();
-            xhr.open('GET', "https://apibeta.deeeep.io/friendRequests/count");
-            xhr.withCredentials = true;
-            xhr.addEventListener("load", (_event) => {
-                const friendRequests = JSON.parse(xhr.response);
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', "https://apibeta.deeeep.io/friendRequests/count");
+        xhr.withCredentials = true;
+        xhr.addEventListener("load", (_event) => {
+            const friendRequests = JSON.parse(xhr.response);
 
-                if (friendRequests.statusCode !== undefined && friendRequests.statusCode === 403) return;
+            if (friendRequests.statusCode !== undefined && friendRequests.statusCode === 403) return;
 
-                if (friendRequests.count > friendRequestCount) {
-                    new Notification("New friend request", {
-                        body: "You received a new friend request."
-                    });
-                }
+            if (friendRequests.count > friendRequestCount) {
+                new Notification("New friend request", {
+                    body: "You received a new friend request."
+                });
+            }
 
-                friendRequestCount = friendRequests.count;
-                badgeCount = friendRequestCount + forumNotificationCount;
+            friendRequestCount = friendRequests.count;
+            badgeCount = friendRequestCount + forumNotificationCount;
 
-                ipcRenderer.send("update-badge", badgeCount || null);
-            });
-            xhr.send();
+            ipcRenderer.send("update-badge", badgeCount || null);
         });
-        authXhr.send();
+        xhr.send();
     }
     checkFriendRequests();
     setInterval(checkFriendRequests, 30000);
