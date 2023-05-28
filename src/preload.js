@@ -1145,7 +1145,7 @@ window.addEventListener("DOMContentLoaded", () => {
     setInterval(checkForumNotifications, 30000);
     // Friend requests
     async function checkFriendRequests() {
-        if (document.contains(userWidget.querySelector("div.avatar.tier-null > button.el-button.btn.nice-button.blue.has-icon")))
+        if (document.contains(userWidget.querySelector("button.el-button.btn.nice-button.blue.has-icon")))
             return;
         const xhr = new XMLHttpRequest();
         xhr.open('GET', "https://apibeta.deeeep.io/friendRequests/count");
