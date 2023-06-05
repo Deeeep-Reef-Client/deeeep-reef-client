@@ -157,6 +157,7 @@ interface SettingsTemplate {
     gameName: string;
     gameAccounts: Array<any>;
     colourblind: boolean;
+    discordRichPresence: boolean;
     developer: boolean;
 }
 
@@ -235,6 +236,10 @@ const schema = {
                 type: "boolean",
                 default: false
             },
+            discordRichPresence: {
+                type: "boolean",
+                default: true
+            },
             developer: {
                 type: "boolean",
                 default: false
@@ -262,6 +267,7 @@ let settings: SettingsTemplate = {
     gameName: "",
     gameAccounts: [],
     colourblind: false,
+    discordRichPresence: true,
     developer: false
 };
 Object.assign(settings, store.get("settings") ?? {});
@@ -284,6 +290,7 @@ if (settings === undefined) {
         gameName: "",
         gameAccounts: [],
         colourblind: false,
+        discordRichPresence: true,
         developer: false
     };
     store.set("settings", settings);
@@ -580,6 +587,11 @@ const createWindow = () => {
 
     if (settings.colourblind === undefined) {
         settings.colourblind = false;
+        store.set("settings", settings);
+    };
+
+    if (settings.discordRichPresence === undefined) {
+        settings.discordRichPresence = true;
         store.set("settings", settings);
     };
 
@@ -991,14 +1003,28 @@ function setDiscordActivity(gameInfo: { gamemode: string, url: string }) {
     })
 };
 rpc.login({ clientId: "1006552150807150594" });
-rpc.on('ready', () => setDiscordActivity({
+rpc.on('ready', () => {
+    if (settings.discordRichPresence) setDiscordActivity({
+        gamemode: "Menu",
+        url: ''
+    });
+});
+// Await gameInfo IPC message to change RPC
+let lastGameInfo = {
     gamemode: "Menu",
     url: ''
-}));
-// Await gameInfo IPC message to change RPC
+};
+
 ipcMain.on("gameInfo", (_event: Event, gameInfo: { gamemode: string, url: string }) => {
-    setDiscordActivity(gameInfo);
+    if (settings.discordRichPresence) setDiscordActivity(gameInfo);
+    lastGameInfo = gameInfo;
 })
+// Reload Discord RPC
+ipcMain.on("reloadDiscordRpc", () => {
+    log.info("Discord RPC reloaded");
+    if (settings.discordRichPresence) setDiscordActivity(lastGameInfo);
+    else rpc.clearActivity();
+});
 
 // plugins
 for (const i in settings.pluginsData) {

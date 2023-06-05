@@ -285,6 +285,7 @@ interface SettingsTemplate {
     gameName: string;
     gameAccounts: Array<any>;
     colourblind: boolean;
+    discordRichPresence: boolean;
     developer: boolean;
 }
 
@@ -305,6 +306,7 @@ let settings: SettingsTemplate = {
     gameName: "",
     gameAccounts: [],
     colourblind: false,
+    discordRichPresence: true,
     developer: false
 };
 ipcRenderer.on("settings", (_event: Event, s: SettingsTemplate) => {
@@ -958,6 +960,35 @@ window.addEventListener("DOMContentLoaded", () => {
             chatPane!.appendChild(advancedProfanityFilterSetting);
 
             // General Settings
+
+            // Discord RPC
+            const discordRichPresenceSetting = graphicsPane!.childNodes[2].cloneNode(true) as HTMLDivElement;
+            const discordRichPresenceName = discordRichPresenceSetting.querySelector(".el-form-item__label") as HTMLDivElement;
+            const discordRichPresenceDesc = discordRichPresenceSetting.querySelector(".notes") as HTMLSpanElement;
+            const discordRichPresenceCheckbox = discordRichPresenceSetting.querySelector(".el-checkbox__input > input") as HTMLInputElement;
+            discordRichPresenceName!.setAttribute("id", "discordRichPresenceName");
+            discordRichPresenceName!.innerText = "Discord Rich Presence";
+            discordRichPresenceDesc!.innerText = "Toggles Discord Rich Presence";
+            if (settings.discordRichPresence) {
+                discordRichPresenceSetting.querySelector(".el-checkbox__input")!.classList.add("is-checked");
+            } else {
+                discordRichPresenceSetting.querySelector(".el-checkbox__input")!.classList.remove("is-checked");
+            }
+            discordRichPresenceCheckbox.addEventListener("click", () => {
+                if (settings.discordRichPresence) {
+                    settings.discordRichPresence = false;
+                    discordRichPresenceSetting.querySelector(".el-checkbox__input")!.classList.remove("is-checked");
+                    new Notification("Discord Rich Presence disabled", {
+                        body: "It may take a few seconds for your changes to take effect."
+                    });
+                } else {
+                    settings.discordRichPresence = true;
+                    discordRichPresenceSetting.querySelector(".el-checkbox__input")!.classList.add("is-checked");
+                };
+                saveSettings();
+                ipcRenderer.send("reloadDiscordRpc");
+            });
+            generalPane!.appendChild(discordRichPresenceSetting);
 
             // Developer Mode
             const developerModeSetting = graphicsPane!.childNodes[2].cloneNode(true) as HTMLDivElement;
