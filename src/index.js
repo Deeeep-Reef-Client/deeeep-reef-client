@@ -390,7 +390,7 @@ const createWindow = () => {
         window.minimize();
     });
     ipcMain.on("windowMaximise", () => {
-        window.maximize();
+        window.maximize(); //TODO: Fix bug
     });
     ipcMain.on("windowRestore", () => {
         window.unmaximize();
@@ -632,7 +632,7 @@ app.on('ready', () => {
         res.on('end', () => {
             log.info(`Current version: ${currentVersionId}`);
             if (versionId != currentVersionId) {
-                if (process.platform === "win32") {
+                if (process.platform === "win32" || process.platform === "darwin") {
                     newUpdate = true;
                     new Notification({
                         title: "New update detected!",
@@ -796,7 +796,18 @@ app.on('window-all-closed', () => {
                 return;
             }
             console.log("Installer successfully deleted");
-            log.info("Installer deleted");
+            log.info("Windows installer deleted");
+        });
+    }
+    else if (fs.existsSync(app.getPath('downloads') + "/drcupdater.dmg")) {
+        fs.unlink(app.getPath('downloads') + "/drcupdater.dmg", (err) => {
+            if (err) {
+                log.info("An error occurred while deleting the installer. Please manually delete `drcupdater.exe` from your Downloads folder");
+                console.error(err);
+                return;
+            }
+            console.log("Installer successfully deleted");
+            log.info("macOS installer deleted");
         });
     }
     // download installer
@@ -806,13 +817,20 @@ app.on('window-all-closed', () => {
             title: "Downloading update",
             body: `The new update ${currentVersionId} is being downloaded`
         }).show();
+        let updaterFilename = "";
+        if (process.platform === "win32") {
+            updaterFilename = "drcupdater.exe";
+        }
+        else if (process.platform === "darwin") {
+            updaterFilename = "drcupdater.dmg";
+        }
         electronDl.download(new BrowserWindow({
             width: 0,
             height: 0,
             show: false,
         }), instUrl, {
             directory: app.getPath("downloads"),
-            filename: "drcupdater.exe",
+            filename: updaterFilename,
             onCompleted: function (file) {
                 if (this.errorTitle) {
                     new Notification({
@@ -824,7 +842,24 @@ app.on('window-all-closed', () => {
                     quitApp();
                     return;
                 }
-                spawn(file.path, { detached: true });
+                if (process.platform === "win32") {
+                    spawn(file.path, { detached: true });
+                }
+                else if (process.platform === "darwin") {
+                    /*
+                    hdiutil attach Deeeep.io-Reef-Client-1.0.1-mac.dmg
+
+cd /Volumes/DarwinPorts-1.2/
+
+sudo installer -pkg DarwinPorts-1.2.pkg -target "~"
+
+hdiutil detach /Volumes/DarwinPorts-1.2/
+*/
+                    spawn("hdiutil", ["attach", file.path]);
+                    spawn("cd", ["/Volumes/drcupdater/"]);
+                    spawn("sudo", ["cp", "-rf", "/Volumes/drcupdater/Deeeep.io Reef Client.app", "/Applications"]);
+                    spawn("hdiutil", ["detach", "/Volumes/drcupdater/"]);
+                }
                 quitApp();
             }
         });
