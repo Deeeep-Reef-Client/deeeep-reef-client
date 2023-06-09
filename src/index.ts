@@ -7,6 +7,7 @@ const Store = require('electron-store');
 const electronDl = require('electron-dl');
 const Badge = require('electron-windows-badge');
 const enhanceWebRequest = require('electron-better-web-request').default;
+const sudoPrompt = require('sudo-prompt');
 const https = require('node:https');
 const spawn = require('node:child_process').spawn;
 const path = require('node:path');
@@ -998,10 +999,20 @@ hdiutil detach /Volumes/DarwinPorts-1.2/
 */
                     spawn("hdiutil", ["attach", file.path]);
                     spawn("cd", ["/Volumes/drcupdater/"]);
-                    spawn("sudo", ["cp", "-rf", "/Volumes/drcupdater/Deeeep.io Reef Client.app", "/Applications"]);
+                    sudoPrompt.exec("cp -rf /Volumes/drcupdater/Deeeep.io Reef Client/Deeeep.io Reef Client.app /Applications", {
+                        name: "Deeeep.io Reef Client",
+                        icns: '/Applications/Deeeep.io Reef Client.app/Contents/Resources/src/favicon.ico', // TODO: Fix the icon
+                    },
+                        (error: any, stdout: string, stderr: string) => {
+                            if (error) new Notification({
+                                title: "Failed to auto update the Client",
+                                body: "Please manually update the Client to the update " + currentVersionId
+                            }).show();;
+                        }
+                    );
                     spawn("hdiutil", ["detach", "/Volumes/drcupdater/"]);
                 }
-                
+
                 quitApp();
             }
         });
