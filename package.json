@@ -96,6 +96,7 @@
     "electron-store": "^8.1.0",
     "electron-windows-badge": "^1.1.0",
     "jotform-css.js": "^1.0.1",
+    "sudo-prompt": "^9.2.1",
     "tippy.js": "^6.3.7"
   },
   "devDependencies": {
