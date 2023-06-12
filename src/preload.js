@@ -6987,6 +6987,8 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
                         author: pluginSrc.author,
                         src: pluginSrc.src
                     };
+                    if (filteredPluginList.list[i].version)
+                        installedPlugin.version = filteredPluginList.list[i].version;
                     if (filteredPluginList.list[i].license)
                         installedPlugin.license = pluginLicenseTemplate(filteredPluginList.list[i].license, pluginSrc.author);
                     settings.pluginsData.push(installedPlugin);
