@@ -7192,7 +7192,6 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
             installElem.classList.add("assetswapper-new-button");
             installElem.innerText = "Install";
             installElem.addEventListener("click", async () => {
-                /*
                 for (const i in settings.pluginsData) {
                     if (settings.pluginsData[i].id == filteredPluginList.list[i].id) {
                         new Notification("This plugin is already installed", {
@@ -7200,7 +7199,7 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
                         });
                         return;
                     }
-                }*/
+                }
                 // fetch plugin src from plugin.json
                 let errorDownloading = false;
                 const pluginSrc = await fetch(`https://deeeep-reef-client.github.io/plugins-api/plugins/${filteredPluginList.list[i].id}/plugin.json`)
