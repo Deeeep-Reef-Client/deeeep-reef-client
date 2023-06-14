@@ -917,9 +917,7 @@ interface ElectronDlFile {
 
 function quitApp() {
     log.info("App has been quit");
-    if (process.platform !== 'darwin') {
-        app.quit();
-    }
+    app.quit();
 }
 
 app.on('window-all-closed', () => {

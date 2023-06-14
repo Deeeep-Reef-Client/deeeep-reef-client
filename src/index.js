@@ -774,9 +774,7 @@ function loadAdblocker() {
 ;
 function quitApp() {
     log.info("App has been quit");
-    if (process.platform !== 'darwin') {
-        app.quit();
-    }
+    app.quit();
 }
 app.on('window-all-closed', () => {
     log.info("Window all closed");
@@ -800,8 +798,8 @@ app.on('window-all-closed', () => {
             log.info("Windows installer deleted");
         });
     }
-    else if (fs.existsSync(app.getPath('downloads') + "/drcupdater.dmg")) {
-        fs.unlink(app.getPath('downloads') + "/drcupdater.dmg", (err) => {
+    else if (fs.existsSync(app.getPath('downloads') + "/drcupdater.pkg")) {
+        fs.unlink(app.getPath('downloads') + "/drcupdater.pkg", (err) => {
             if (err) {
                 log.info("An error occurred while deleting the installer. Please manually delete `drcupdater.exe` from your Downloads folder");
                 console.error(err);
@@ -823,7 +821,7 @@ app.on('window-all-closed', () => {
             updaterFilename = "drcupdater.exe";
         }
         else if (process.platform === "darwin") {
-            updaterFilename = "drcupdater.dmg";
+            updaterFilename = "drcupdater.pkg";
         }
         electronDl.download(new BrowserWindow({
             width: 0,
@@ -856,20 +854,18 @@ sudo installer -pkg DarwinPorts-1.2.pkg -target "~"
 
 hdiutil detach /Volumes/DarwinPorts-1.2/
 */
-                    spawn("hdiutil", ["attach", file.path]);
-                    spawn("cd", ["/Volumes/drcupdater/"]);
-                    sudoPrompt.exec("cp -rf /Volumes/drcupdater/Deeeep.io Reef Client/Deeeep.io Reef Client.app /Applications", {
-                        name: "Deeeep.io Reef Client",
-                        icns: '/Applications/Deeeep.io Reef Client.app/Contents/Resources/src/favicon.ico', // TODO: Fix the icon
-                    }, (error, stdout, stderr) => {
-                        if (error)
-                            new Notification({
-                                title: "Failed to auto update the Client",
-                                body: "Please manually update the Client to the update " + currentVersionId
-                            }).show();
-                        ;
-                    });
-                    spawn("hdiutil", ["detach", "/Volumes/drcupdater/"]);
+                    // sudoPrompt.exec("installer -pkg " + file.path + " -target \"~\"", {
+                    //     name: "Deeeep.io Reef Client Updater",
+                    //     icns: '/Applications/Deeeep.io Reef Client.app/Contents/Resources/icon.icns',
+                    // },
+                    //     (error: any, stdout: string, stderr: string) => {
+                    //         if (error) new Notification({
+                    //             title: "Failed to auto update the Client",
+                    //             body: "Please manually update the Client to the update " + currentVersionId
+                    //         }).show();;
+                    //     }
+                    // );
+                    spawn("installer", ["-pkg", file.path, "-target", "\"~\""]);
                 }
                 quitApp();
             }
