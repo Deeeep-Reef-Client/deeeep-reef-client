@@ -85,7 +85,10 @@
       "description": "A simple desktop client for Deeeep.io"
     },
     "mac": {
-      "target": "pkg"
+      "target": "pkg",
+      "allowAnywhere": false,
+      "allowCurrentUserHome": true,
+      "allowRootDirectory": false
     },
     "asar": false
   },
