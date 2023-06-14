@@ -84,6 +84,9 @@
       "icon": "build/icon.png",
       "description": "A simple desktop client for Deeeep.io"
     },
+    "mac": {
+      "target": "pkg"
+    },
     "asar": false
   },
   "dependencies": {
