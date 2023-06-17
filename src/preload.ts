@@ -4574,6 +4574,8 @@ window.addEventListener("DOMContentLoaded", () => {
                     </svg>
                     <div class="spacer"></div>
                     <select id="assetSwapperSkinDropdown"></select>
+                    <div class="spacer"></div>
+                    <input id="assetSwapperIdInput" placeholder="Skin ID" class="drc-modal-hidden">
                 </div>
                 <button id="assetSwapperAddButton" class="assetswapper-add-button">Add</button>
             </div>
@@ -4590,6 +4592,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const assetSwapperLetterDropdown = document.getElementById("assetSwapperLetterDropdown") as HTMLSelectElement;
     const assetSwapperTargetDropdown = document.getElementById("assetSwapperTargetDropdown") as HTMLSelectElement;
     const assetSwapperSkinDropdown = document.getElementById("assetSwapperSkinDropdown") as HTMLSelectElement;
+    const assetSwapperIdInput = document.getElementById("assetSwapperIdInput") as HTMLInputElement;
     const assetSwapperRuleList = document.getElementById("assetSwapperRuleList") as HTMLDivElement;
     let assetSwapperLetter = assetSwapperLetterDropdown!.value;
     let assetSwapperTarget: string = '';
@@ -4604,6 +4607,7 @@ window.addEventListener("DOMContentLoaded", () => {
     let translations: any = {};
     let animalList: Array<any> = [];
     function updateAssetSwapperTargetDropdown() {
+        assetSwapperIdInput.classList.add("drc-modal-hidden");
         assetSwapperLetter = assetSwapperLetterDropdown!.value;
         assetSwapperTargetDropdown.innerHTML = "";
         for (let i in animalList) {
@@ -4623,6 +4627,7 @@ window.addEventListener("DOMContentLoaded", () => {
         updateAssetSwapperSkinDropdown();
     };
     async function updateAssetSwapperSkinDropdown() {
+        assetSwapperIdInput.classList.add("drc-modal-hidden");
         assetSwapperTarget = assetSwapperTargetDropdown!.value;
         assetSwapperSkinDropdown.innerHTML = "";
         assetSwapperTargetSkins = [];
@@ -4640,7 +4645,19 @@ window.addEventListener("DOMContentLoaded", () => {
             elem.innerText = assetSwapperTargetSkins[i].name;
             assetSwapperSkinDropdown.appendChild(elem);
         }
+        const otherElem = document.createElement("option");
+        otherElem.setAttribute("value", "other");
+        otherElem.innerText = "Other by ID";
+        assetSwapperSkinDropdown.appendChild(otherElem);
     };
+    assetSwapperSkinDropdown.addEventListener("change", () => {
+        if (assetSwapperSkinDropdown.value === "other") {
+            assetSwapperIdInput.value = "";
+            assetSwapperIdInput.classList.remove("drc-modal-hidden");
+        } else {
+            assetSwapperIdInput.classList.add("drc-modal-hidden");
+        }
+    });
     async function updateAssetSwapperList() {
         let assetSwapperRuleSkins: Array<any> = [];
         let assetSwapperRuleAnimalName: string = "";
@@ -4662,6 +4679,8 @@ window.addEventListener("DOMContentLoaded", () => {
                         animalSkins[settings.assetSwapperConfig[i].animal] = data;
                     })
             } else assetSwapperRuleSkins = animalSkins[settings.assetSwapperConfig[i].animal];
+            console.log(animalSkins)
+            console.log(assetSwapperRuleSkins)
             for (let j in assetSwapperRuleSkins) {
                 if (assetSwapperRuleSkins[j].id == settings.assetSwapperConfig[i].skin) {
                     assetSwapperRuleSkinName = assetSwapperRuleSkins[j].name;
@@ -4735,7 +4754,9 @@ window.addEventListener("DOMContentLoaded", () => {
     assetSwapperAddButton.addEventListener("click", () => {
         settings.assetSwapperConfig.push({
             animal: assetSwapperTargetDropdown.value,
-            skin: assetSwapperSkinDropdown.value
+            skin: assetSwapperSkinDropdown.value !== "other" ?
+                assetSwapperSkinDropdown.value
+                : assetSwapperIdInput.value
         });
         saveSettings();
         updateAssetSwapperList();
