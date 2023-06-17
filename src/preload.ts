@@ -4599,7 +4599,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
     let assetSwapperTargetSkins: Array<any> = [];
 
-    let animalSkins: any = {};
+    let allSkins: any;
 
     // former prelude that was moved
     // modified api/animals json that excludes nonplayable animals
@@ -4628,17 +4628,15 @@ window.addEventListener("DOMContentLoaded", () => {
     };
     async function updateAssetSwapperSkinDropdown() {
         assetSwapperIdInput.classList.add("drc-modal-hidden");
-        assetSwapperTarget = assetSwapperTargetDropdown!.value;
         assetSwapperSkinDropdown.innerHTML = "";
-        assetSwapperTargetSkins = [];
-        if (animalSkins[assetSwapperTarget] === undefined) {
-            await fetch(API_URL + "/skins?cat=all&animalId=" + assetSwapperTarget)
+        if (allSkins === undefined) {
+            await fetch(API_URL + "/skins?cat=all")
                 .then(res => res.json())
                 .then(data => {
-                    assetSwapperTargetSkins = data;
-                    animalSkins[assetSwapperTarget] = data;
+                    assetSwapperTargetSkins = data.filter((s: any) => s.fish_level == assetSwapperTargetDropdown.value);
+                    allSkins = data;
                 });
-        } else assetSwapperTargetSkins = animalSkins[assetSwapperTarget];
+        } else assetSwapperTargetSkins = allSkins.filter((s: any) => s.fish_level == assetSwapperTargetDropdown.value);
         for (let i in assetSwapperTargetSkins) {
             const elem = document.createElement("option");
             elem.setAttribute("value", assetSwapperTargetSkins[i].id);
@@ -4671,16 +4669,14 @@ window.addEventListener("DOMContentLoaded", () => {
                     break;
                 }
             }
-            if (animalSkins[settings.assetSwapperConfig[i].animal] === undefined) {
-                await fetch(API_URL + "/skins?cat=all&animalId=" + settings.assetSwapperConfig[i].animal)
+            if (allSkins === undefined) {
+                await fetch(API_URL + "/skins?cat=all")
                     .then(res => res.json())
                     .then(data => {
-                        assetSwapperRuleSkins = data;
-                        animalSkins[settings.assetSwapperConfig[i].animal] = data;
-                    })
-            } else assetSwapperRuleSkins = animalSkins[settings.assetSwapperConfig[i].animal];
-            console.log(animalSkins)
-            console.log(assetSwapperRuleSkins)
+                        assetSwapperRuleSkins = data.filter((s: any) => s.fish_level == settings.assetSwapperConfig[i].animal);
+                        allSkins = data;
+                    });
+            } else assetSwapperRuleSkins = allSkins.filter((s: any) => s.fish_level == settings.assetSwapperConfig[i].animal);
             for (let j in assetSwapperRuleSkins) {
                 if (assetSwapperRuleSkins[j].id == settings.assetSwapperConfig[i].skin) {
                     assetSwapperRuleSkinName = assetSwapperRuleSkins[j].name;
