@@ -4523,18 +4523,12 @@ window.addEventListener("DOMContentLoaded", () => {
                 }
             }
             if (allSkins === undefined) {
-                await fetch(API_URL + "/skins?cat=all")
-                    .then(res => res.json())
-                    .then(data => {
-                    assetSwapperRuleSkins = data.filter((s) => s.fish_level == settings.assetSwapperConfig[i].animal);
-                    allSkins = data;
-                });
+                allSkins = await fetch(API_URL + "/skins?cat=all")
+                    .then(res => res.json());
             }
-            else
-                assetSwapperRuleSkins = allSkins.filter((s) => s.fish_level == settings.assetSwapperConfig[i].animal);
-            for (let j in assetSwapperRuleSkins) {
-                if (assetSwapperRuleSkins[j].id == settings.assetSwapperConfig[i].skin) {
-                    assetSwapperRuleSkinName = assetSwapperRuleSkins[j].name;
+            for (let j in allSkins) {
+                if (allSkins[j].id == settings.assetSwapperConfig[i].skin) {
+                    assetSwapperRuleSkinName = allSkins[j].name;
                     break;
                 }
             }
