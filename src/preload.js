@@ -4594,7 +4594,6 @@ window.addEventListener("DOMContentLoaded", () => {
         }
         // init dropdown
         updateAssetSwapperTargetDropdown();
-        updateAssetSwapperSkinDropdown();
         updateAssetSwapperList();
     });
     assetSwapperLetterDropdown.addEventListener("change", updateAssetSwapperTargetDropdown);
