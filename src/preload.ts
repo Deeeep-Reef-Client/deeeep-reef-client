@@ -4600,6 +4600,7 @@ window.addEventListener("DOMContentLoaded", () => {
     let assetSwapperTargetSkins: Array<any> = [];
 
     let allSkins: any;
+    let pendingSkins: any;
 
     // former prelude that was moved
     // modified api/animals json that excludes nonplayable animals
@@ -4673,9 +4674,19 @@ window.addEventListener("DOMContentLoaded", () => {
                 allSkins = await fetch(API_URL + "/skins?cat=all")
                     .then(res => res.json());
             }
+            if (pendingSkins === undefined) {
+                pendingSkins = await fetch(API_URL + "/skins/pending")
+                    .then(res => res.json());
+            }
             for (let j in allSkins) {
                 if (allSkins[j].id == settings.assetSwapperConfig[i].skin) {
                     assetSwapperRuleSkinName = allSkins[j].name;
+                    break;
+                }
+            }
+            for (let j in pendingSkins) {
+                if (pendingSkins[j].id == settings.assetSwapperConfig[i].skin) {
+                    assetSwapperRuleSkinName = pendingSkins[j].name;
                     break;
                 }
             }
