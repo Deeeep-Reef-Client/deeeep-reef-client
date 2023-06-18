@@ -445,7 +445,29 @@ const createWindow = () => {
     });
 
     ipcMain.on("windowClose", () => {
-        window.close();
+        // Close confirmation
+        if (gameStarted) {            
+            const closeConfirmationWindow = new BrowserWindow({
+                width: 300,
+                height: 250,
+                frame: false,
+                resizable: false,
+                transparent: true,
+                webPreferences: {
+                    nodeIntegration: true,
+                    contextIsolation: false
+                }
+            });
+            closeConfirmationWindow.loadFile("./src/close_confirmation.html");
+ 
+            ipcMain.once("confirmClose", () => {
+                closeConfirmationWindow.close();
+                window.close();
+            });
+            ipcMain.once("closeConfirmationWindow", () => {
+                closeConfirmationWindow.close();
+            });
+        } else window.close();
     });
 
     window.on("maximize", () => {
@@ -457,38 +479,17 @@ const createWindow = () => {
     });
 
     // Close confirmation
-    let confirmedClose = false;
-    window.on("close", (e: any) => {
-        if (!gameStarted || confirmedClose) return;
+    // window.on("close", (e: any) => {
 
-        const closeConfirmationWindow = new BrowserWindow({
-            width: 300,
-            height: 250,
-            frame: false,
-            resizable: false,
-            transparent: true,
-            webPreferences: {
-                nodeIntegration: true
-            }
-        });
-        closeConfirmationWindow.loadFile("./src/close_confirmation.html");
-        ipcMain.once("confirmClose", () => {
-            confirmedClose = true;
-            closeConfirmationWindow.close();
-            window.close();
-        });
-        ipcMain.once("closeConfirmationWindow", () => {
-            closeConfirmationWindow.close();
-        });
-        // let response = dialog.showMessageBoxSync(window, {
-        //     type: "question",
-        //     buttons: ["Exit", "Cancel"],
-        //     title: "Exit Confirmation",
-        //     message: "Are you sure you want to quit? You have an ongoing game."
-        // });
+    //     // let response = dialog.showMessageBoxSync(window, {
+    //     //     type: "question",
+    //     //     buttons: ["Exit", "Cancel"],
+    //     //     title: "Exit Confirmation",
+    //     //     message: "Are you sure you want to quit? You have an ongoing game."
+    //     // });
 
-        e.preventDefault();
-    });
+    //     e.preventDefault();
+    // });
 
     // Loads doc assets
     let docassetsOn = settings.docassets;

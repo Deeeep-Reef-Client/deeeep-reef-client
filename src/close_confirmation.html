@@ -5,8 +5,14 @@
     <meta charset="UTF-8">
     <title>Exit Confirmation</title>
     <style>
+        @font-face {
+            font-family: Quicksand;
+            src: url("./Quicksand.ttf");
+        }
+
         body {
             margin: 0px;
+            font-family: Quicksand;
         }
 
         .dialog-modal-container {
@@ -23,6 +29,7 @@
             line-height: 1.2em;
             font-weight: 300;
             box-sizing: border-box;
+            color: white;
         }
 
         .dialog-modal-title {
@@ -36,6 +43,7 @@
 
         .dialog-modal-content {
             font-size: 1rem;
+            padding: 1rem;
         }
 
         .dialog-modal-action {
@@ -43,7 +51,8 @@
             justify-content: center;
             align-items: center;
             flex-shrink: 0;
-            padding-top: .75rem;
+            padding-top: 0.75rem;
+            padding-bottom: 0.75rem;
         }
 
         .dialog-modal-close {
@@ -52,6 +61,47 @@
             right: .5rem;
             background-color: inherit;
             border: 0px;
+        }
+
+        .dialog-button {
+            border-radius: 1rem;
+            padding: 0.75rem 1.25rem;
+            margin-top: 10px;
+            border-width: 0px;
+            border-bottom-width: 4px;
+        }
+
+        .dialog-button.cancel {
+            background-color: rgba(107, 114, 128, 1);
+            border-color: rgb(141, 156, 178);
+            color: rgba(255, 255, 255, 1);
+        }
+
+        .dialog-button.cancel:hover {
+            background-color: rgb(83, 88, 98);
+            border-color: rgb(122, 134, 153);
+        }
+
+        .dialog-button.cancel:active {
+            background-color: rgb(83, 88, 98);
+            border-color: rgb(122, 134, 153);
+        }
+
+        .dialog-button.confirm {
+            background-color: rgba(16, 185, 129, 1);
+            border-color: rgb(11, 208, 145);
+            color: rgba(255, 255, 255, 1);
+            margin-left: 12px;
+        }
+
+        .dialog-button.confirm:hover {
+            background-color: rgb(14, 147, 103);
+            border-color: rgb(10, 179, 126);
+        }
+
+        .dialog-button.confirm:active {
+            background-color: rgb(14, 147, 103);
+            border-color: rgb(10, 179, 126);
         }
     </style>
 </head>
@@ -69,8 +119,8 @@
         </div>
 
         <div class="dialog-modal-action">
-            <button>Cancel</button>
-            <button>Exit</button>
+            <button id="cancelButton" class="dialog-button cancel">Cancel</button>
+            <button id="exitButton" class="dialog-button confirm">Exit</button>
         </div>
         <button id="closeButton" class="dialog-modal-close"><svg width="1.125em" height="1.125em" viewBox="0 0 24 24"
                 class="svg-icon" color="gray" style="--sx:1; --sy:1; --r:0deg;">
@@ -81,63 +131,22 @@
         </button>
     </div>
     <script>
+        console.log("hello from scrip")
         const { ipcRenderer } = require('electron');
         document.getElementById("closeButton").addEventListener("click", () => {
             ipcRenderer.send("closeConfirmationWindow");
+            console.log("hello3")
         });
-        document.getElementById("closeButton").addEventListener("click", () => {
+        document.getElementById("cancelButton").addEventListener("click", () => {
             ipcRenderer.send("closeConfirmationWindow");
+            console.log("hello4")
         });
-
+        document.getElementById("exitButton").addEventListener("click", () => {
+            ipcRenderer.send("confirmClose");
+            console.log("hello5")
+        });
+        document.getElementById("exitButton").focus();
     </script>
 </body>
 
 </html>
-
-// Modules to control application life and create native browser window
-const {app, BrowserWindow} = require('electron')
-const path = require('path')
-
-function createWindow () {
-  // Create the browser window.
-  const mainWindow = new BrowserWindow({
-    width: 350,
-    height: 250,
-    frame: false,
-    transparent: true,
-    
-            webPreferences: {
-                nodeIntegration: true
-            }
-  })
-
-  // and load the index.html of the app.
-  mainWindow.loadFile('index.html')
-
-
-  // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
-}
-
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
-app.whenReady().then(() => {
-  createWindow()
-
-  app.on('activate', function () {
-    // On macOS it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
-    if (BrowserWindow.getAllWindows().length === 0) createWindow()
-  })
-})
-
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
-app.on('window-all-closed', function () {
-  if (process.platform !== 'darwin') app.quit()
-})
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
