@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Exit Confirmation</title>
+    <style>
+        body {
+            margin: 0px;
+        }
+
+        .dialog-modal-container {
+            width: 100vw;
+            /* height: 100vh; */
+            background-color: rgba(31, 41, 55, 1);
+            border-radius: 1rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 1.3rem;
+            line-height: 1.2em;
+            font-weight: 300;
+            box-sizing: border-box;
+        }
+
+        .dialog-modal-title {
+            display: flex;
+            padding-top: .5rem;
+            padding-bottom: .5rem;
+            padding-left: .75rem;
+            padding-right: .75rem;
+            color: rgba(229, 231, 235, 1);
+        }
+
+        .dialog-modal-content {
+            font-size: 1rem;
+        }
+
+        .dialog-modal-action {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+            padding-top: .75rem;
+        }
+
+        .dialog-modal-close {
+            position: absolute;
+            top: .3rem;
+            right: .5rem;
+            background-color: inherit;
+            border: 0px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dialog-modal-container">
+        <div class="dialog-modal-title">
+            <div></div>
+            <div style="justify-self:center">Exit Confirmation</div>
+            <div></div>
+        </div>
+
+        <div class="dialog-modal-content">
+            <p>Are you sure you want to quit? You have an ongoing game.</p>
+        </div>
+
+        <div class="dialog-modal-action">
+            <button>Cancel</button>
+            <button>Exit</button>
+        </div>
+        <button id="closeButton" class="dialog-modal-close"><svg width="1.125em" height="1.125em" viewBox="0 0 24 24"
+                class="svg-icon" color="gray" style="--sx:1; --sy:1; --r:0deg;">
+                <path style="fill:currentColor"
+                    d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z">
+                </path>
+            </svg>
+        </button>
+    </div>
+    <script>
+        const { ipcRenderer } = require('electron');
+        document.getElementById("closeButton").addEventListener("click", () => {
+            ipcRenderer.send("closeConfirmationWindow");
+        });
+        document.getElementById("closeButton").addEventListener("click", () => {
+            ipcRenderer.send("closeConfirmationWindow");
+        });
+
+    </script>
+</body>
+
+</html>
+
+// Modules to control application life and create native browser window
+const {app, BrowserWindow} = require('electron')
+const path = require('path')
+
+function createWindow () {
+  // Create the browser window.
+  const mainWindow = new BrowserWindow({
+    width: 350,
+    height: 250,
+    frame: false,
+    transparent: true,
+    
+            webPreferences: {
+                nodeIntegration: true
+            }
+  })
+
+  // and load the index.html of the app.
+  mainWindow.loadFile('index.html')
+
+
+  // Open the DevTools.
+  // mainWindow.webContents.openDevTools()
+}
+
+// This method will be called when Electron has finished
+// initialization and is ready to create browser windows.
+// Some APIs can only be used after this event occurs.
+app.whenReady().then(() => {
+  createWindow()
+
+  app.on('activate', function () {
+    // On macOS it's common to re-create a window in the app when the
+    // dock icon is clicked and there are no other windows open.
+    if (BrowserWindow.getAllWindows().length === 0) createWindow()
+  })
+})
+
+// Quit when all windows are closed, except on macOS. There, it's common
+// for applications and their menu bar to stay active until the user quits
+// explicitly with Cmd + Q.
+app.on('window-all-closed', function () {
+  if (process.platform !== 'darwin') app.quit()
+})
+
+// In this file you can include the rest of your app's specific main process
+// code. You can also put them in separate files and require them here.

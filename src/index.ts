@@ -457,17 +457,37 @@ const createWindow = () => {
     });
 
     // Close confirmation
+    let confirmedClose = false;
     window.on("close", (e: any) => {
-        if (!gameStarted) return;
+        if (!gameStarted || confirmedClose) return;
 
-        let response = dialog.showMessageBoxSync(window, {
-            type: "question",
-            buttons: ["Exit", "Cancel"],
-            title: "Exit Confirmation",
-            message: "Are you sure you want to quit? You have an ongoing game."
+        const closeConfirmationWindow = new BrowserWindow({
+            width: 300,
+            height: 250,
+            frame: false,
+            resizable: false,
+            transparent: true,
+            webPreferences: {
+                nodeIntegration: true
+            }
         });
+        closeConfirmationWindow.loadFile("./src/close_confirmation.html");
+        ipcMain.once("confirmClose", () => {
+            confirmedClose = true;
+            closeConfirmationWindow.close();
+            window.close();
+        });
+        ipcMain.once("closeConfirmationWindow", () => {
+            closeConfirmationWindow.close();
+        });
+        // let response = dialog.showMessageBoxSync(window, {
+        //     type: "question",
+        //     buttons: ["Exit", "Cancel"],
+        //     title: "Exit Confirmation",
+        //     message: "Are you sure you want to quit? You have an ongoing game."
+        // });
 
-        if (response === 1) e.preventDefault();
+        e.preventDefault();
     });
 
     // Loads doc assets

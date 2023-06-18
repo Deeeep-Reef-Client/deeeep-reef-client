@@ -409,12 +409,22 @@ const createWindow = () => {
     window.on("close", (e) => {
         if (!gameStarted)
             return;
-        let response = dialog.showMessageBoxSync(window, {
-            type: "question",
-            buttons: ["Exit", "Cancel"],
-            title: "Exit Confirmation",
-            message: "Are you sure you want to quit? You have an ongoing game."
+        const closeConfirmationWindow = new BrowserWindow({
+            width: 300,
+            height: 250,
+            frame: false,
+            resizable: false,
+            transparent: true
         });
+        closeConfirmationWindow.loadFile("./src/close_confirmation.html");
+        closeConfirmationWindow.openDevTools();
+        // let response = dialog.showMessageBoxSync(window, {
+        //     type: "question",
+        //     buttons: ["Exit", "Cancel"],
+        //     title: "Exit Confirmation",
+        //     message: "Are you sure you want to quit? You have an ongoing game."
+        // });
+        let response = 1;
         if (response === 1)
             e.preventDefault();
     });
