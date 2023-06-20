@@ -432,6 +432,7 @@ const createWindow = () => {
     // Menu.setApplicationMenu(menu);
 
     // Menu bar
+
     ipcMain.on("windowMinimise", () => {
         window.minimize();
     });
@@ -445,29 +446,7 @@ const createWindow = () => {
     });
 
     ipcMain.on("windowClose", () => {
-        // Close confirmation
-        if (gameStarted) {            
-            const closeConfirmationWindow = new BrowserWindow({
-                width: 300,
-                height: 250,
-                frame: false,
-                resizable: false,
-                transparent: true,
-                webPreferences: {
-                    nodeIntegration: true,
-                    contextIsolation: false
-                }
-            });
-            closeConfirmationWindow.loadFile("./src/close_confirmation.html");
- 
-            ipcMain.once("confirmClose", () => {
-                closeConfirmationWindow.close();
-                window.close();
-            });
-            ipcMain.once("closeConfirmationWindow", () => {
-                closeConfirmationWindow.close();
-            });
-        } else window.close();
+        window.close();
     });
 
     window.on("maximize", () => {

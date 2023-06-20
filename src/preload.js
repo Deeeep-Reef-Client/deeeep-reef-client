@@ -487,8 +487,86 @@ window.addEventListener("DOMContentLoaded", () => {
         windowRestoreButton.setAttribute("style", "display:none;");
         ipcRenderer.send("windowRestore");
     });
-    windowCloseButton.addEventListener("click", () => {
+    const windowCloseStyle = document.createElement("style");
+    windowCloseStyle.innerHTML = `
+    .drc-close-modal-content {
+        font-size: 1rem;
+        padding: 1rem;
+    }
+
+    .drc-close-modal-action {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-shrink: 0;
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+    }
+
+    .drc-close-button {
+        border-radius: 1rem;
+        padding: 0.75rem 1.25rem;
+        margin-top: 10px;
+        border-width: 0px;
+        border-bottom-width: 4px;
+        font-family: Quicksand;
+    }
+
+    .drc-close-button.cancel {
+        background-color: rgba(107, 114, 128, 1);
+        border-color: rgba(75, 85, 99, 1);
+        color: rgba(255, 255, 255, 1);
+    }
+
+    .drc-close-button.cancel:hover {
+        background-color: rgba(75, 85, 99, 1);
+        border-color: rgba(55, 65, 81, 1);
+    }
+
+    .drc-close-button.confirm {
+        background-color: rgba(16, 185, 129, 1);
+        border-color: rgba(5, 150, 105, 1);
+        color: rgba(255, 255, 255, 1);
+        margin-left: 12px;
+    }
+
+    .drc-close-button.confirm:hover {
+        background-color: rgba(5, 150, 105, 1)
+        border-color: rgba(4, 120, 87, 1);
+    }
+    `;
+    document.head.appendChild(windowCloseStyle);
+    const windowCloseConfirmationModal = DRC.Modal.buildModal("windowCloseConfirmation", "Exit Confirmation", `
+    <div class="drc-close-modal-content">
+        <p>Are you sure you want to quit? You have an ongoing game.</p>
+    </div>
+
+    <div class="drc-close-modal-action">
+        <button id="windowCloseConfirmation_cancelButton" class="drc-close-button cancel">Cancel</button>
+        <button id="windowCloseConfirmation_exitButton" class="drc-close-button confirm">Exit</button>
+    </div>
+    `, true);
+    const windowCloseConfirmation_cancelButton = document.getElementById("windowCloseConfirmation_cancelButton");
+    const windowCloseConfirmation_exitButton = document.getElementById("windowCloseConfirmation_exitButton");
+    const windowCloseConfirmation_closeButton = document.getElementById("windowCloseConfirmationCloseButton");
+    windowCloseConfirmationModal.classList.add("drc-modal-hidden");
+    windowCloseConfirmation_exitButton.addEventListener("click", () => {
         ipcRenderer.send("windowClose");
+    });
+    windowCloseConfirmation_cancelButton.addEventListener("click", () => {
+        windowCloseConfirmationModal.classList.add("drc-modal-hidden");
+    });
+    windowCloseConfirmationModal.addEventListener("keydown", (key) => {
+        if (key.code === "Enter")
+            windowCloseConfirmation_exitButton.click();
+    });
+    windowCloseButton.addEventListener("click", () => {
+        if (gameStarted) {
+            windowCloseConfirmationModal.classList.remove("drc-modal-hidden");
+            windowCloseConfirmation_exitButton.focus();
+        }
+        else
+            ipcRenderer.send("windowClose");
     });
     ipcRenderer.on("windowMaximise", () => {
         windowMaximiseButton.setAttribute("style", "display:none;");
