@@ -7477,23 +7477,31 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
                 </p>
                 <br/>
                 <div style="text-align:left;max-width:50vw;">
-                    <p><b>v1.0.0 The Full Release</b></p>
+                <p>
+                    <b>v1.1.0 The Postrelease Update</b></p>
                     <ul>
-                        <li> Evolution Tree </li>
-                        <li> Custom Theme editing </li>
-                        <li> Forum/Friend Notifications </li>
-                        <li> Plugins expansion </li>
-                        <li> Theme Maker expansion </li>
-                        <li> Advanced Themes </li>
-                        <li> Colourblind Mode </li>
-                        <li> Exit confirmation dialog </li>
-                        <li> Screenshotter </li>
-                        <li> Seamless title bar </li>
-                        <li> DRC info modal </li>
-                        <li> DRC API </li>
-                        <li> One-click installer </li>
-                        <li> Support for GNU/Linux </li>
-                        <li> Misc bug fixes </li>
+                        <li>Discord Rich Presence is now togglable</li>
+                        <li>Swap skin by ID</li>
+                        <li>Misc bug fixes</li>
+                    </ul>
+                    <br />
+                    <b>v1.0.0 The Full Release</b></p>
+                    <ul>
+                        <li>Evolution Tree </li>
+                        <li>Custom Theme editing </li>
+                        <li>Forum/Friend Notifications </li>
+                        <li>Plugins expansion </li>
+                        <li>Theme Maker expansion </li>
+                        <li>Advanced Themes </li>
+                        <li>Colourblind Mode </li>
+                        <li>Exit confirmation dialog </li>
+                        <li>Screenshotter </li>
+                        <li>Seamless title bar </li>
+                        <li>DRC info modal </li>
+                        <li>DRC API </li>
+                        <li>One-click installer </li>
+                        <li>Support for GNU/Linux </li>
+                        <li>Misc bug fixes </li>
                     </ul>
                     <br />
                     <p><b>v0.9.1 (beta) The Prerelease Patch</b></p>
