@@ -216,6 +216,10 @@ const schema = {
             developer: {
                 type: "boolean",
                 default: false
+            },
+            previousVersion: {
+                type: "string",
+                default: ""
             }
         }
     }
@@ -240,7 +244,8 @@ let settings = {
     gameAccounts: [],
     colourblind: false,
     discordRichPresence: true,
-    developer: false
+    developer: false,
+    previousVersion: ""
 };
 Object.assign(settings, store.get("settings") ?? {});
 if (settings === undefined) {
@@ -262,10 +267,14 @@ if (settings === undefined) {
         gameAccounts: [],
         colourblind: false,
         discordRichPresence: true,
-        developer: false
+        developer: false,
+        previousVersion: ""
     };
     store.set("settings", settings);
 }
+// If this is a new install
+settings.previousVersion = DRC.Client.versionTag;
+store.set("settings", settings);
 // Save settings
 ipcMain.on("saveSettings", (_event, newSettings) => {
     settings = newSettings;
@@ -775,6 +784,7 @@ function quitApp() {
 }
 app.on('window-all-closed', () => {
     log.info("Window all closed");
+    settings.previousVersion = DRC.Client.versionTag;
     // Save settings 1 last time, just in case
     store.set("settings", settings);
     // Auto update

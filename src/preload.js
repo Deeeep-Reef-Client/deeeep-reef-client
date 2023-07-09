@@ -262,7 +262,8 @@ let settings = {
     gameAccounts: [],
     colourblind: false,
     discordRichPresence: true,
-    developer: false
+    developer: false,
+    previousVersion: ""
 };
 ipcRenderer.on("settings", (_event, s) => {
     Object.assign(settings, s);
@@ -7383,6 +7384,12 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
         aboutDrcPane1.classList.remove("drc-modal-hidden");
         aboutDrcPane0.classList.add("drc-modal-hidden");
     });
+    // Show changelog on new update
+    if (settings.previousVersion !== DRC.Client.versionTag) {
+        aboutDrcModalMain.classList.remove("drc-modal-hidden");
+        aboutDrcPane0.classList.add("drc-modal-hidden");
+        aboutDrcPane1.classList.remove("drc-modal-hidden");
+    }
     aboutDrcButton.addEventListener("click", () => aboutDrcModalMain.classList.toggle("drc-modal-hidden"));
     (async () => {
         aboutDrcVersionTag.innerText = DRC.Client.versionTag;
