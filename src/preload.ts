@@ -7652,6 +7652,10 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
         aboutDrcModalMain.classList.remove("drc-modal-hidden");
         aboutDrcPane0.classList.add("drc-modal-hidden");
         aboutDrcPane1.classList.remove("drc-modal-hidden");
+
+        new Notification("Client updated!", {
+            body: `The Deeeep.io Reef Client has been updated to version ${DRC.Client.versionTag}.`
+        });
     }
 
     aboutDrcButton.addEventListener("click", () => aboutDrcModalMain.classList.toggle("drc-modal-hidden"));
