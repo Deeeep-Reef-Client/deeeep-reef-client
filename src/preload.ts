@@ -7925,6 +7925,7 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
                 });
                 const startObserver = new MutationObserver((mutations: MutationRecord[]) => {
                     if (document.contains(document.querySelector("div.stats > div.animal-data > div.detailed-info > h4.name"))) {
+                        startObserver.disconnect();
                         // DRC API
                         DRC.EventObject.dispatchEvent(DRC.Events.EventList.GameEvolved);
 
