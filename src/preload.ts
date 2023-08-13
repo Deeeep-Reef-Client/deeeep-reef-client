@@ -696,6 +696,13 @@ window.addEventListener("DOMContentLoaded", () => {
             });
         });
 
+    // Alt + C copy link
+    window.addEventListener("keydown", (key: KeyboardEvent) => {
+        if (key.altKey && key.code == "KeyC") {
+            navigator.clipboard.writeText(window.location.href);
+        }
+    });
+
     // Custom stylesheet
     const customTheme = document.createElement("link");
     customTheme.rel = "stylesheet";

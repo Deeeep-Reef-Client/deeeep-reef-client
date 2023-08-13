@@ -614,6 +614,12 @@ window.addEventListener("DOMContentLoaded", () => {
             body: "Due to Deeeep.io's code being updated (which is outside our control), some features may not work until the Client is updated to reflect these changes."
         });
     });
+    // Alt + C copy link
+    window.addEventListener("keydown", (key) => {
+        if (key.altKey && key.code == "KeyC") {
+            navigator.clipboard.writeText(window.location.href);
+        }
+    });
     // Custom stylesheet
     const customTheme = document.createElement("link");
     customTheme.rel = "stylesheet";
