@@ -620,7 +620,7 @@ window.addEventListener("DOMContentLoaded", () => {
     `);
     const joinGameCodeInput = document.getElementById("joinGameCodeInput");
     const joinGameButton = document.getElementById("joinGameButton");
-    joinGameButton.addEventListener("click", () => {
+    function joinGame() {
         let code = joinGameCodeInput.value;
         const codeMatch = code.match(/^(https?:\/\/)?(beta\.)?deeeep\.io\/\?host=(?<code>\w{6})$/);
         if (codeMatch) {
@@ -633,6 +633,11 @@ window.addEventListener("DOMContentLoaded", () => {
             new Notification("Invalid code or URL", {
                 body: "Your server code or URL does not seem to be valid."
             });
+    }
+    joinGameButton.addEventListener("click", joinGame);
+    joinGameModal.addEventListener("keydown", key => {
+        if (key.code === "Enter")
+            joinGame();
     });
     window.addEventListener("keydown", (key) => {
         // Alt + C copy link
