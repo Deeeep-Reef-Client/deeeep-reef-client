@@ -618,9 +618,21 @@ window.addEventListener("DOMContentLoaded", () => {
     <input id="joinGameCodeInput" placeholder="Server code or link">
     <button id="joinGameButton" class="assetswapper-add-button" style="margin-left:0.5rem">Join</button>
     `);
+    const joinGameConfirmationModal = DRC.Modal.buildModal("joinGameConfirmation", "Exit Confirmation", `
+    <div class="drc-close-modal-content">
+        <p>Are you sure you want to join another game? You have an ongoing game.</p>
+    </div>
+
+    <div class="drc-close-modal-action">
+        <button id="joinGameConfirmation_cancelButton" class="drc-close-button cancel">Cancel</button>
+        <button id="joinGameConfirmation_exitButton" class="drc-close-button confirm">Join</button>
+    </div>
+    `, true);
+    const joinGameConfirmation_cancelButton = document.getElementById("joinGameConfirmation_cancelButton");
+    const joinGameConfirmation_exitButton = document.getElementById("joinGameConfirmation_exitButton");
     const joinGameCodeInput = document.getElementById("joinGameCodeInput");
     const joinGameButton = document.getElementById("joinGameButton");
-    function joinGame() {
+    function joinGameSwitch() {
         let code = joinGameCodeInput.value;
         const codeMatch = code.match(/^(https?:\/\/)?(beta\.)?deeeep\.io\/\?host=(?<code>\w{6})$/);
         if (codeMatch) {
@@ -633,6 +645,25 @@ window.addEventListener("DOMContentLoaded", () => {
             new Notification("Invalid code or URL", {
                 body: "Your server code or URL does not seem to be valid."
             });
+    }
+    joinGameConfirmation_exitButton.addEventListener("click", () => {
+        joinGameSwitch();
+    });
+    joinGameConfirmation_cancelButton.addEventListener("click", () => {
+        joinGameConfirmationModal.classList.add("drc-modal-hidden");
+    });
+    joinGameConfirmationModal.addEventListener("keydown", (key) => {
+        if (key.code === "Enter")
+            joinGameConfirmation_exitButton.click();
+    });
+    function joinGame() {
+        joinGameModal.classList.add("drc-modal-hidden");
+        if (gameStarted) {
+            joinGameConfirmationModal.classList.remove("drc-modal-hidden");
+            joinGameConfirmation_exitButton.focus();
+        }
+        else
+            joinGameSwitch();
     }
     joinGameButton.addEventListener("click", joinGame);
     joinGameModal.addEventListener("keydown", key => {
