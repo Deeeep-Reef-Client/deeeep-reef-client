@@ -729,6 +729,8 @@ window.addEventListener("DOMContentLoaded", () => {
         } else new Notification("Invalid code or URL", {
             body: "Your server code or URL does not seem to be valid."
         });
+
+        joinGameCodeInput.value = "";
     }
 
     
@@ -750,7 +752,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
         if (gameStarted) {
             joinGameConfirmationModal.classList.remove("drc-modal-hidden");
-            joinGameConfirmationModal.focus();
             joinGameConfirmation_exitButton.focus();
         } else joinGameSwitch();
     }

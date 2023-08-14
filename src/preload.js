@@ -645,6 +645,7 @@ window.addEventListener("DOMContentLoaded", () => {
             new Notification("Invalid code or URL", {
                 body: "Your server code or URL does not seem to be valid."
             });
+        joinGameCodeInput.value = "";
     }
     joinGameConfirmation_exitButton.addEventListener("click", () => {
         joinGameSwitch();
