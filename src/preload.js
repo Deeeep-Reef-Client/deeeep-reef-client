@@ -647,6 +647,7 @@ window.addEventListener("DOMContentLoaded", () => {
         }
         else if (key.altKey && key.code == "KeyJ") {
             joinGameModal.classList.remove("drc-modal-hidden");
+            joinGameCodeInput.focus();
         }
     });
     // Custom stylesheet

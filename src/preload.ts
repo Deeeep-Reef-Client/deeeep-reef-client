@@ -728,6 +728,8 @@ window.addEventListener("DOMContentLoaded", () => {
             // Alt + C join game
         } else if (key.altKey && key.code == "KeyJ") {
             joinGameModal.classList.remove("drc-modal-hidden")
+
+            joinGameCodeInput.focus();
         }
     });
 
