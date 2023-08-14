@@ -615,13 +615,24 @@ window.addEventListener("DOMContentLoaded", () => {
         });
     });
     const joinGameModal = DRC.Modal.buildModal("joinGame", "Join Game", `
-    <input id="joinGameCodeInput" placeholder="Game code">
+    <input id="joinGameCodeInput" placeholder="Server code or link">
     <button id="joinGameButton" class="assetswapper-add-button" style="margin-left:0.5rem">Join</button>
     `);
     const joinGameCodeInput = document.getElementById("joinGameCodeInput");
     const joinGameButton = document.getElementById("joinGameButton");
     joinGameButton.addEventListener("click", () => {
-        window.location.href = "?host=" + joinGameCodeInput.value;
+        let code = joinGameCodeInput.value;
+        const codeMatch = code.match(/^(https?:\/\/)?(beta\.)?deeeep\.io\/\?host=(?<code>\w{6})$/);
+        if (codeMatch) {
+            window.location.href = "?host=" + codeMatch.groups.code;
+        }
+        else if (code.match(/^\w{6}$/)) {
+            window.location.href = "?host=" + code;
+        }
+        else
+            new Notification("Invalid code or URL", {
+                body: "Your server code or URL does not seem to be valid."
+            });
     });
     window.addEventListener("keydown", (key) => {
         // Alt + C copy link
