@@ -363,16 +363,21 @@ const createWindow = () => {
         window.webContents.send("windowFocus");
     });
 
+    window.webContents.on("will-navigate", () => {
+        window.hide();
+        loadingWindow.show();
+    });
+
     window.webContents.on("did-navigate", () => {
         window.webContents.send("settings", settings);
     });
 
-    window.webContents.once('did-finish-load', () => {
+    window.webContents.on('did-finish-load', () => {
         finishedLoad = true;
-        loadingWindow.close();
+        loadingWindow.hide();
         window.show();
     });
-    window.webContents.once('did-fail-load', () => {
+    window.webContents.on('did-fail-load', () => {
         loadingWindow.close();
         window.close();
         new Notification({
@@ -462,6 +467,7 @@ const createWindow = () => {
 
     ipcMain.on("windowClose", () => {
         window.close();
+        loadingWindow.close();
     });
 
     window.on("maximize", () => {
