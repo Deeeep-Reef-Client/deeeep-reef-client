@@ -685,6 +685,9 @@ window.addEventListener("DOMContentLoaded", () => {
         // Alt + C copy link
         if (key.altKey && key.code == "KeyC") {
             navigator.clipboard.writeText(window.location.href);
+            new Notification("Link copied", {
+                body: "The current URL has been copied to your clipboard."
+            });
             // Alt + C join game
         }
         else if (key.altKey && key.code == "KeyJ") {
