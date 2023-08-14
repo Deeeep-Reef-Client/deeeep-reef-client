@@ -715,6 +715,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
     const joinGameConfirmation_cancelButton = document.getElementById("joinGameConfirmation_cancelButton") as HTMLButtonElement;
     const joinGameConfirmation_exitButton = document.getElementById("joinGameConfirmation_exitButton") as HTMLButtonElement;
+    const joinGameConfirmationCloseButton = document.getElementById("joinGameConfirmationCloseButton") as HTMLButtonElement;
 
     const joinGameCodeInput = document.getElementById("joinGameCodeInput") as HTMLInputElement;
     const joinGameButton = document.getElementById("joinGameButton") as HTMLButtonElement;
@@ -736,10 +737,16 @@ window.addEventListener("DOMContentLoaded", () => {
     
     joinGameConfirmation_exitButton.addEventListener("click", () => {
         joinGameSwitch();
+        joinGameConfirmationModal.classList.add("drc-modal-hidden");
     });
 
     joinGameConfirmation_cancelButton!.addEventListener("click", () => {
         joinGameConfirmationModal.classList.add("drc-modal-hidden");
+        joinGameCodeInput.value = "";
+    });
+
+    joinGameConfirmationCloseButton.addEventListener("click", () => {
+        joinGameCodeInput.value = "";
     });
 
     joinGameConfirmationModal.addEventListener("keydown", (key: KeyboardEvent) => {
@@ -749,6 +756,10 @@ window.addEventListener("DOMContentLoaded", () => {
 
     function joinGame() {
         joinGameModal.classList.add("drc-modal-hidden");
+
+        if (!joinGameCodeInput.value.match(/^((https?:\/\/)?(beta\.)?deeeep\.io\/\?host=(?<code>\w{6}))|(\w{6})$/)) new Notification("Invalid code or URL", {
+            body: "Your server code or URL does not seem to be valid."
+        });
 
         if (gameStarted) {
             joinGameConfirmationModal.classList.remove("drc-modal-hidden");
