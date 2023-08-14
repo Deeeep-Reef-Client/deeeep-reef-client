@@ -318,6 +318,9 @@ const createWindow = () => {
     window.on("focus", () => {
         window.webContents.send("windowFocus");
     });
+    window.webContents.on("did-navigate", () => {
+        window.webContents.send("settings", settings);
+    });
     window.webContents.once('did-finish-load', () => {
         finishedLoad = true;
         loadingWindow.close();
