@@ -614,10 +614,23 @@ window.addEventListener("DOMContentLoaded", () => {
             body: "Due to Deeeep.io's code being updated (which is outside our control), some features may not work until the Client is updated to reflect these changes."
         });
     });
-    // Alt + C copy link
+    const joinGameModal = DRC.Modal.buildModal("joinGame", "Join Game", `
+    <input id="joinGameCodeInput" placeholder="Game code">
+    <button id="joinGameButton" class="assetswapper-add-button" style="margin-left:0.5rem">Join</button>
+    `);
+    const joinGameCodeInput = document.getElementById("joinGameCodeInput");
+    const joinGameButton = document.getElementById("joinGameButton");
+    joinGameButton.addEventListener("click", () => {
+        window.location.href = "?host=" + joinGameCodeInput.value;
+    });
     window.addEventListener("keydown", (key) => {
+        // Alt + C copy link
         if (key.altKey && key.code == "KeyC") {
             navigator.clipboard.writeText(window.location.href);
+            // Alt + C join game
+        }
+        else if (key.altKey && key.code == "KeyJ") {
+            joinGameModal.classList.remove("drc-modal-hidden");
         }
     });
     // Custom stylesheet

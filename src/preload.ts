@@ -696,10 +696,25 @@ window.addEventListener("DOMContentLoaded", () => {
             });
         });
 
-    // Alt + C copy link
+    const joinGameModal = DRC.Modal.buildModal("joinGame", "Join Game", `
+    <input id="joinGameCodeInput" placeholder="Game code">
+    <button id="joinGameButton" class="assetswapper-add-button" style="margin-left:0.5rem">Join</button>
+    `);
+
+    const joinGameCodeInput = document.getElementById("joinGameCodeInput") as HTMLInputElement;
+    const joinGameButton = document.getElementById("joinGameButton") as HTMLButtonElement;
+
+    joinGameButton.addEventListener("click", () => {
+        window.location.href = "?host=" + joinGameCodeInput.value;
+    });
+
     window.addEventListener("keydown", (key: KeyboardEvent) => {
+        // Alt + C copy link
         if (key.altKey && key.code == "KeyC") {
             navigator.clipboard.writeText(window.location.href);
+            // Alt + C join game
+        } else if (key.altKey && key.code == "KeyJ") {
+            joinGameModal.classList.remove("drc-modal-hidden")
         }
     });
 
