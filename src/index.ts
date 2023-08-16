@@ -677,7 +677,11 @@ const createWindow = () => {
     });
 
     // Take a screenshot
+    let lastScreenshotTime = 0;
     ipcMain.on("captureScreenshot", () => {
+        if (Date.now() - lastScreenshotTime < 500) return;
+
+        lastScreenshotTime = Date.now();
         window.webContents.capturePage().then((image: any) => {
             try {
                 const filename = Math.random().toString(36).slice(2, 8);
