@@ -597,7 +597,12 @@ const createWindow = () => {
     ipcMain.on("captureScreenshot", () => {
         window.webContents.capturePage().then((image) => {
             try {
-                fs.writeFileSync(`${app.getPath("downloads")}/drc_screenshot_${Math.random().toString(36).slice(2, 8)}.png`, image.toPNG());
+                const filename = Math.random().toString(36).slice(2, 8);
+                fs.writeFileSync(`${app.getPath("downloads")}/drc_screenshot_${filename}.png`, image.toPNG());
+                new Notification({
+                    title: "Screenshot captured",
+                    body: `Your screenshot has been saved to drc_screenshot_${filename}.png in your Downloads folder.`
+                }).show();
                 // file written successfully
             }
             catch (err) {
