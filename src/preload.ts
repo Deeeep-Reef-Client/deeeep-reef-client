@@ -701,7 +701,7 @@ window.addEventListener("DOMContentLoaded", () => {
     <button id="joinGameButton" class="assetswapper-add-button" style="margin-left:0.5rem">Join</button>
     `);
 
-    
+
     const joinGameConfirmationModal = DRC.Modal.buildModal("joinGameConfirmation", "Exit Confirmation", `
     <div class="drc-close-modal-content">
         <p>Are you sure you want to join another game? You have an ongoing game.</p>
@@ -734,7 +734,7 @@ window.addEventListener("DOMContentLoaded", () => {
         joinGameCodeInput.value = "";
     }
 
-    
+
     joinGameConfirmation_exitButton.addEventListener("click", () => {
         joinGameSwitch();
         joinGameConfirmationModal.classList.add("drc-modal-hidden");
@@ -7569,6 +7569,15 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
                 <br/>
                 <div style="text-align:left;max-width:50vw;">
                 <p>
+                    <b>v1.1.1 The Postrelease Patch</b></p>
+                    <ul>
+                        <li>Copy URL hotkey</li>
+                        <li>Join game by code or URL</li>
+                        <li>Loading spinner</li>
+                        <li>Screenshot delay</li>
+                        <li>Misc bug fixes</li>
+                    </ul>
+                    <br />
                     <b>v1.1.0 The Postrelease Update</b></p>
                     <ul>
                         <li>Discord Rich Presence is now togglable</li>

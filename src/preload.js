@@ -7316,6 +7316,15 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
                 <br/>
                 <div style="text-align:left;max-width:50vw;">
                 <p>
+                    <b>v1.1.1 The Postrelease Patch</b></p>
+                    <ul>
+                        <li>Copy URL hotkey</li>
+                        <li>Join game by code or URL</li>
+                        <li>Loading spinner</li>
+                        <li>Screenshot delay</li>
+                        <li>Misc bug fixes</li>
+                    </ul>
+                    <br />
                     <b>v1.1.0 The Postrelease Update</b></p>
                     <ul>
                         <li>Discord Rich Presence is now togglable</li>
