@@ -691,14 +691,14 @@ window.addEventListener("DOMContentLoaded", () => {
     });
     window.addEventListener("keydown", (key) => {
         // Alt + C copy link
-        if (key.altKey && key.code == "KeyC") {
+        if (key.altKey && key.code == settings.keybinds.copyUrl) {
             navigator.clipboard.writeText(window.location.href);
             new Notification("Link copied", {
                 body: "The current URL has been copied to your clipboard."
             });
             // Alt + C join game
         }
-        else if (key.altKey && key.code == "KeyJ") {
+        else if (key.altKey && key.code == settings.keybinds.joinGame) {
             joinGameModal.classList.remove("drc-modal-hidden");
             joinGameCodeInput.focus();
         }
@@ -4466,7 +4466,7 @@ window.addEventListener("DOMContentLoaded", () => {
     });
     // hotkey V for toggling evolution tree
     window.addEventListener("keydown", (key) => {
-        if (key.code != "KeyT"
+        if (key.code != settings.keybinds.evolutionTree
             || !gameStarted
             || !document.contains(document.querySelector("div.chat-input.horizontal-center[style='display: none;']"))
             || document.contains(document.querySelector("div.center > div.chat-container > div")))
@@ -7530,7 +7530,7 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
                     url: window.location.href
                 });
                 function ghostSuicide(key) {
-                    if (key.code != "KeyX" || !document.contains(document.querySelector("div.chat-input.horizontal-center[style='display: none;']")))
+                    if (key.code != settings.keybinds.ghostQuit || !document.contains(document.querySelector("div.chat-input.horizontal-center[style='display: none;']")))
                         return;
                     DRC.Preload.evalInBrowserContext(`
                     if (game.currentScene.myAnimal._visibleFishLevel == 33) {
@@ -7540,7 +7540,7 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
                 }
                 ;
                 function cancelBoost(key) {
-                    if (key.code != "KeyC" || !document.contains(document.querySelector("div.chat-input.horizontal-center[style='display: none;']")))
+                    if (key.code != settings.keybinds.cancelCharge || !document.contains(document.querySelector("div.chat-input.horizontal-center[style='display: none;']")))
                         return;
                     DRC.Preload.evalInBrowserContext(`
                     game.inputManager.pressElapsed = 0;
@@ -7549,7 +7549,7 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
                 }
                 ;
                 async function takeScreenshot(key) {
-                    if (key.code !== "KeyV"
+                    if (key.code !== settings.keybinds.screenshot
                         || !document.contains(document.querySelector("#canvas-container > canvas"))
                         || !document.contains(document.querySelector("div.chat-input.horizontal-center[style='display: none;']"))
                         || !document.contains(document.querySelector("div.home-page[style='display: none;']")))
