@@ -220,6 +220,9 @@ const schema = {
             previousVersion: {
                 type: "string",
                 default: ""
+            },
+            keybinds: {
+                type: "object"
             }
         }
     }
@@ -245,7 +248,15 @@ let settings = {
     colourblind: false,
     discordRichPresence: true,
     developer: false,
-    previousVersion: ""
+    previousVersion: "",
+    keybinds: {
+        cancelCharge: "KeyC",
+        evolutionTree: "KeyT",
+        screenshot: "KeyV",
+        ghostQuit: "KeyX",
+        copyUrl: "KeyC",
+        joinGame: "KeyJ"
+    }
 };
 Object.assign(settings, store.get("settings") ?? {});
 if (settings === undefined) {
@@ -268,7 +279,15 @@ if (settings === undefined) {
         colourblind: false,
         discordRichPresence: true,
         developer: false,
-        previousVersion: ""
+        previousVersion: "",
+        keybinds: {
+            cancelCharge: "KeyC",
+            evolutionTree: "KeyT",
+            screenshot: "KeyV",
+            ghostQuit: "KeyX",
+            copyUrl: "KeyC",
+            joinGame: "KeyJ"
+        }
     };
     store.set("settings", settings);
 }
@@ -548,6 +567,18 @@ const createWindow = () => {
     ;
     if (settings.discordRichPresence === undefined) {
         settings.discordRichPresence = true;
+        store.set("settings", settings);
+    }
+    ;
+    if (settings.keybinds === undefined) {
+        settings.keybinds = {
+            cancelCharge: "KeyC",
+            evolutionTree: "KeyT",
+            screenshot: "KeyV",
+            ghostQuit: "KeyX",
+            copyUrl: "KeyC",
+            joinGame: "KeyJ"
+        };
         store.set("settings", settings);
     }
     ;

@@ -263,7 +263,15 @@ let settings = {
     colourblind: false,
     discordRichPresence: true,
     developer: false,
-    previousVersion: ""
+    previousVersion: "",
+    keybinds: {
+        cancelCharge: "KeyC",
+        evolutionTree: "KeyT",
+        screenshot: "KeyV",
+        ghostQuit: "KeyX",
+        copyUrl: "KeyC",
+        joinGame: "KeyJ"
+    }
 };
 ipcRenderer.on("settings", (_event, s) => {
     Object.assign(settings, s);

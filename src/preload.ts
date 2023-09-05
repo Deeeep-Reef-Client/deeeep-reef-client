@@ -288,6 +288,14 @@ interface SettingsTemplate {
     discordRichPresence: boolean;
     developer: boolean;
     previousVersion: string;
+    keybinds: {
+        cancelCharge: string;
+        evolutionTree: string;
+        screenshot: string;
+        ghostQuit: string;
+        copyUrl: string;
+        joinGame: string;
+    }
 }
 
 let settings: SettingsTemplate = {
@@ -309,7 +317,15 @@ let settings: SettingsTemplate = {
     colourblind: false,
     discordRichPresence: true,
     developer: false,
-    previousVersion: ""
+    previousVersion: "",
+    keybinds: {
+        cancelCharge: "KeyC",
+        evolutionTree: "KeyT",
+        screenshot: "KeyV",
+        ghostQuit: "KeyX",
+        copyUrl: "KeyC",
+        joinGame: "KeyJ"
+    }
 };
 ipcRenderer.on("settings", (_event: Event, s: SettingsTemplate) => {
     Object.assign(settings, s);

@@ -161,6 +161,14 @@ interface SettingsTemplate {
     discordRichPresence: boolean;
     developer: boolean;
     previousVersion: string;
+    keybinds: {
+        cancelCharge: string;
+        evolutionTree: string;
+        screenshot: string;
+        ghostQuit: string;
+        copyUrl: string;
+        joinGame: string;
+    }
 }
 
 const schema = {
@@ -249,6 +257,9 @@ const schema = {
             previousVersion: {
                 type: "string",
                 default: ""
+            },
+            keybinds: {
+                type: "object"
             }
         }
     }
@@ -275,7 +286,15 @@ let settings: SettingsTemplate = {
     colourblind: false,
     discordRichPresence: true,
     developer: false,
-    previousVersion: ""
+    previousVersion: "",
+    keybinds: {
+        cancelCharge: "KeyC",
+        evolutionTree: "KeyT",
+        screenshot: "KeyV",
+        ghostQuit: "KeyX",
+        copyUrl: "KeyC",
+        joinGame: "KeyJ"
+    }
 };
 Object.assign(settings, store.get("settings") ?? {});
 
@@ -299,7 +318,15 @@ if (settings === undefined) {
         colourblind: false,
         discordRichPresence: true,
         developer: false,
-        previousVersion: ""
+        previousVersion: "",
+        keybinds: {
+            cancelCharge: "KeyC",
+            evolutionTree: "KeyT",
+            screenshot: "KeyV",
+            ghostQuit: "KeyX",
+            copyUrl: "KeyC",
+            joinGame: "KeyJ"
+        }
     };
     store.set("settings", settings);
 }
@@ -614,6 +641,18 @@ const createWindow = () => {
 
     if (settings.discordRichPresence === undefined) {
         settings.discordRichPresence = true;
+        store.set("settings", settings);
+    };
+
+    if (settings.keybinds === undefined) {
+        settings.keybinds = {
+            cancelCharge: "KeyC",
+            evolutionTree: "KeyT",
+            screenshot: "KeyV",
+            ghostQuit: "KeyX",
+            copyUrl: "KeyC",
+            joinGame: "KeyJ"
+        };
         store.set("settings", settings);
     };
 
