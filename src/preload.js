@@ -891,6 +891,9 @@ window.addEventListener("DOMContentLoaded", () => {
         settings.keybinds.joinGame = "KeyJ";
         saveSettings();
         updateKeybindsDisplay();
+        new Notification("Keybinds updated!", {
+            body: "You may need to restart the Client for your changes to take effect."
+        });
     });
     updateKeybindsDisplay();
     // Custom Settings
@@ -4599,7 +4602,7 @@ window.addEventListener("DOMContentLoaded", () => {
         treeModalContainer.classList.remove("drc-modal-hidden");
     });
     window.addEventListener("keyup", (key) => {
-        if (key.code != "KeyT")
+        if (key.code != settings.keybinds.evolutionTree)
             return;
         treeModalContainer.classList.add("drc-modal-hidden");
     });

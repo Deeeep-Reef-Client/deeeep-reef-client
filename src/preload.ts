@@ -1006,6 +1006,10 @@ window.addEventListener("DOMContentLoaded", () => {
 
         saveSettings();
         updateKeybindsDisplay()
+
+        new Notification("Keybinds updated!", {
+            body: "You may need to restart the Client for your changes to take effect."
+        });
     });
 
     updateKeybindsDisplay();
