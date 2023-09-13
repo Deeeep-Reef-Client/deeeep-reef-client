@@ -870,6 +870,9 @@ window.addEventListener("DOMContentLoaded", () => {
                 settings.keybinds[keybind] = e.code;
                 updateKeybindsDisplay();
                 saveSettings();
+                new Notification("Keybinds updated!", {
+                    body: "You may need to restart the Client for your changes to take effect."
+                });
             }, { once: true });
         };
     }
