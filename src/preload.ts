@@ -888,10 +888,107 @@ window.addEventListener("DOMContentLoaded", () => {
     document.head.appendChild(colourblindTheme);
 
     // Keybinds
-    
+
     const keybindsModal = DRC.Modal.buildModal("keybinds", "Edit Keybinds", `
-    Hello there
-    `);
+    <div>
+        <div class="spacer"></div>
+        <div class="assetswapper-list-rule">
+            <p>Cancel Change:<br/>
+            <div class="spacer"></div>
+            <p id="keybindsDisplayCancelCharge"></p>
+            <div class="spacer"></div>
+            <button id="keybindsEditCancelCharge" class="assetswapper-new-button">Change</button>
+        </div>
+        <div class="spacer"></div>
+        <div class="assetswapper-list-rule">
+            <p>Evolution Tree:<br/>
+            <div class="spacer"></div>
+            <p id="keybindsDisplayEvolutionTree"></p>
+            <div class="spacer"></div>
+            <button id="keybindsEditEvolutionTree" class="assetswapper-new-button">Change</button>
+        </div>
+        <div class="spacer"></div>
+        <div class="assetswapper-list-rule">
+            <p>Screenshot:<br/>
+            <div class="spacer"></div>
+            <p id="keybindsDisplayScreenshot"></p>
+            <div class="spacer"></div>
+            <button id="keybindsEditScreenshot" class="assetswapper-new-button">Change</button>
+        </div>
+        <div class="spacer"></div>
+        <div class="assetswapper-list-rule">
+            <p>Ghost Quit:<br/>
+            <div class="spacer"></div>
+            <p id="keybindsDisplayGhostQuit"></p>
+            <div class="spacer"></div>
+            <button id="keybindsEditGhostQuit" class="assetswapper-new-button">Change</button>
+        </div>
+        <div class="spacer"></div>
+        <div class="assetswapper-list-rule">
+            <p>Copy URL:<br/>
+            <div class="spacer"></div>
+            <p>Alt + <span id="keybindsDisplayCopyUrl"></span></p>
+            <div class="spacer"></div>
+            <button id="keybindsEditCopyUrl" class="assetswapper-new-button">Change</button>
+        </div>
+        <div class="spacer"></div>
+        <div class="assetswapper-list-rule">
+            <p>Join Game:<br/>
+            <div class="spacer"></div>
+            <p>Alt + <span id="keybindsDisplayJoinGame"></span></p>
+            <div class="spacer"></div>
+            <button id="keybindsEditJoinGame" class="assetswapper-new-button">Change</button>
+        </div>
+    </div>
+    `, true);
+
+    const keybindsDisplayCancelCharge = document.getElementById("keybindsDisplayCancelCharge");
+    const keybindsDisplayEvolutionTree = document.getElementById("keybindsDisplayEvolutionTree");
+    const keybindsDisplayScreenshot = document.getElementById("keybindsDisplayScreenshot");
+    const keybindsDisplayGhostQuit = document.getElementById("keybindsDisplayGhostQuit");
+    const keybindsDisplayCopyUrl = document.getElementById("keybindsDisplayCopyUrl");
+    const keybindsDisplayJoinGame = document.getElementById("keybindsDisplayJoinGame");
+
+    const keybindsEditCancelCharge = document.getElementById("keybindsEditCancelCharge") as HTMLButtonElement;
+    const keybindsEditEvolutionTree = document.getElementById("keybindsEditEvolutionTree") as HTMLButtonElement;
+    const keybindsEditScreenshot = document.getElementById("keybindsEditScreenshot") as HTMLButtonElement;
+    const keybindsEditGhostQuit = document.getElementById("keybindsEditGhostQuit") as HTMLButtonElement;
+    const keybindsEditCopyUrl = document.getElementById("keybindsEditCopyUrl") as HTMLButtonElement;
+    const keybindsEditJoinGame = document.getElementById("keybindsEditJoinGame") as HTMLButtonElement;
+
+    function updateKeybindsDisplay() {
+        keybindsDisplayCancelCharge!.innerText = settings.keybinds.cancelCharge;
+        keybindsDisplayEvolutionTree!.innerText = settings.keybinds.evolutionTree;
+        keybindsDisplayScreenshot!.innerText = settings.keybinds.screenshot;
+        keybindsDisplayGhostQuit!.innerText = settings.keybinds.ghostQuit;
+        keybindsDisplayCopyUrl!.innerText = settings.keybinds.copyUrl;
+        keybindsDisplayJoinGame!.innerText = settings.keybinds.joinGame;
+    }
+
+    function changeKeybind(button: HTMLButtonElement, keybind: (keyof typeof settings.keybinds)) {
+        return function () {
+            button.innerText = "Press a key";
+
+            window.addEventListener("keydown", (e) => {
+                button.innerText = "Change";
+
+                settings.keybinds[keybind] = e.code;
+
+                updateKeybindsDisplay();
+
+                saveSettings();
+            }, { once: true });
+        }
+    }
+
+    keybindsEditCancelCharge.addEventListener("click", changeKeybind(keybindsEditCancelCharge, "cancelCharge"));
+    keybindsEditEvolutionTree.addEventListener("click", changeKeybind(keybindsEditEvolutionTree, "evolutionTree"));
+    keybindsEditScreenshot.addEventListener("click", changeKeybind(keybindsEditScreenshot, "screenshot"));
+    keybindsEditGhostQuit.addEventListener("click", changeKeybind(keybindsEditGhostQuit, "ghostQuit"));
+    keybindsEditCopyUrl.addEventListener("click", changeKeybind(keybindsEditCopyUrl, "copyUrl"));
+    keybindsEditJoinGame.addEventListener("click", changeKeybind(keybindsEditJoinGame, "joinGame"));
+
+    updateKeybindsDisplay();
 
     // Custom Settings
     // Watch for settings pane opened
