@@ -786,6 +786,10 @@ window.addEventListener("DOMContentLoaded", () => {
     colourblindTheme.setAttribute("id", "colourblindThemeStyle");
     colourblindTheme.href = settings.colourblind ? "https://deeeep-reef-client.netlify.app/assets/colourblind.css" : '';
     document.head.appendChild(colourblindTheme);
+    // Keybinds
+    const keybindsModal = DRC.Modal.buildModal("keybinds", "Edit Keybinds", `
+    Hello there
+    `);
     // Custom Settings
     // Watch for settings pane opened
     const observer = new MutationObserver((mutations) => {
@@ -1064,6 +1068,24 @@ window.addEventListener("DOMContentLoaded", () => {
             });
             chatPane.appendChild(advancedProfanityFilterSetting);
             // General Settings
+            // Keybinds
+            const keybindsSetting = graphicsPane.childNodes[2].cloneNode(true);
+            const keybindsName = keybindsSetting.querySelector(".el-form-item__label");
+            const keybindsDesc = keybindsSetting.querySelector(".notes");
+            const keybindsCheckbox = keybindsSetting.querySelector("label.el-checkbox");
+            keybindsName.setAttribute("id", "keybindsName");
+            keybindsName.innerText = "DRC Keybinds";
+            keybindsDesc.innerText = "Deeeep.io Reef Client keybinds";
+            keybindsCheckbox.innerHTML = "";
+            const keybindsOpenButton = document.createElement("span");
+            keybindsOpenButton.setAttribute("id", "keybindsOpenButton");
+            keybindsOpenButton.setAttribute("style", "color:#409eff;");
+            keybindsOpenButton.innerHTML = "<u>Edit</u>";
+            keybindsOpenButton.addEventListener("click", () => {
+                keybindsModal.classList.remove("drc-modal-hidden");
+            });
+            keybindsCheckbox.appendChild(keybindsOpenButton);
+            generalPane.appendChild(keybindsSetting);
             // Discord RPC
             const discordRichPresenceSetting = graphicsPane.childNodes[2].cloneNode(true);
             const discordRichPresenceName = discordRichPresenceSetting.querySelector(".el-form-item__label");
