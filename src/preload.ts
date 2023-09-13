@@ -4793,7 +4793,7 @@ window.addEventListener("DOMContentLoaded", () => {
         treeModalContainer!.classList.remove("drc-modal-hidden");
     });
     window.addEventListener("keyup", (key: KeyboardEvent) => {
-        if (key.code != "KeyT") return;
+        if (key.code != settings.keybinds.evolutionTree) return;
         treeModalContainer!.classList.add("drc-modal-hidden");
     });
 
