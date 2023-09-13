@@ -939,6 +939,8 @@ window.addEventListener("DOMContentLoaded", () => {
             <div class="spacer"></div>
             <button id="keybindsEditJoinGame" class="assetswapper-new-button">Change</button>
         </div>
+
+        <button id="keybindsResetButton" class="assetswapper-add-button">Reset</button>
     </div>
     `, true);
 
@@ -955,6 +957,8 @@ window.addEventListener("DOMContentLoaded", () => {
     const keybindsEditGhostQuit = document.getElementById("keybindsEditGhostQuit") as HTMLButtonElement;
     const keybindsEditCopyUrl = document.getElementById("keybindsEditCopyUrl") as HTMLButtonElement;
     const keybindsEditJoinGame = document.getElementById("keybindsEditJoinGame") as HTMLButtonElement;
+
+    const keybindsResetButton = document.getElementById("keybindsResetButton") as HTMLButtonElement;
 
     function updateKeybindsDisplay() {
         keybindsDisplayCancelCharge!.innerText = settings.keybinds.cancelCharge;
@@ -987,6 +991,18 @@ window.addEventListener("DOMContentLoaded", () => {
     keybindsEditGhostQuit.addEventListener("click", changeKeybind(keybindsEditGhostQuit, "ghostQuit"));
     keybindsEditCopyUrl.addEventListener("click", changeKeybind(keybindsEditCopyUrl, "copyUrl"));
     keybindsEditJoinGame.addEventListener("click", changeKeybind(keybindsEditJoinGame, "joinGame"));
+
+    keybindsResetButton.addEventListener("click", () => {
+        settings.keybinds.cancelCharge = "KeyC";
+        settings.keybinds.evolutionTree = "KeyT";
+        settings.keybinds.screenshot = "KeyV";
+        settings.keybinds.ghostQuit = "KeyX";
+        settings.keybinds.copyUrl = "KeyC";
+        settings.keybinds.joinGame = "KeyJ";
+
+        saveSettings();
+        updateKeybindsDisplay()
+    });
 
     updateKeybindsDisplay();
 

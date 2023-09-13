@@ -837,6 +837,8 @@ window.addEventListener("DOMContentLoaded", () => {
             <div class="spacer"></div>
             <button id="keybindsEditJoinGame" class="assetswapper-new-button">Change</button>
         </div>
+
+        <button id="keybindsResetButton" class="assetswapper-add-button">Reset</button>
     </div>
     `, true);
     const keybindsDisplayCancelCharge = document.getElementById("keybindsDisplayCancelCharge");
@@ -851,6 +853,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const keybindsEditGhostQuit = document.getElementById("keybindsEditGhostQuit");
     const keybindsEditCopyUrl = document.getElementById("keybindsEditCopyUrl");
     const keybindsEditJoinGame = document.getElementById("keybindsEditJoinGame");
+    const keybindsResetButton = document.getElementById("keybindsResetButton");
     function updateKeybindsDisplay() {
         keybindsDisplayCancelCharge.innerText = settings.keybinds.cancelCharge;
         keybindsDisplayEvolutionTree.innerText = settings.keybinds.evolutionTree;
@@ -876,6 +879,16 @@ window.addEventListener("DOMContentLoaded", () => {
     keybindsEditGhostQuit.addEventListener("click", changeKeybind(keybindsEditGhostQuit, "ghostQuit"));
     keybindsEditCopyUrl.addEventListener("click", changeKeybind(keybindsEditCopyUrl, "copyUrl"));
     keybindsEditJoinGame.addEventListener("click", changeKeybind(keybindsEditJoinGame, "joinGame"));
+    keybindsResetButton.addEventListener("click", () => {
+        settings.keybinds.cancelCharge = "KeyC";
+        settings.keybinds.evolutionTree = "KeyT";
+        settings.keybinds.screenshot = "KeyV";
+        settings.keybinds.ghostQuit = "KeyX";
+        settings.keybinds.copyUrl = "KeyC";
+        settings.keybinds.joinGame = "KeyJ";
+        saveSettings();
+        updateKeybindsDisplay();
+    });
     updateKeybindsDisplay();
     // Custom Settings
     // Watch for settings pane opened
