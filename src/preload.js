@@ -870,9 +870,6 @@ window.addEventListener("DOMContentLoaded", () => {
                 settings.keybinds[keybind] = e.code;
                 updateKeybindsDisplay();
                 saveSettings();
-                new Notification("Keybinds updated!", {
-                    body: "You may need to restart the Client for your changes to take effect."
-                });
             }, { once: true });
         };
     }
@@ -891,9 +888,6 @@ window.addEventListener("DOMContentLoaded", () => {
         settings.keybinds.joinGame = "KeyJ";
         saveSettings();
         updateKeybindsDisplay();
-        new Notification("Keybinds updated!", {
-            body: "You may need to restart the Client for your changes to take effect."
-        });
     });
     updateKeybindsDisplay();
     // Custom Settings
