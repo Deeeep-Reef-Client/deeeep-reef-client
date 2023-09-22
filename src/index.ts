@@ -21,7 +21,7 @@ const development = true;
 // Auto update
 let newUpdate = false;
 let instUrl = "";
-const versionId = "v1.1.1";
+const versionId = "v1.2.0";
 let currentVersionId = "";
 
 
@@ -32,8 +32,8 @@ const DRC: any = {
     // Client info
     Client: {
         name: "Deeeep.io Reef Client",
-        version: "1.1.1",
-        versionTag: "v1.1.1"
+        version: "1.2.0",
+        versionTag: "v1.2.0"
     },
     // Utility functions
     Utils: {

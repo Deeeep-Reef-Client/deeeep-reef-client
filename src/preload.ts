@@ -13,8 +13,8 @@ const DRC = {
     // Client info
     Client: {
         name: "Deeeep.io Reef Client",
-        version: "1.1.1",
-        versionTag: "v1.1.1"
+        version: "1.2.0",
+        versionTag: "v1.2.0"
     },
     // Utility functions
     Utils: {
