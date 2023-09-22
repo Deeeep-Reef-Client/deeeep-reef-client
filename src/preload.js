@@ -7459,6 +7459,11 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
                 </p>
                 <br/>
                 <div style="text-align:left;max-width:50vw;">
+                    <p><b>v1.2.0 The Keybinds Update</b></p>
+                    <ul>
+                        <li>Keybinds can be changed</li>
+                    </ul>
+                    <br />
                     <p><b>v1.1.1 The Postrelease Patch</b></p>
                     <ul>
                         <li>Copy URL hotkey</li>
