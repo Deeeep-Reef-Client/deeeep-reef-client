@@ -1,6 +1,6 @@
 import { AnonymousGuild, Widget } from "discord.js";
 
-const { app, BrowserWindow, Menu, ipcMain, shell, session, globalShortcut, Notification, dialog } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain, shell, session, globalShortcut, Notification, dialog, clipboard } = require('electron');
 const log = require('electron-log');
 const RPC = require('discord-rpc');
 const Store = require('electron-store');
@@ -737,6 +737,8 @@ const createWindow = () => {
                     body: "An error occurred while taking a screenshot."
                 }).show();
             }
+
+            clipboard.writeImage(image);
         })
     });
 
