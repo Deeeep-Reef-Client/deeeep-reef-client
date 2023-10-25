@@ -255,7 +255,8 @@ let settings = {
         screenshot: "KeyV",
         ghostQuit: "KeyX",
         copyUrl: "KeyC",
-        joinGame: "KeyJ"
+        joinGame: "KeyJ",
+        boost: "Space"
     }
 };
 Object.assign(settings, store.get("settings") ?? {});
@@ -286,7 +287,8 @@ if (settings === undefined) {
             screenshot: "KeyV",
             ghostQuit: "KeyX",
             copyUrl: "KeyC",
-            joinGame: "KeyJ"
+            joinGame: "KeyJ",
+            boost: "Space"
         }
     };
     store.set("settings", settings);
@@ -577,7 +579,8 @@ const createWindow = () => {
             screenshot: "KeyV",
             ghostQuit: "KeyX",
             copyUrl: "KeyC",
-            joinGame: "KeyJ"
+            joinGame: "KeyJ",
+            boost: "Space"
         };
         store.set("settings", settings);
     }

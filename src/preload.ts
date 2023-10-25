@@ -295,6 +295,7 @@ interface SettingsTemplate {
         ghostQuit: string;
         copyUrl: string;
         joinGame: string;
+        boost: string;
     }
 }
 
@@ -324,7 +325,8 @@ let settings: SettingsTemplate = {
         screenshot: "KeyV",
         ghostQuit: "KeyX",
         copyUrl: "KeyC",
-        joinGame: "KeyJ"
+        joinGame: "KeyJ",
+        boost: "Space"
     }
 };
 ipcRenderer.on("settings", (_event: Event, s: SettingsTemplate) => {
@@ -939,7 +941,14 @@ window.addEventListener("DOMContentLoaded", () => {
             <div class="spacer"></div>
             <button id="keybindsEditJoinGame" class="assetswapper-new-button">Change</button>
         </div>
-
+        <div class="spacer"></div>
+        <div class="assetswapper-list-rule">
+            <p>Boost:<br/>
+            <div class="spacer"></div>
+            <p id="keybindsDisplayBoost"></p>
+            <div class="spacer"></div>
+            <button id="keybindsEditBoost" class="assetswapper-new-button">Change</button>
+        </div>
         <button id="keybindsResetButton" class="assetswapper-add-button">Reset</button>
     </div>
     `, true);
@@ -950,6 +959,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const keybindsDisplayGhostQuit = document.getElementById("keybindsDisplayGhostQuit");
     const keybindsDisplayCopyUrl = document.getElementById("keybindsDisplayCopyUrl");
     const keybindsDisplayJoinGame = document.getElementById("keybindsDisplayJoinGame");
+    const keybindsDisplayBoost = document.getElementById("keybindsDisplayBoost");
 
     const keybindsEditCancelCharge = document.getElementById("keybindsEditCancelCharge") as HTMLButtonElement;
     const keybindsEditEvolutionTree = document.getElementById("keybindsEditEvolutionTree") as HTMLButtonElement;
@@ -957,6 +967,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const keybindsEditGhostQuit = document.getElementById("keybindsEditGhostQuit") as HTMLButtonElement;
     const keybindsEditCopyUrl = document.getElementById("keybindsEditCopyUrl") as HTMLButtonElement;
     const keybindsEditJoinGame = document.getElementById("keybindsEditJoinGame") as HTMLButtonElement;
+    const keybindsEditBoost = document.getElementById("keybindsEditBoost") as HTMLButtonElement;
 
     const keybindsResetButton = document.getElementById("keybindsResetButton") as HTMLButtonElement;
 
@@ -967,6 +978,7 @@ window.addEventListener("DOMContentLoaded", () => {
         keybindsDisplayGhostQuit!.innerText = settings.keybinds.ghostQuit;
         keybindsDisplayCopyUrl!.innerText = settings.keybinds.copyUrl;
         keybindsDisplayJoinGame!.innerText = settings.keybinds.joinGame;
+        keybindsDisplayBoost!.innerText = settings.keybinds.boost;
 
         const treeHotkeyElem = document.getElementById("treeOpenHotkey");
         if (gameStarted && document.contains(treeHotkeyElem)) {
@@ -1006,6 +1018,7 @@ window.addEventListener("DOMContentLoaded", () => {
     keybindsEditGhostQuit.addEventListener("click", changeKeybind(keybindsEditGhostQuit, "ghostQuit"));
     keybindsEditCopyUrl.addEventListener("click", changeKeybind(keybindsEditCopyUrl, "copyUrl"));
     keybindsEditJoinGame.addEventListener("click", changeKeybind(keybindsEditJoinGame, "joinGame"));
+    keybindsEditBoost.addEventListener("click", changeKeybind(keybindsEditBoost, "boost"));
 
     keybindsResetButton.addEventListener("click", () => {
         settings.keybinds.cancelCharge = "KeyC";
@@ -1014,6 +1027,7 @@ window.addEventListener("DOMContentLoaded", () => {
         settings.keybinds.ghostQuit = "KeyX";
         settings.keybinds.copyUrl = "KeyC";
         settings.keybinds.joinGame = "KeyJ";
+        settings.keybinds.boost = "Space";
 
         saveSettings();
         updateKeybindsDisplay()
@@ -7989,6 +8003,14 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
                     `);
                 };
 
+                function boostKeybind(key: KeyboardEvent) {
+                    if (settings.keybinds.boost === "Space" || key.code !== settings.keybinds.boost) return;
+
+                    DRC.Preload.evalInBrowserContext(`
+                    game.inputManager.handleLongPress();
+                    `);
+                }
+
                 async function takeScreenshot(key: KeyboardEvent) {
                     if (key.code !== settings.keybinds.screenshot
                         || !document.contains(document.querySelector("#canvas-container > canvas"))
@@ -8055,6 +8077,7 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
                 window.addEventListener("keydown", ghostSuicide);
                 window.addEventListener("keydown", cancelBoost);
                 window.addEventListener("keydown", takeScreenshot);
+                window.addEventListener("keydown", boostKeybind);
 
                 let advancedProfanityFilter = setInterval(() => {
                     if (!settings.advancedProfanityFilter) return;
@@ -8252,6 +8275,7 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
                     window.removeEventListener("keydown", ghostSuicide);
                     window.removeEventListener("keydown", cancelBoost);
                     window.removeEventListener("keydown", takeScreenshot);
+                    window.removeEventListener("keydown", boostKeybind);
 
                     clearInterval(advancedProfanityFilter);
                     clearInterval(colourblindMode);
