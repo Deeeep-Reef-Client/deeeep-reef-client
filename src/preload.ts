@@ -179,6 +179,7 @@ const DRC = {
         GameEnded: "DRC.GameEnded",
         GameEvolved: "DRC.GameEvolved",
         SettingsOpened: "DRC.SettingsOpened",
+        GameBoost: "DRC.GameBoost",
         EventList: {
             DomContentLoaded: new CustomEvent("DRC.DomContentLoaded"),
             DocumentLoaded: new CustomEvent("DRC.DocumentLoaded"),
@@ -186,6 +187,7 @@ const DRC = {
             GameEnded: new CustomEvent("DRC.GameEnded"),
             GameEvolved: new CustomEvent("DRC.GameEvolved"),
             SettingsOpened: new CustomEvent("DRC.SettingsOpened"),
+            GameBoost: new CustomEvent("DRC.GameBoost"),
         }
     },
     // Internal messaging
@@ -991,7 +993,7 @@ window.addEventListener("DOMContentLoaded", () => {
             } else {
                 gameTreeHotkey = settings.keybinds.evolutionTree.slice(0, 1);
             }
-            
+
             treeHotkeyElem!.innerText = gameTreeHotkey;
         }
     }
@@ -8232,6 +8234,16 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
                         `);
                     }
                 });
+
+                // Boosting
+                const boostObserver = new MutationObserver((mutations) => {
+                    for (let i in mutations) {
+                        if (mutations[i].oldValue === "transform: scale3d(1, 1, 1); background-color: rgba(5, 255, 0, 0.7);") {
+                            // DRC API
+                            DRC.EventObject.dispatchEvent(DRC.Events.EventList.GameBoost);
+                        }
+                    }
+                });
                 const startObserver = new MutationObserver((mutations: MutationRecord[]) => {
                     if (document.contains(document.querySelector("div.stats > div.animal-data > div.detailed-info > h4.name"))) {
                         startObserver.disconnect();
@@ -8241,6 +8253,10 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
                         // Asset swapper (do stuff on evolve)
                         const animalNameElement = document.querySelector("div.stats > div.animal-data > div.detailed-info > h4.name") as HTMLHeadingElement;
                         evolveObserver.observe(animalNameElement!, { childList: true });
+
+                        const boostsContainer = document.querySelector("div.boosts > div.el-row.inner") as HTMLDivElement;
+                        boostObserver.observe(boostsContainer, { subtree: true, attributes: true, attributeOldValue: true });
+
                         for (let i in settings.assetSwapperConfig) {
                             DRC.Preload.evalInBrowserContext(`
                             if (${settings.assetSwapperConfig[i].animal} == game.currentScene.myAnimal.visibleFishLevel) {
