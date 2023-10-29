@@ -826,15 +826,11 @@ window.addEventListener("DOMContentLoaded", () => {
             zoomFactor += 0.2;
 
             webFrame.setZoomFactor(zoomFactor);
-
-            saveSettings();
         } else if (key.ctrlKey && key.shiftKey && key.code === settings.keybinds.zoomOut) {
             console.log("Zoom out");
             zoomFactor -= 0.2;
 
             webFrame.setZoomFactor(zoomFactor);
-
-            saveSettings();
         }
     });
 
