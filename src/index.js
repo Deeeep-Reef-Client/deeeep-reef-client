@@ -8,7 +8,6 @@ const electronDl = require('electron-dl');
 const Badge = require('electron-windows-badge');
 const enhanceWebRequest = require('electron-better-web-request').default;
 const sudoPrompt = require('sudo-prompt');
-const deepMerge = require('deepmerge');
 const https = require('node:https');
 const spawn = require('node:child_process').spawn;
 const path = require('node:path');
@@ -230,7 +229,7 @@ const schema = {
 };
 const store = new Store({ schema });
 // Fetch settings
-let settings = deepMerge({
+let settings = {
     customTheme: true,
     docassets: false,
     v3ui: true,
@@ -261,7 +260,20 @@ let settings = deepMerge({
         zoomIn: "Equal",
         zoomOut: "Minus"
     }
-}, store.get("settings") ?? {});
+};
+const savedSettings = store.get("settings") ?? {};
+for (let i of Object.keys(savedSettings)) {
+    if (i === "keybinds") {
+        for (let j of Object.keys(savedSettings.keybinds)) {
+            //@ts-ignore
+            settings.keybinds[j] = savedSettings.keybinds[j];
+        }
+    }
+    else {
+        // @ts-ignore
+        settings[i] = savedSettings[i];
+    }
+}
 if (settings === undefined) {
     settings = {
         customTheme: true,

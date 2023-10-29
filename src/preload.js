@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const { ipcRenderer, app, contextBridge, webFrame } = require('electron');
 const Filter = require('bad-words');
 const cssjs = require('jotform-css.js');
-const deepMerge = require('deepmerge');
 const fs = require('node:fs');
 const tippy_js_1 = __importDefault(require("tippy.js"));
 // The DRC API
@@ -280,7 +279,18 @@ let settings = {
     }
 };
 ipcRenderer.on("settings", (_event, s) => {
-    settings = deepMerge(settings, s);
+    for (let i of Object.keys(s)) {
+        if (i === "keybinds") {
+            for (let j of Object.keys(s.keybinds)) {
+                //@ts-ignore
+                settings.keybinds[j] = s.keybinds[j];
+            }
+        }
+        else {
+            // @ts-ignore
+            settings[i] = s[i];
+        }
+    }
 });
 function saveSettings() {
     console.log(settings);
@@ -714,11 +724,13 @@ window.addEventListener("DOMContentLoaded", () => {
             console.log("Zoom in");
             zoomFactor += 0.2;
             webFrame.setZoomFactor(zoomFactor);
+            saveSettings();
         }
         else if (key.ctrlKey && key.shiftKey && key.code === settings.keybinds.zoomOut) {
             console.log("Zoom out");
             zoomFactor -= 0.2;
             webFrame.setZoomFactor(zoomFactor);
+            saveSettings();
         }
     });
     // Custom stylesheet

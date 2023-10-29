@@ -4,7 +4,6 @@ import { load } from "dotenv";
 const { ipcRenderer, app, contextBridge, webFrame } = require('electron');
 const Filter = require('bad-words');
 const cssjs = require('jotform-css.js');
-const deepMerge = require('deepmerge')
 const fs = require('node:fs');
 
 import tippy from 'tippy.js';
@@ -337,7 +336,17 @@ let settings: SettingsTemplate = {
     }
 };
 ipcRenderer.on("settings", (_event: Event, s: SettingsTemplate) => {
-    settings = deepMerge(settings, s);
+    for (let i of Object.keys(s)) {
+        if (i === "keybinds") {
+            for (let j of Object.keys(s.keybinds)) {
+                //@ts-ignore
+                settings.keybinds[j] = s.keybinds[j];
+            }
+        } else {
+            // @ts-ignore
+            settings[i] = s[i];
+        }
+    }
 })
 
 function saveSettings() {
