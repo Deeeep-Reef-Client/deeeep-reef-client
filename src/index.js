@@ -257,7 +257,9 @@ let settings = deepMerge({
         ghostQuit: "KeyX",
         copyUrl: "KeyC",
         joinGame: "KeyJ",
-        boost: "Space"
+        boost: "Space",
+        zoomIn: "Equal",
+        zoomOut: "Minus"
     }
 }, store.get("settings") ?? {});
 if (settings === undefined) {
@@ -288,7 +290,9 @@ if (settings === undefined) {
             ghostQuit: "KeyX",
             copyUrl: "KeyC",
             joinGame: "KeyJ",
-            boost: "Space"
+            boost: "Space",
+            zoomIn: "Equal",
+            zoomOut: "Minus"
         }
     };
     store.set("settings", settings);
@@ -580,7 +584,9 @@ const createWindow = () => {
             ghostQuit: "KeyX",
             copyUrl: "KeyC",
             joinGame: "KeyJ",
-            boost: "Space"
+            boost: "Space",
+            zoomIn: "Equal",
+            zoomOut: "Minus"
         };
         store.set("settings", settings);
     }

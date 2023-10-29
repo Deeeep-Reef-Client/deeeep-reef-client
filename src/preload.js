@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const { ipcRenderer, app, contextBridge } = require('electron');
+const { ipcRenderer, app, contextBridge, webFrame } = require('electron');
 const Filter = require('bad-words');
 const cssjs = require('jotform-css.js');
 const deepMerge = require('deepmerge');
@@ -274,7 +274,9 @@ let settings = {
         ghostQuit: "KeyX",
         copyUrl: "KeyC",
         joinGame: "KeyJ",
-        boost: "Space"
+        boost: "Space",
+        zoomIn: "Equal",
+        zoomOut: "Minus"
     }
 };
 ipcRenderer.on("settings", (_event, s) => {
@@ -693,6 +695,7 @@ window.addEventListener("DOMContentLoaded", () => {
         if (key.code === "Enter")
             joinGame();
     });
+    let zoomFactor = 1;
     window.addEventListener("keydown", (key) => {
         // Alt + C copy link
         if (key.altKey && key.code == settings.keybinds.copyUrl) {
@@ -705,6 +708,17 @@ window.addEventListener("DOMContentLoaded", () => {
         else if (key.altKey && key.code == settings.keybinds.joinGame) {
             joinGameModal.classList.remove("drc-modal-hidden");
             joinGameCodeInput.focus();
+            // Ctrl + Shift + Zoom in
+        }
+        else if (key.ctrlKey && key.shiftKey && key.code === settings.keybinds.zoomIn) {
+            console.log("Zoom in");
+            zoomFactor += 0.2;
+            webFrame.setZoomFactor(zoomFactor);
+        }
+        else if (key.ctrlKey && key.shiftKey && key.code === settings.keybinds.zoomOut) {
+            console.log("Zoom out");
+            zoomFactor -= 0.2;
+            webFrame.setZoomFactor(zoomFactor);
         }
     });
     // Custom stylesheet
@@ -849,6 +863,22 @@ window.addEventListener("DOMContentLoaded", () => {
             <div class="spacer"></div>
             <button id="keybindsEditBoost" class="assetswapper-new-button">Change</button>
         </div>
+        <div class="spacer"></div>
+        <div class="assetswapper-list-rule">
+            <p>Zoom In:<br/>
+            <div class="spacer"></div>
+            <p>Ctrl + Shift + <span id="keybindsDisplayZoomIn"></span></p>
+            <div class="spacer"></div>
+            <button id="keybindsEditZoomIn" class="assetswapper-new-button">Change</button>
+        </div>
+        <div class="spacer"></div>
+        <div class="assetswapper-list-rule">
+            <p>Zoom Out:<br/>
+            <div class="spacer"></div>
+            <p>Ctrl + Shift + <span id="keybindsDisplayZoomOut"></span></p>
+            <div class="spacer"></div>
+            <button id="keybindsEditZoomOut" class="assetswapper-new-button">Change</button>
+        </div>
         <button id="keybindsResetButton" class="assetswapper-add-button">Reset</button>
     </div>
     `, true);
@@ -859,6 +889,8 @@ window.addEventListener("DOMContentLoaded", () => {
     const keybindsDisplayCopyUrl = document.getElementById("keybindsDisplayCopyUrl");
     const keybindsDisplayJoinGame = document.getElementById("keybindsDisplayJoinGame");
     const keybindsDisplayBoost = document.getElementById("keybindsDisplayBoost");
+    const keybindsDisplayZoomIn = document.getElementById("keybindsDisplayZoomIn");
+    const keybindsDisplayZoomOut = document.getElementById("keybindsDisplayZoomOut");
     const keybindsEditCancelCharge = document.getElementById("keybindsEditCancelCharge");
     const keybindsEditEvolutionTree = document.getElementById("keybindsEditEvolutionTree");
     const keybindsEditScreenshot = document.getElementById("keybindsEditScreenshot");
@@ -866,6 +898,8 @@ window.addEventListener("DOMContentLoaded", () => {
     const keybindsEditCopyUrl = document.getElementById("keybindsEditCopyUrl");
     const keybindsEditJoinGame = document.getElementById("keybindsEditJoinGame");
     const keybindsEditBoost = document.getElementById("keybindsEditBoost");
+    const keybindsEditZoomIn = document.getElementById("keybindsEditZoomIn");
+    const keybindsEditZoomOut = document.getElementById("keybindsEditZoomOut");
     const keybindsResetButton = document.getElementById("keybindsResetButton");
     function updateKeybindsDisplay() {
         keybindsDisplayCancelCharge.innerText = settings.keybinds.cancelCharge;
@@ -875,6 +909,8 @@ window.addEventListener("DOMContentLoaded", () => {
         keybindsDisplayCopyUrl.innerText = settings.keybinds.copyUrl;
         keybindsDisplayJoinGame.innerText = settings.keybinds.joinGame;
         keybindsDisplayBoost.innerText = settings.keybinds.boost;
+        keybindsDisplayZoomIn.innerText = settings.keybinds.zoomIn;
+        keybindsDisplayZoomOut.innerText = settings.keybinds.zoomOut;
         const treeHotkeyElem = document.getElementById("treeOpenHotkey");
         if (gameStarted && document.contains(treeHotkeyElem)) {
             let gameTreeHotkey;
@@ -908,6 +944,8 @@ window.addEventListener("DOMContentLoaded", () => {
     keybindsEditCopyUrl.addEventListener("click", changeKeybind(keybindsEditCopyUrl, "copyUrl"));
     keybindsEditJoinGame.addEventListener("click", changeKeybind(keybindsEditJoinGame, "joinGame"));
     keybindsEditBoost.addEventListener("click", changeKeybind(keybindsEditBoost, "boost"));
+    keybindsEditZoomIn.addEventListener("click", changeKeybind(keybindsEditZoomIn, "zoomIn"));
+    keybindsEditZoomOut.addEventListener("click", changeKeybind(keybindsEditZoomOut, "zoomOut"));
     keybindsResetButton.addEventListener("click", () => {
         settings.keybinds.cancelCharge = "KeyC";
         settings.keybinds.evolutionTree = "KeyT";
@@ -916,6 +954,8 @@ window.addEventListener("DOMContentLoaded", () => {
         settings.keybinds.copyUrl = "KeyC";
         settings.keybinds.joinGame = "KeyJ";
         settings.keybinds.boost = "Space";
+        settings.keybinds.zoomIn = "Equal";
+        settings.keybinds.zoomOut = "Minus";
         saveSettings();
         updateKeybindsDisplay();
     });

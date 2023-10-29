@@ -170,6 +170,8 @@ interface SettingsTemplate {
         copyUrl: string;
         joinGame: string;
         boost: string;
+        zoomIn: string;
+        zoomOut: string;
     }
 }
 
@@ -296,7 +298,9 @@ let settings: SettingsTemplate = deepMerge({
         ghostQuit: "KeyX",
         copyUrl: "KeyC",
         joinGame: "KeyJ",
-        boost: "Space"
+        boost: "Space",
+        zoomIn: "Equal",
+        zoomOut: "Minus"
     }
 }, store.get("settings") ?? {});
 
@@ -328,7 +332,9 @@ if (settings === undefined) {
             ghostQuit: "KeyX",
             copyUrl: "KeyC",
             joinGame: "KeyJ",
-            boost: "Space"
+            boost: "Space",
+            zoomIn: "Equal",
+            zoomOut: "Minus"
         }
     };
     store.set("settings", settings);
@@ -655,7 +661,9 @@ const createWindow = () => {
             ghostQuit: "KeyX",
             copyUrl: "KeyC",
             joinGame: "KeyJ",
-            boost: "Space"
+            boost: "Space",
+            zoomIn: "Equal",
+            zoomOut: "Minus"
         };
         store.set("settings", settings);
     };
