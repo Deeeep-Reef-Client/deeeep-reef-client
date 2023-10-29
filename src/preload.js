@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const { ipcRenderer, app, contextBridge } = require('electron');
 const Filter = require('bad-words');
 const cssjs = require('jotform-css.js');
+const deepMerge = require('deepmerge');
 const fs = require('node:fs');
 const tippy_js_1 = __importDefault(require("tippy.js"));
 // The DRC API
@@ -277,7 +278,7 @@ let settings = {
     }
 };
 ipcRenderer.on("settings", (_event, s) => {
-    Object.assign(settings, s);
+    settings = deepMerge(settings, s);
 });
 function saveSettings() {
     console.log(settings);

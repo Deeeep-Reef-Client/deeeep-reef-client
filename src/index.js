@@ -8,6 +8,7 @@ const electronDl = require('electron-dl');
 const Badge = require('electron-windows-badge');
 const enhanceWebRequest = require('electron-better-web-request').default;
 const sudoPrompt = require('sudo-prompt');
+const deepMerge = require('deepmerge');
 const https = require('node:https');
 const spawn = require('node:child_process').spawn;
 const path = require('node:path');
@@ -229,7 +230,7 @@ const schema = {
 };
 const store = new Store({ schema });
 // Fetch settings
-let settings = {
+let settings = deepMerge({
     customTheme: true,
     docassets: false,
     v3ui: true,
@@ -258,8 +259,7 @@ let settings = {
         joinGame: "KeyJ",
         boost: "Space"
     }
-};
-Object.assign(settings, store.get("settings") ?? {});
+}, store.get("settings") ?? {});
 if (settings === undefined) {
     settings = {
         customTheme: true,

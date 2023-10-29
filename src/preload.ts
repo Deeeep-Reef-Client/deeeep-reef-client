@@ -4,6 +4,7 @@ import { load } from "dotenv";
 const { ipcRenderer, app, contextBridge } = require('electron');
 const Filter = require('bad-words');
 const cssjs = require('jotform-css.js');
+const deepMerge = require('deepmerge')
 const fs = require('node:fs');
 
 import tippy from 'tippy.js';
@@ -332,7 +333,7 @@ let settings: SettingsTemplate = {
     }
 };
 ipcRenderer.on("settings", (_event: Event, s: SettingsTemplate) => {
-    Object.assign(settings, s);
+    settings = deepMerge(settings, s);
 })
 
 function saveSettings() {
