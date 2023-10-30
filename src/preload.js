@@ -7766,14 +7766,14 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
                 }
                 ;
                 function boostKeybindKeydown(key) {
-                    if (settings.keybinds.boost === "Space" || homePageOpened || key.code !== settings.keybinds.boost)
+                    if (settings.keybinds.boost === "Space" || homePageOpened || key.code !== settings.keybinds.boost || !document.contains(document.querySelector("div.chat-input.horizontal-center[style='display: none;']")))
                         return;
                     DRC.Preload.evalInBrowserContext(`
                     game.inputManager.pointerDown = true;
                     `);
                 }
                 function boostKeybindKeyup(key) {
-                    if (settings.keybinds.boost === "Space" || homePageOpened || key.code !== settings.keybinds.boost)
+                    if (settings.keybinds.boost === "Space" || homePageOpened || key.code !== settings.keybinds.boost || !document.contains(document.querySelector("div.chat-input.horizontal-center[style='display: none;']")))
                         return;
                     DRC.Preload.evalInBrowserContext(`
                     document.querySelector("div.game > div#canvas-container > canvas").dispatchEvent(new MouseEvent("pointerup", { clientX: ${canvasMouseX}, clientY: ${canvasMouseY} }));
