@@ -5321,6 +5321,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 loadingBarColour: themeMakerOptionsLoadingBarColour.value
             },
             src: await formatThemeMakerCSS(),
+            generateCss: true,
             active: true
         };
         if (themeMakerOptionsAdvancedTheme.checked) {
@@ -5621,6 +5622,8 @@ window.addEventListener("DOMContentLoaded", () => {
             theme.themetype = "advancedtheme";
             theme.script = exportedTheme.script;
         }
+        if (exportedTheme?.generateCss !== undefined)
+            theme.generateCss = exportedTheme.generateCss;
         const content = JSON.stringify(theme);
         const path = await ipcRenderer.invoke("getPath", "downloads");
         const sub = exportedTheme.themetype === "advancedtheme" ? "drcadvancedtheme" : "drctheme";
@@ -5665,11 +5668,14 @@ window.addEventListener("DOMContentLoaded", () => {
                 });
                 return;
             }
-            settings.userThemeData.push({
+            let importedTheme = {
                 name: parsedTheme.name,
                 src: parsedTheme.src,
                 active: true
-            });
+            };
+            if (parsedTheme?.generateCss)
+                importedTheme.generateCss = true;
+            settings.userThemeData.push(importedTheme);
             for (let i in settings.userThemeData) {
                 settings.userThemeData[i].active = false;
             }
