@@ -8041,6 +8041,10 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
                     url: window.location.href
                 });
 
+                const gameCanvas = document.querySelector("div.game > div#canvas-container > canvas") as HTMLCanvasElement;
+                let canvasMouseX = 0;
+                let canvasMouseY = 0;
+
                 function ghostSuicide(key: KeyboardEvent) {
                     if (key.code != settings.keybinds.ghostQuit || !document.contains(document.querySelector("div.chat-input.horizontal-center[style='display: none;']"))) return;
                     DRC.Preload.evalInBrowserContext(`
@@ -8058,11 +8062,19 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
                     `);
                 };
 
-                function boostKeybind(key: KeyboardEvent) {
+                function boostKeybindKeydown(key: KeyboardEvent) {
                     if (settings.keybinds.boost === "Space" || key.code !== settings.keybinds.boost) return;
 
                     DRC.Preload.evalInBrowserContext(`
-                    game.inputManager.handleLongPress();
+                    game.inputManager.pointerDown = true;
+                    `);
+                }
+
+                function boostKeybindKeyup(key: KeyboardEvent) {
+                    if (settings.keybinds.boost === "Space" || key.code !== settings.keybinds.boost) return;
+
+                    DRC.Preload.evalInBrowserContext(`
+                    document.querySelector("div.game > div#canvas-container > canvas").dispatchEvent(new MouseEvent("pointerup", { clientX: ${canvasMouseX}, clientY: ${canvasMouseY} }));
                     `);
                 }
 
@@ -8089,6 +8101,11 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
                     document.getElementById("canvas-container")?.appendChild(overlayDiv);
                     setTimeout(() => overlayDiv.remove(), 200);
                 };
+
+                function canvasMousemove(event: MouseEvent) {
+                    canvasMouseX = event.x;
+                    canvasMouseY = event.y;
+                }
 
                 // tree button
                 try {
@@ -8132,7 +8149,9 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
                 window.addEventListener("keydown", ghostSuicide);
                 window.addEventListener("keydown", cancelBoost);
                 window.addEventListener("keydown", takeScreenshot);
-                window.addEventListener("keydown", boostKeybind);
+                window.addEventListener("keydown", boostKeybindKeydown);
+                window.addEventListener("keyup", boostKeybindKeyup);
+                gameCanvas.addEventListener("mousemove", canvasMousemove);
 
                 let advancedProfanityFilter = setInterval(() => {
                     if (!settings.advancedProfanityFilter) return;
@@ -8344,7 +8363,10 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
                     window.removeEventListener("keydown", ghostSuicide);
                     window.removeEventListener("keydown", cancelBoost);
                     window.removeEventListener("keydown", takeScreenshot);
-                    window.removeEventListener("keydown", boostKeybind);
+                    window.removeEventListener("keydown", boostKeybindKeydown);
+                    window.removeEventListener("keyup", boostKeybindKeyup);
+
+                    gameCanvas.removeEventListener("mousemove", canvasMousemove);
 
                     clearInterval(advancedProfanityFilter);
                     clearInterval(colourblindMode);
