@@ -8056,6 +8056,15 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
                 let canvasMouseX = 0;
                 let canvasMouseY = 0;
 
+                let chatInputOpened = false;
+
+                const chatInputElem = document.querySelector("div.chat-input.horizontal-center") as HTMLDivElement;
+                const chatInputObserver = new MutationObserver((mutations: MutationRecord[]) => {
+                    chatInputOpened = !chatInputElem.getAttribute("style")?.includes("display: none;");
+                });
+
+                chatInputObserver.observe(chatInputElem, { attributes: true });
+
                 function ghostSuicide(key: KeyboardEvent) {
                     if (key.code != settings.keybinds.ghostQuit || homePageOpened || !document.contains(document.querySelector("div.chat-input.horizontal-center[style='display: none;']"))) return;
                     DRC.Preload.evalInBrowserContext(`

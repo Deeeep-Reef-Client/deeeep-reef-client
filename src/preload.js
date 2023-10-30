@@ -7746,6 +7746,12 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
                 const gameCanvas = document.querySelector("div.game > div#canvas-container > canvas");
                 let canvasMouseX = 0;
                 let canvasMouseY = 0;
+                let chatInputOpened = false;
+                const chatInputElem = document.querySelector("div.chat-input.horizontal-center");
+                const chatInputObserver = new MutationObserver((mutations) => {
+                    chatInputOpened = !chatInputElem.getAttribute("style")?.includes("display: none;");
+                });
+                chatInputObserver.observe(chatInputElem, { attributes: true });
                 function ghostSuicide(key) {
                     if (key.code != settings.keybinds.ghostQuit || homePageOpened || !document.contains(document.querySelector("div.chat-input.horizontal-center[style='display: none;']")))
                         return;
