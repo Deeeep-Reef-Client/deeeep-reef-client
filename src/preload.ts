@@ -918,6 +918,16 @@ window.addEventListener("DOMContentLoaded", () => {
     colourblindTheme.href = settings.colourblind ? "https://deeeep-reef-client.netlify.app/assets/colourblind.css" : '';
     document.head.appendChild(colourblindTheme);
 
+    // Home page opened
+    let homePageOpened = false;
+
+    const homePageElem = document.querySelector("div.home-page") as HTMLDivElement;
+    const homePageObserver = new MutationObserver((mutations: MutationRecord[]) => {
+        homePageOpened = !homePageElem.getAttribute("style")?.includes("display: none;");
+    });
+
+    homePageObserver.observe(homePageElem, { attributes: true });
+
     // Keybinds
 
     const keybindsModal = DRC.Modal.buildModal("keybinds", "Edit Keybinds", `

@@ -814,6 +814,13 @@ window.addEventListener("DOMContentLoaded", () => {
     colourblindTheme.setAttribute("id", "colourblindThemeStyle");
     colourblindTheme.href = settings.colourblind ? "https://deeeep-reef-client.netlify.app/assets/colourblind.css" : '';
     document.head.appendChild(colourblindTheme);
+    // Home page opened
+    let homePageOpened = false;
+    const homePageElem = document.querySelector("div.home-page");
+    const homePageObserver = new MutationObserver((mutations) => {
+        homePageOpened = !homePageElem.getAttribute("style")?.includes("display: none;");
+    });
+    homePageObserver.observe(homePageElem, { attributes: true });
     // Keybinds
     const keybindsModal = DRC.Modal.buildModal("keybinds", "Edit Keybinds", `
     <div>
@@ -7797,7 +7804,6 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
                 function canvasMousemove(event) {
                     canvasMouseX = event.x;
                     canvasMouseY = event.y;
-                    console.log(event);
                 }
                 // tree button
                 try {
