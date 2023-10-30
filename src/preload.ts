@@ -4878,6 +4878,7 @@ window.addEventListener("DOMContentLoaded", () => {
     window.addEventListener("keydown", (key: KeyboardEvent) => {
         if (key.code != settings.keybinds.evolutionTree
             || !gameStarted
+            || homePageOpened
             || !document.contains(document.querySelector("div.chat-input.horizontal-center[style='display: none;']"))
             || document.contains(document.querySelector("div.center > div.chat-container > div"))) return;
         treeModalContainer!.classList.remove("drc-modal-hidden");
@@ -8056,7 +8057,7 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
                 let canvasMouseY = 0;
 
                 function ghostSuicide(key: KeyboardEvent) {
-                    if (key.code != settings.keybinds.ghostQuit || !document.contains(document.querySelector("div.chat-input.horizontal-center[style='display: none;']"))) return;
+                    if (key.code != settings.keybinds.ghostQuit || homePageOpened || !document.contains(document.querySelector("div.chat-input.horizontal-center[style='display: none;']"))) return;
                     DRC.Preload.evalInBrowserContext(`
                     if (game.currentScene.myAnimal._visibleFishLevel == 33) {
                         game.inputManager.handleGhostSuicide();
@@ -8065,7 +8066,7 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
                 };
 
                 function cancelBoost(key: KeyboardEvent) {
-                    if (key.code != settings.keybinds.cancelCharge || !document.contains(document.querySelector("div.chat-input.horizontal-center[style='display: none;']"))) return;
+                    if (key.code != settings.keybinds.cancelCharge || homePageOpened || !document.contains(document.querySelector("div.chat-input.horizontal-center[style='display: none;']"))) return;
                     DRC.Preload.evalInBrowserContext(`
                     game.inputManager.pressElapsed = 0;
                     game.inputManager.pointerDown = false;
@@ -8073,7 +8074,7 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
                 };
 
                 function boostKeybindKeydown(key: KeyboardEvent) {
-                    if (settings.keybinds.boost === "Space" || key.code !== settings.keybinds.boost) return;
+                    if (settings.keybinds.boost === "Space" || homePageOpened || key.code !== settings.keybinds.boost) return;
 
                     DRC.Preload.evalInBrowserContext(`
                     game.inputManager.pointerDown = true;
@@ -8081,7 +8082,7 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
                 }
 
                 function boostKeybindKeyup(key: KeyboardEvent) {
-                    if (settings.keybinds.boost === "Space" || key.code !== settings.keybinds.boost) return;
+                    if (settings.keybinds.boost === "Space" || homePageOpened ||  key.code !== settings.keybinds.boost) return;
 
                     DRC.Preload.evalInBrowserContext(`
                     document.querySelector("div.game > div#canvas-container > canvas").dispatchEvent(new MouseEvent("pointerup", { clientX: ${canvasMouseX}, clientY: ${canvasMouseY} }));
@@ -8091,6 +8092,7 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
                 async function takeScreenshot(key: KeyboardEvent) {
                     if (key.code !== settings.keybinds.screenshot
                         || !document.contains(document.querySelector("#canvas-container > canvas"))
+                        ||  homePageOpened
                         || !document.contains(document.querySelector("div.chat-input.horizontal-center[style='display: none;']"))
                         || !document.contains(document.querySelector("div.home-page[style='display: none;']"))) return;
 
