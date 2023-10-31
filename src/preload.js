@@ -5178,33 +5178,33 @@ window.addEventListener("DOMContentLoaded", () => {
         themeMakerOptionsName.value = "Theme " + settings.userThemeData.length;
         themeMakerModalContainer.classList.toggle("drc-modal-hidden");
     });
-    function formatThemeMakerCSS() {
+    function formatThemeMakerCSS(themeOptions) {
         return new Promise(async (resolve, reject) => {
             let homeBg, loadingBg, loadingBall;
-            if (themeMakerOptionsBgImage.value != "") {
+            if (themeOptions.bgImage != "") {
                 homeBg = `
             .home-page .home-bg {
-                background-image: url(${themeMakerOptionsBgImage.value}) !important;
+                background-image: url(${themeOptions.bgImage}) !important;
             }
             `;
             }
-            if (themeMakerOptionsLoadingBgImage.value != "") {
+            if (themeOptions.loadingBgImage != "") {
                 loadingBg = `
             .loading-container {
-                background-image: url(${themeMakerOptionsLoadingBgImage.value}) !important;
+                background-image: url(${themeOptions.loadingBgImage}) !important;
             }
             `;
             }
-            if (themeMakerOptionsLoadingIconImage.value != "") {
+            if (themeOptions.loadingIconImage != "") {
                 const img = new Image();
-                img.src = themeMakerOptionsLoadingIconImage.value;
+                img.src = themeOptions.loadingIconImage;
                 try {
                     await img.decode();
                     loadingBall = `
                         div.loading-bar > img.ball {
                             display: block !important;
                             box-sizing: border-box !important;
-                            background: url(${themeMakerOptionsLoadingIconImage.value}) no-repeat !important;
+                            background: url(${themeOptions.loadingIconImage}) no-repeat !important;
                             width: ${img.naturalWidth}px !important;
                             height: ${img.naturalHeight}px !important;
                             padding-left: ${img.naturalWidth}px !important;
@@ -5218,7 +5218,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     div.loading-bar > img.ball {
                         display: block !important;
                         box-sizing: border-box !important;
-                        background: url(${themeMakerOptionsLoadingIconImage.value}) no-repeat !important;
+                        background: url(${themeOptions.loadingIconImage}) no-repeat !important;
                         width: 128px !important;
                         height: 64px !important;
                         padding-left: 128px !important;
@@ -5226,9 +5226,9 @@ window.addEventListener("DOMContentLoaded", () => {
                     `;
                 }
             }
-            let bgColour = themeMakerOptionsModalBgColour.value;
+            let bgColour = themeOptions.modalBgColour;
             let alpha = "";
-            switch (themeMakerOptionsModalTransparency.value) {
+            switch (themeOptions.modalTransparency) {
                 case "10":
                     alpha = "00";
                     break;
@@ -5264,19 +5264,19 @@ window.addEventListener("DOMContentLoaded", () => {
                     break;
             }
             bgColour += alpha;
-            let bgOpacity = (10 - Number(themeMakerOptionsModalTransparency.value)) / 10;
+            let bgOpacity = (10 - Number(themeOptions.modalTransparency)) / 10;
             resolve(`
         div.modal-content {
             background-color: ${bgColour} !important;
         }
         span.modal__title {
-            color: ${themeMakerOptionsModalTextColour.value} !important;
+            color: ${themeOptions.modalTextColour} !important;
         }
         div.modal__content {
-            color: ${themeMakerOptionsModalTextColour.value} !important;
+            color: ${themeOptions.modalTextColour} !important;
         }
         span.drc-modal-title {
-            color: ${themeMakerOptionsModalTextColour.value} !important;
+            color: ${themeOptions.modalTextColour} !important;
         }
         div.drc-modal-modal-content {
             background-color: ${bgColour} !important;
@@ -5300,7 +5300,7 @@ window.addEventListener("DOMContentLoaded", () => {
             background-color: ${bgColour} !important
         }  
         div.loading-bar > div {
-            background-color: ${themeMakerOptionsLoadingBarColour.value} !important;
+            background-color: ${themeOptions.loadingBarColour} !important;
         }
         ${homeBg ?? ""}
         ${loadingBg ?? ""}
@@ -5320,7 +5320,15 @@ window.addEventListener("DOMContentLoaded", () => {
                 loadingIconImage: themeMakerOptionsLoadingIconImage.value,
                 loadingBarColour: themeMakerOptionsLoadingBarColour.value
             },
-            src: await formatThemeMakerCSS(),
+            src: await formatThemeMakerCSS({
+                bgImage: themeMakerOptionsBgImage.value,
+                loadingBgImage: themeMakerOptionsLoadingBgImage.value,
+                modalBgColour: themeMakerOptionsModalBgColour.value,
+                modalTextColour: themeMakerOptionsModalTextColour.value,
+                modalTransparency: themeMakerOptionsModalTransparency.value,
+                loadingIconImage: themeMakerOptionsLoadingIconImage.value,
+                loadingBarColour: themeMakerOptionsLoadingBarColour.value
+            }),
             generateCss: true,
             active: true
         };
