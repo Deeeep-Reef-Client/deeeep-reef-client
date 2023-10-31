@@ -7410,6 +7410,9 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
                     // plugins
                     pluginSrc.src.filter((s) => s.type === "install").forEach((s) => eval(s.src));
                     updateInstalledPluginsList();
+                    new Notification("Plugin installed!", {
+                        body: `The ${filteredPluginList.list[i].type} ${filteredPluginList.list[i].name} has been installed. Please restart the client for your changes to take effect.`
+                    });
                 }
                 else {
                     // Theme
@@ -7433,11 +7436,11 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
                     }
                     settings.userThemeData[settings.userThemeData.length - 1].active = true;
                     reloadCustomTheme();
+                    new Notification("Theme installed!", {
+                        body: `The ${filteredPluginList.list[i].type} ${filteredPluginList.list[i].name} has been installed. Please restart the client for your changes to take effect.`
+                    });
                 }
                 ;
-                new Notification("Plugin installed!", {
-                    body: `The ${filteredPluginList.list[i].type} ${filteredPluginList.list[i].name} has been installed. Please restart the client for your changes to take effect.`
-                });
                 saveSettings();
                 searchPluginsModalContainer.classList.toggle("drc-modal-hidden");
                 window.removeEventListener("keydown", searchPluginsEnterListener);
