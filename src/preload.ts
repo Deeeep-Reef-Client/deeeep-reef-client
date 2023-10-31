@@ -7703,6 +7703,12 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
 
                     settings.pluginsData.push(installedPlugin);
 
+                    // Create its data
+                    settings.pluginUserData[pluginSrc.id] = {};
+                    // plugins
+                    pluginSrc.src.filter((s: any) => s.type === "install").forEach((s: any) => eval(s.src));
+
+
                     updateInstalledPluginsList();
                 } else {
                     // Theme
@@ -7731,10 +7737,6 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
                     body: `The ${filteredPluginList.list[i].type} ${filteredPluginList.list[i].name} has been installed. Please restart the client for your changes to take effect.`
                 });
                 saveSettings();
-                // Create its data
-                settings.pluginUserData[pluginSrc.id] = {};
-                // plugins
-                pluginSrc.src.filter((s: any) => s.type === "install").forEach((s: any) => eval(s.src));
 
                 searchPluginsModalContainer!.classList.toggle("drc-modal-hidden");
                 window.removeEventListener("keydown", searchPluginsEnterListener);
