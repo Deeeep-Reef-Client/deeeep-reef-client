@@ -5309,6 +5309,23 @@ window.addEventListener("DOMContentLoaded", () => {
         });
     }
     themeMakerAddButton.addEventListener("click", async () => {
+        let loadingIconWidth = 128;
+        let loadingIconHeight = 64;
+        if (themeMakerOptionsLoadingIconImage.value !== "") {
+            const img = new Image();
+            img.src = themeMakerOptionsLoadingIconImage.value;
+            try {
+                await img.decode();
+                loadingIconWidth = img.naturalWidth;
+                loadingIconHeight = img.naturalHeight;
+            }
+            catch (e) {
+                console.log("Could not load loading ball. Using defaults instead.");
+                // Just in case the request fails
+                loadingIconWidth = 128;
+                loadingIconHeight = 64;
+            }
+        }
         let theme = {
             name: themeMakerOptionsName.value,
             themedata: {
@@ -5318,7 +5335,9 @@ window.addEventListener("DOMContentLoaded", () => {
                 modalTextColour: themeMakerOptionsModalTextColour.value,
                 modalTransparency: themeMakerOptionsModalTransparency.value,
                 loadingIconImage: themeMakerOptionsLoadingIconImage.value,
-                loadingBarColour: themeMakerOptionsLoadingBarColour.value
+                loadingBarColour: themeMakerOptionsLoadingBarColour.value,
+                loadingIconImage_loadingIconWidth: loadingIconWidth,
+                loadingIconImage_loadingIconHeight: loadingIconHeight
             },
             src: await formatThemeMakerCSS({
                 bgImage: themeMakerOptionsBgImage.value,
@@ -5329,7 +5348,6 @@ window.addEventListener("DOMContentLoaded", () => {
                 loadingIconImage: themeMakerOptionsLoadingIconImage.value,
                 loadingBarColour: themeMakerOptionsLoadingBarColour.value
             }),
-            generateCss: true,
             active: true
         };
         if (themeMakerOptionsAdvancedTheme.checked) {
@@ -5630,8 +5648,6 @@ window.addEventListener("DOMContentLoaded", () => {
             theme.themetype = "advancedtheme";
             theme.script = exportedTheme.script;
         }
-        if (exportedTheme?.generateCss !== undefined)
-            theme.generateCss = exportedTheme.generateCss;
         const content = JSON.stringify(theme);
         const path = await ipcRenderer.invoke("getPath", "downloads");
         const sub = exportedTheme.themetype === "advancedtheme" ? "drcadvancedtheme" : "drctheme";
@@ -5681,8 +5697,6 @@ window.addEventListener("DOMContentLoaded", () => {
                 src: parsedTheme.src,
                 active: true
             };
-            if (parsedTheme?.generateCss)
-                importedTheme.generateCss = true;
             settings.userThemeData.push(importedTheme);
             for (let i in settings.userThemeData) {
                 settings.userThemeData[i].active = false;
