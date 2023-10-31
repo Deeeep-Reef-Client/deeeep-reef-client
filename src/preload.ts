@@ -5885,7 +5885,7 @@ window.addEventListener("DOMContentLoaded", () => {
             theme.script = exportedTheme.script
         }
         if (exportedTheme?.generateCss !== undefined) theme.generateCss = exportedTheme.generateCss;
-        
+
         const content = JSON.stringify(theme);
         const path = await ipcRenderer.invoke("getPath", "downloads");
         const sub = exportedTheme.themetype === "advancedtheme" ? "drcadvancedtheme" : "drctheme";
@@ -7715,6 +7715,10 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
                     if (pluginSrc.themetype !== undefined && pluginSrc.themetype === "advancedtheme") {
                         theme.themetype = "advancedtheme";
                         theme.script = pluginSrc.script;
+                    }
+                    // Theme data
+                    if (pluginSrc.themedata !== undefined) {
+                        theme.themedata = pluginSrc.themedata;
                     }
                     settings.userThemeData.push(theme);
                     for (let i in settings.userThemeData) {

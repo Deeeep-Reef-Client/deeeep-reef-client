@@ -7419,6 +7419,10 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
                         theme.themetype = "advancedtheme";
                         theme.script = pluginSrc.script;
                     }
+                    // Theme data
+                    if (pluginSrc.themedata !== undefined) {
+                        theme.themedata = pluginSrc.themedata;
+                    }
                     settings.userThemeData.push(theme);
                     for (let i in settings.userThemeData) {
                         settings.userThemeData[i].active = false;
