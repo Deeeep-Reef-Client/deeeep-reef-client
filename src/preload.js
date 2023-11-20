@@ -166,6 +166,7 @@ const DRC = {
         DocumentLoaded: "DRC.DocumentLoaded",
         GameStarted: "DRC.GameStarted",
         GameEnded: "DRC.GameEnded",
+        GameDeath: "DRC.GameDeath",
         GameEvolved: "DRC.GameEvolved",
         SettingsOpened: "DRC.SettingsOpened",
         GameBoost: "DRC.GameBoost",
@@ -174,6 +175,7 @@ const DRC = {
             DocumentLoaded: new CustomEvent("DRC.DocumentLoaded"),
             GameStarted: new CustomEvent("DRC.GameStarted"),
             GameEnded: new CustomEvent("DRC.GameEnded"),
+            GameDeath: new CustomEvent("DRC.GameDeath"),
             GameEvolved: new CustomEvent("DRC.GameEvolved"),
             SettingsOpened: new CustomEvent("DRC.SettingsOpened"),
             GameBoost: new CustomEvent("DRC.GameBoost"),
@@ -8082,10 +8084,22 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
                     clearInterval(advancedProfanityFilter);
                     clearInterval(colourblindMode);
                 }
+                let dead = false;
                 // Watch for game end
                 const closeObserver = new MutationObserver((mutations) => {
-                    if (document.contains(document.querySelector(".death-reason")))
+                    console.log(mutations);
+                    if (document.contains(document.querySelector(".death-reason"))) {
+                        DRC.EventObject.dispatchEvent(DRC.Events.EventList.GameDeath);
                         onGameEnd();
+                    }
+                    if (!dead && (document.contains(document.querySelector("div.ovo-overlay > div.result-container"))
+                        || document.contains(document.querySelector("div.pd-overlay > div.respawn-time")))) {
+                        dead = true;
+                        DRC.EventObject.dispatchEvent(DRC.Events.EventList.GameDeath);
+                    }
+                    if (!document.contains(document.querySelector("div.pd-overlay > div.respawn-time"))) {
+                        dead = false;
+                    }
                     mutations.forEach((mutation) => {
                         mutation.removedNodes.forEach((removedNode) => {
                             if (removedNode.className == "game")

@@ -8447,9 +8447,24 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
                     clearInterval(colourblindMode);
                 }
 
+                let dead = false;
                 // Watch for game end
                 const closeObserver = new MutationObserver((mutations: MutationRecord[]) => {
-                    if (document.contains(document.querySelector(".death-reason"))) onGameEnd();
+                    console.log(mutations)
+                    if (document.contains(document.querySelector(".death-reason"))) {
+                        DRC.EventObject.dispatchEvent(DRC.Events.EventList.GameDeath);
+                        onGameEnd();
+                    }
+                    if (!dead && (
+                        document.contains(document.querySelector("div.ovo-overlay > div.result-container"))
+                        || document.contains(document.querySelector("div.pd-overlay > div.respawn-time"))
+                    )) {
+                        dead = true;
+                        DRC.EventObject.dispatchEvent(DRC.Events.EventList.GameDeath);
+                    }
+                    if (!document.contains(document.querySelector("div.pd-overlay > div.respawn-time"))) {
+                        dead = false;
+                    }
                     mutations.forEach((mutation: MutationRecord) => {
                         mutation.removedNodes.forEach((removedNode: Node) => {
                             if ((removedNode as HTMLElement)!.className == "game") onGameEnd();
