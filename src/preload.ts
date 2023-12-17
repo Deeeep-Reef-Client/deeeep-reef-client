@@ -81,6 +81,27 @@ const DRC = {
                 }
             }
             return (new Habitat(num)).convertToList();
+        },
+        habitatToObject: function (num: number): {
+            cold: boolean;
+            warm: boolean;
+            shallow: boolean;
+            deep: boolean;
+            fresh: boolean;
+            salt: boolean;
+            reef: boolean;
+        } {
+            const joined = DRC.Utils.habitatToArray(num).join('');
+
+            return {
+                cold: joined.includes("Cold"),
+                warm: joined.includes("Warm"),
+                shallow: joined.includes("Shallow"),
+                deep: joined.includes("Deep"),
+                fresh: joined.includes("Fresh"),
+                salt: joined.includes("Salt"),
+                reef: joined.includes("Reef")
+            };
         }
     },
     Modal: {
