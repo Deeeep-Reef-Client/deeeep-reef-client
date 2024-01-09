@@ -8471,7 +8471,6 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
                 let dead = false;
                 // Watch for game end
                 const closeObserver = new MutationObserver((mutations: MutationRecord[]) => {
-                    console.log(mutations)
                     if (document.contains(document.querySelector(".death-reason"))) {
                         DRC.EventObject.dispatchEvent(DRC.Events.EventList.GameDeath);
                         onGameEnd();
