@@ -7903,7 +7903,7 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
                 </p>
                 <br/>
                 <div style="text-align:left;max-width:50vw;">
-                    <p><b>v1.3.0 The Misc Update</b></p>
+                    <p><b>v1.3.0 The Random Update</b></p>
                     <ul>
                         <li>More hotkeys</li>
                         <li>Plugin improvements</li>
