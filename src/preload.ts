@@ -7903,6 +7903,13 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
                 </p>
                 <br/>
                 <div style="text-align:left;max-width:50vw;">
+                    <p><b>v1.3.0 The Misc Update</b></p>
+                    <ul>
+                        <li>More hotkeys</li>
+                        <li>Plugin improvements</li>
+                        <li>Some bug fixes</li>
+                    </ul>
+                    <br />
                     <p><b>v1.2.0 The Keybinds Update</b></p>
                     <ul>
                         <li>Keybinds can be changed</li>
