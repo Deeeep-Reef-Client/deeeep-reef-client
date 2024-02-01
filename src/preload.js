@@ -76,6 +76,18 @@ const DRC = {
                 }
             }
             return (new Habitat(num)).convertToList();
+        },
+        habitatToObject: function (num) {
+            const joined = DRC.Utils.habitatToArray(num).join('');
+            return {
+                cold: joined.includes("Cold"),
+                warm: joined.includes("Warm"),
+                shallow: joined.includes("Shallow"),
+                deep: joined.includes("Deep"),
+                fresh: joined.includes("Fresh"),
+                salt: joined.includes("Salt"),
+                reef: joined.includes("Reef")
+            };
         }
     },
     Modal: {
@@ -7393,6 +7405,12 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
                         });
                         return;
                     }
+                }
+                if (await ipcRenderer.invoke("getVersion") !== DRC.Client.versionTag) {
+                    new Notification("The Client is not fully updated", {
+                        body: "Please update the Client as plugins may not work on older versions."
+                    });
+                    return;
                 }
                 // fetch plugin src from plugin.json
                 let errorDownloading = false;
