@@ -7620,6 +7620,10 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
     const pluginsSearchType = document.getElementById("pluginsSearchType") as HTMLSelectElement;
     const pluginsSearchButton = document.getElementById("pluginsSearchButton");
 
+    pluginsSearchQuery.addEventListener("input", () => {
+        updateFilteredPlugins();
+    });
+
     pluginsSearchButton?.addEventListener("click", () => {
         updateFilteredPlugins();
     });

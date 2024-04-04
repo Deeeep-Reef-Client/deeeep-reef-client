@@ -7324,6 +7324,9 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
     const pluginsSearchQuery = document.getElementById("pluginsSearchQuery");
     const pluginsSearchType = document.getElementById("pluginsSearchType");
     const pluginsSearchButton = document.getElementById("pluginsSearchButton");
+    pluginsSearchQuery.addEventListener("input", () => {
+        updateFilteredPlugins();
+    });
     pluginsSearchButton?.addEventListener("click", () => {
         updateFilteredPlugins();
     });
