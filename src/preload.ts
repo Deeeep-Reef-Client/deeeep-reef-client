@@ -396,6 +396,11 @@ const animalStatData = JSON.parse(`[{"name":"fish","size":{"x":48,"y":68},"mass"
 let reloadCustomTheme = () => { };
 
 window.addEventListener("DOMContentLoaded", () => {
+    if (document.querySelector("title")?.innerText === "Just a moment...") {
+        ipcRenderer.send("isCloudflare");
+        return;
+    }
+
     // DRC
     document.body.appendChild(DRC.EventObject);
     DRC.EventObject.dispatchEvent(DRC.Events.EventList.DomContentLoaded);

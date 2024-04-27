@@ -379,7 +379,16 @@ const createWindow = () => {
         loadingWindow.hide();
         window.show();
     });
+    let isCloudflare = false;
+    ipcMain.on("isCloudflare", () => {
+        log.info("Cloudflare verification loaded");
+        isCloudflare = true;
+    });
     window.webContents.on('did-fail-load', () => {
+        if (isCloudflare) {
+            isCloudflare = false;
+            return;
+        }
         loadingWindow.close();
         window.close();
         new Notification({
