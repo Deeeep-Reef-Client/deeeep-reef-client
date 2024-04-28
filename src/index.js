@@ -374,6 +374,9 @@ const createWindow = () => {
     window.webContents.on("did-navigate", () => {
         window.webContents.send("settings", settings);
     });
+    ipcMain.handle("getSettings", async () => {
+        return settings;
+    });
     window.webContents.on('did-finish-load', () => {
         finishedLoad = true;
         loadingWindow.hide();

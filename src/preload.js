@@ -292,7 +292,22 @@ let settings = {
         zoomOut: "Minus"
     }
 };
-ipcRenderer.on("settings", (_event, s) => {
+// ipcRenderer.on("settings", (_event: Event, s: SettingsTemplate) => {
+//     for (let i of Object.keys(s)) {
+//         if (i === "keybinds") {
+//             for (let j of Object.keys(s.keybinds)) {
+//                 //@ts-ignore
+//                 settings.keybinds[j] = s.keybinds[j];
+//             }
+//         } else {
+//             // @ts-ignore
+//             settings[i] = s[i];
+//         }
+//     }
+// })
+ipcRenderer.invoke("getSettings")
+    .then((s) => {
+    console.dir(s);
     for (let i of Object.keys(s)) {
         if (i === "keybinds") {
             for (let j of Object.keys(s.keybinds)) {
