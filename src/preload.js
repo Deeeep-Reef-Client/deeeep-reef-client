@@ -307,7 +307,6 @@ let settings = {
 // })
 ipcRenderer.invoke("getSettings")
     .then((s) => {
-    console.dir(s);
     for (let i of Object.keys(s)) {
         if (i === "keybinds") {
             for (let j of Object.keys(s.keybinds)) {

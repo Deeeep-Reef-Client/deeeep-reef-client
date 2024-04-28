@@ -334,7 +334,7 @@ let gameStarted = false;
 // Create window
 const createWindow = () => {
     // Create the browser window.
-    const window = new BrowserWindow({
+    const mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
         show: false,
@@ -344,13 +344,14 @@ const createWindow = () => {
             sandbox: false
         }
     });
+    const window = mainWindow;
     // enhanceWebRequest(session.defaultSession);
     const badgeOptions = {
         font: '20px arial'
     };
-    new Badge(window, badgeOptions);
-    window.hide();
-    window.webContents.setBackgroundThrottling(false);
+    new Badge(mainWindow, badgeOptions);
+    mainWindow.hide();
+    mainWindow.webContents.setBackgroundThrottling(false);
     let finishedLoad = false;
     const loadingWindow = new BrowserWindow({
         width: 960,
@@ -362,38 +363,38 @@ const createWindow = () => {
     loadingWindow.removeMenu();
     loadingWindow.on("close", () => {
         if (!finishedLoad)
-            window.close();
+            mainWindow.close();
     });
-    window.on("focus", () => {
-        window.webContents.send("windowFocus");
+    mainWindow.on("focus", () => {
+        mainWindow.webContents.send("windowFocus");
     });
-    window.webContents.on("will-navigate", () => {
-        window.hide();
+    mainWindow.webContents.on("will-navigate", () => {
+        mainWindow.hide();
         loadingWindow.show();
     });
-    window.webContents.on("did-navigate", () => {
-        window.webContents.send("settings", settings);
+    mainWindow.webContents.on("did-navigate", () => {
+        mainWindow.webContents.send("settings", settings);
     });
     ipcMain.handle("getSettings", async () => {
         return settings;
     });
-    window.webContents.on('did-finish-load', () => {
+    mainWindow.webContents.on('did-finish-load', () => {
         finishedLoad = true;
         loadingWindow.hide();
-        window.show();
+        mainWindow.show();
     });
     let isCloudflare = false;
     ipcMain.on("isCloudflare", () => {
         log.info("Cloudflare verification loaded");
         isCloudflare = true;
     });
-    window.webContents.on('did-fail-load', () => {
+    mainWindow.webContents.on('did-fail-load', () => {
         if (isCloudflare) {
             isCloudflare = false;
             return;
         }
         loadingWindow.close();
-        window.close();
+        mainWindow.close();
         new Notification({
             title: "Failed to load the game",
             body: "Please check your internet and try again."
@@ -402,10 +403,10 @@ const createWindow = () => {
     // Loads blocky fish game :)... probably not
     // window.loadURL("https://deeeep.io");
     if (settings.developer)
-        window.webContents.openDevTools();
-    window.maximize();
+        mainWindow.webContents.openDevTools();
+    mainWindow.maximize();
     // Deletes menu and makes new menu
-    window.removeMenu();
+    mainWindow.removeMenu();
     /*
     const menu = Menu.buildFromTemplate([
         {
@@ -465,23 +466,23 @@ const createWindow = () => {
     // Menu.setApplicationMenu(menu);
     // Menu bar
     ipcMain.on("windowMinimise", () => {
-        window.minimize();
+        mainWindow.minimize();
     });
     ipcMain.on("windowMaximise", () => {
-        window.maximize(); //TODO: Fix bug
+        mainWindow.maximize(); //TODO: Fix bug
     });
     ipcMain.on("windowRestore", () => {
-        window.unmaximize();
+        mainWindow.unmaximize();
     });
     ipcMain.on("windowClose", () => {
-        window.close();
+        mainWindow.close();
         loadingWindow.close();
     });
-    window.on("maximize", () => {
-        window.webContents.send("windowMaximise");
+    mainWindow.on("maximize", () => {
+        mainWindow.webContents.send("windowMaximise");
     });
-    window.on("unmaximize", () => {
-        window.webContents.send("windowRestore");
+    mainWindow.on("unmaximize", () => {
+        mainWindow.webContents.send("windowRestore");
     });
     // Close confirmation
     // window.on("close", (e: any) => {
@@ -516,8 +517,8 @@ const createWindow = () => {
             loadDocassets();
         if (adBlockerOn)
             loadAdblocker();
-        window.loadURL("https://deeeep.io");
-        window.hide();
+        mainWindow.loadURL("https://deeeep.io");
+        mainWindow.hide();
         /*
         if (docassetsOn) {
             window.webContents.session.loadExtension(app.getAppPath().substring(0, app.getAppPath().lastIndexOf("\\")) + "/extensions/docassets").then(() => {
@@ -559,7 +560,7 @@ const createWindow = () => {
         */
     })();
     // Opens URLs in browser
-    window.webContents.setWindowOpenHandler((details) => {
+    mainWindow.webContents.setWindowOpenHandler((details) => {
         shell.openExternal(details.url);
         return { action: 'deny' };
     });
@@ -628,22 +629,22 @@ const createWindow = () => {
     }
     ;
     // Loads settings
-    window.webContents.send("settings", settings);
+    mainWindow.webContents.send("settings", settings);
     ipcMain.on("evalInBrowserContext", (_event, code) => {
-        window.webContents.executeJavaScript(code);
+        mainWindow.webContents.executeJavaScript(code);
     });
-    window.webContents.on("console-message", (event, level, message, line, sourceId) => {
-        window.webContents.send("console-message", {
+    mainWindow.webContents.on("console-message", (event, level, message, line, sourceId) => {
+        mainWindow.webContents.send("console-message", {
             level, message, line, sourceId
         });
     });
     ipcMain.on("ipcProxy", (_event, ipc) => {
-        window.webContents.send(ipc.channel, ipc.data);
+        mainWindow.webContents.send(ipc.channel, ipc.data);
     });
     ipcMain.on("sendKeyPress", (_event, keyCode) => {
-        window.webContents.sendInputEvent({ type: "keyDown", keyCode });
-        window.webContents.sendInputEvent({ type: "char", keyCode });
-        window.webContents.sendInputEvent({ type: "keyUp", keyCode });
+        mainWindow.webContents.sendInputEvent({ type: "keyDown", keyCode });
+        mainWindow.webContents.sendInputEvent({ type: "char", keyCode });
+        mainWindow.webContents.sendInputEvent({ type: "keyUp", keyCode });
     });
     // window.show();
     // listen for app path requests
@@ -652,7 +653,7 @@ const createWindow = () => {
     });
     // toggle DevTools on request
     ipcMain.on("openDevTools", () => {
-        window.webContents.openDevTools();
+        mainWindow.webContents.openDevTools();
     });
     // forum notification badge
     ipcMain.on("setBadge", (_event, count) => {
@@ -675,7 +676,7 @@ const createWindow = () => {
         if (Date.now() - lastScreenshotTime < 500)
             return;
         lastScreenshotTime = Date.now();
-        window.webContents.capturePage().then((image) => {
+        mainWindow.webContents.capturePage().then((image) => {
             try {
                 const filename = Math.random().toString(36).slice(2, 8);
                 fs.writeFileSync(`${app.getPath("downloads")}/drc_screenshot_${filename}.png`, image.toPNG());
