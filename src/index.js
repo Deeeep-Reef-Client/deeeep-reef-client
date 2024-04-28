@@ -18,7 +18,7 @@ const development = true;
 // Auto update
 let newUpdate = false;
 let instUrl = "";
-const versionId = "v1.3.0";
+const versionId = "v1.3.1";
 let currentVersionId = "";
 // DRC API
 const assetswapperAlreadyChecked = new Set();
@@ -27,8 +27,8 @@ const DRC = {
     // Client info
     Client: {
         name: "Deeeep.io Reef Client",
-        version: "1.3.0",
-        versionTag: "v1.3.0"
+        version: "1.3.1",
+        versionTag: "v1.3.1"
     },
     // Utility functions
     Utils: {

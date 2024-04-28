@@ -13,8 +13,8 @@ const DRC = {
     // Client info
     Client: {
         name: "Deeeep.io Reef Client",
-        version: "1.3.0",
-        versionTag: "v1.3.0"
+        version: "1.3.1",
+        versionTag: "v1.3.1"
     },
     // Utility functions
     Utils: {
@@ -7616,6 +7616,12 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
                 </p>
                 <br/>
                 <div style="text-align:left;max-width:50vw;">
+                    <p><b>v1.3.1 The Cloudflare Patch</b></p>
+                    <ul>
+                        <li>Emergency fix for Cloudflare verification</li>
+                        <li>Plugin search on input</li>
+                    </ul>
+                    <br />
                     <p><b>v1.3.0 The Random Update</b></p>
                     <ul>
                         <li>More hotkeys</li>
