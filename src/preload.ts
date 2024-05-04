@@ -1,5 +1,4 @@
-import { ThreadChannel } from "discord.js";
-import { load } from "dotenv";
+import { SkinData, loadAllSkinsFromAnimalId, loadSkinFromId } from "./skins.js";
 
 const { ipcRenderer, app, contextBridge, webFrame } = require('electron');
 const Filter = require('bad-words');
@@ -5066,12 +5065,12 @@ window.addEventListener("DOMContentLoaded", () => {
     const assetSwapperIdInput = document.getElementById("assetSwapperIdInput") as HTMLInputElement;
     const assetSwapperRuleList = document.getElementById("assetSwapperRuleList") as HTMLDivElement;
     let assetSwapperLetter = assetSwapperLetterDropdown!.value;
-    let assetSwapperTarget: string = '';
 
-    let assetSwapperTargetSkins: Array<any> = [];
+    let assetSwapperTargetSkins: SkinData[] = [];
 
-    let allSkins: any;
-    let pendingSkins: any;
+    const allSkins: SkinData[] = [];
+    const loadedAnimalSkins: number[] = [];
+    const loadedPendingSkins: number[] = [];
 
     // former prelude that was moved
     // modified api/animals json that excludes nonplayable animals
@@ -5101,20 +5100,24 @@ window.addEventListener("DOMContentLoaded", () => {
     async function updateAssetSwapperSkinDropdown() {
         assetSwapperIdInput.classList.add("drc-modal-hidden");
         assetSwapperSkinDropdown.innerHTML = "";
-        if (allSkins === undefined) {
-            await fetch(API_URL + "/skins?cat=all")
-                .then(res => res.json())
-                .then(data => {
-                    assetSwapperTargetSkins = data.filter((s: any) => s.fish_level == assetSwapperTargetDropdown.value);
-                    allSkins = data;
-                });
-        } else assetSwapperTargetSkins = allSkins.filter((s: any) => s.fish_level == assetSwapperTargetDropdown.value);
-        for (let i in assetSwapperTargetSkins) {
+
+        const selectedAnimalId = Number(assetSwapperTargetDropdown.value);
+
+        // Has the animal already been loaded?
+        if (!loadedAnimalSkins.includes(selectedAnimalId)) {
+            allSkins.push(...await loadAllSkinsFromAnimalId(API_URL, selectedAnimalId));
+            loadedAnimalSkins.push(selectedAnimalId);
+        }
+
+        assetSwapperTargetSkins = allSkins.filter((s: SkinData) => s.fish_level === selectedAnimalId);
+
+        for (const skin of assetSwapperTargetSkins) {
             const elem = document.createElement("option");
-            elem.setAttribute("value", assetSwapperTargetSkins[i].id);
-            elem.innerText = assetSwapperTargetSkins[i].name;
+            elem.setAttribute("value", String(skin.id));
+            elem.innerText = skin.name;
             assetSwapperSkinDropdown.appendChild(elem);
         }
+        
         const otherElem = document.createElement("option");
         otherElem.setAttribute("value", "other");
         otherElem.innerText = "Other by ID";
@@ -5129,38 +5132,41 @@ window.addEventListener("DOMContentLoaded", () => {
         }
     });
     async function updateAssetSwapperList() {
-        let assetSwapperRuleSkins: Array<any> = [];
         let assetSwapperRuleAnimalName: string = "";
         let assetSwapperRuleSkinName: string = "";
         assetSwapperRuleList.innerHTML = "";
         for (let i in settings.assetSwapperConfig) {
-            assetSwapperRuleSkinName = "";
+            assetSwapperRuleSkinName = "Unknown";
+            
+            const swappedAnimalId = Number(settings.assetSwapperConfig[i].animal);
+            const swappedSkinId = Number(settings.assetSwapperConfig[i].skin);
+
             for (let j in animalList) {
-                if (animalList[j].id == settings.assetSwapperConfig[i].animal) {
+                if (animalList[j].id == swappedAnimalId) {
                     assetSwapperRuleAnimalName = animalList[j].name;
                     break;
                 }
             }
-            if (allSkins === undefined) {
-                allSkins = await fetch(API_URL + "/skins?cat=all")
-                    .then(res => res.json());
+
+            // Has the animal already been loaded?
+            if (!loadedAnimalSkins.includes(swappedAnimalId)) {
+                allSkins.push(...await loadAllSkinsFromAnimalId(API_URL, swappedAnimalId));
+                loadedAnimalSkins.push(swappedAnimalId);
             }
-            if (pendingSkins === undefined) {
-                pendingSkins = await fetch(API_URL + "/skins/pending")
-                    .then(res => res.json());
+
+            // Has the skin already been loaded?
+            if (!loadedPendingSkins.includes(swappedSkinId) && !Number.isNaN(swappedSkinId)) {
+                allSkins.push(await loadSkinFromId(API_URL, swappedSkinId));
+                loadedPendingSkins.push(swappedSkinId);
             }
-            for (let j in allSkins) {
-                if (allSkins[j].id == settings.assetSwapperConfig[i].skin) {
-                    assetSwapperRuleSkinName = allSkins[j].name;
+
+            for (const s of allSkins) {
+                if (s.id === swappedSkinId) {
+                    assetSwapperRuleSkinName = s.name;
                     break;
                 }
             }
-            for (let j in pendingSkins) {
-                if (pendingSkins[j].id == settings.assetSwapperConfig[i].skin) {
-                    assetSwapperRuleSkinName = pendingSkins[j].name;
-                    break;
-                }
-            }
+
             const mainElem = document.createElement("div");
             mainElem.classList.add("assetswapper-list-rule")
             // animal name
