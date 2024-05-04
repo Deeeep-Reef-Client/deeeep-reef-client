@@ -7940,6 +7940,13 @@ THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES WIT
                 </p>
                 <br/>
                 <div style="text-align:left;max-width:50vw;">
+                    <p><b>v1.3.2 The API Changes Patch</b></p>
+                    <ul>
+                        <li>Fixes for Deeeep API changes</li>
+                        <li>More efficient asset swapper</li>
+                        <li>Notification if Developer Mode is active</li>
+                    </ul>
+                    <br />
                     <p><b>v1.3.1 The Cloudflare Patch</b></p>
                     <ul>
                         <li>Emergency fix for Cloudflare verification</li>
