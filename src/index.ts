@@ -475,7 +475,14 @@ const createWindow = () => {
     // Loads blocky fish game :)... probably not
     // window.loadURL("https://deeeep.io");
 
-    if (settings.developer) mainWindow.webContents.openDevTools();
+    if (settings.developer) {
+        mainWindow.webContents.openDevTools();
+
+        new Notification({
+            title: "Developer Mode is active",
+            body: "I hope you know what you are doing."
+        }).show();
+    }
 
     mainWindow.maximize();
     // Deletes menu and makes new menu
