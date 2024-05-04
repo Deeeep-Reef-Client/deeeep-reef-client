@@ -1566,7 +1566,7 @@ window.addEventListener("DOMContentLoaded", () => {
         if (document.contains(userWidget.querySelector("button.el-button.btn.nice-button.blue.has-icon")))
             return;
         const xhr = new XMLHttpRequest();
-        xhr.open('GET', "https://apibeta.deeeep.io/forumNotifications/count");
+        xhr.open('GET', API_URL + "/forumNotifications/count");
         xhr.withCredentials = true;
         xhr.addEventListener("load", (_event) => {
             const forumNotifications = JSON.parse(xhr.response);
@@ -1590,7 +1590,7 @@ window.addEventListener("DOMContentLoaded", () => {
         if (document.contains(userWidget.querySelector("button.el-button.btn.nice-button.blue.has-icon")))
             return;
         const xhr = new XMLHttpRequest();
-        xhr.open('GET', "https://apibeta.deeeep.io/friendRequests/count");
+        xhr.open('GET', API_URL + "/friendRequests/count");
         xhr.withCredentials = true;
         xhr.addEventListener("load", (_event) => {
             const friendRequests = JSON.parse(xhr.response);
