@@ -72,6 +72,16 @@
     "directories": {
       "buildResources": "build"
     },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
     "nsis": {
       "installerIcon": "build/icon.ico",
       "uninstallerIcon": "build/icon.ico",
@@ -80,9 +90,27 @@
       "createDesktopShortcut": true
     },
     "linux": {
-      "target": "AppImage",
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
       "icon": "build/icon.png",
       "description": "A simple desktop client for Deeeep.io"
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ]
     },
     "asar": false
   },
