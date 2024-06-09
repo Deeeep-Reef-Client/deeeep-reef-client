@@ -60,7 +60,7 @@
   "build": {
     "productName": "Deeeep.io Reef Client",
     "appId": "deeeepio.reefclient",
-    "artifactName": "Deeeep.io-Reef-Client-${version}-${os}.${ext}",
+    "artifactName": "Deeeep.io-Reef-Client-${version}-${os}-${arch}.${ext}",
     "files": [
       "package.json",
       "src/**.js",
